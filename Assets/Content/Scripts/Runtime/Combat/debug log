@@ -1,0 +1,815 @@
+[AIAgent] Entered Idle State
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.AIIdleState:OnStateEnter (LittleHeroJourney.AIStateType) (at Assets/Content/Scripts/Runtime/AI/States/AIIdleState.cs:19)
+LittleHeroJourney.AIAgent:TransitionToState (LittleHeroJourney.AIStateType) (at Assets/Content/Scripts/Runtime/AI/AIAgent.cs:181)
+LittleHeroJourney.AIAgent:InitializeStates () (at Assets/Content/Scripts/Runtime/AI/AIAgent.cs:157)
+LittleHeroJourney.AIAgent:Awake () (at Assets/Content/Scripts/Runtime/AI/AIAgent.cs:91)
+
+[AIAgent] Transitioned from Idle to Idle
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.AIAgent:TransitionToState (LittleHeroJourney.AIStateType) (at Assets/Content/Scripts/Runtime/AI/AIAgent.cs:183)
+LittleHeroJourney.AIAgent:InitializeStates () (at Assets/Content/Scripts/Runtime/AI/AIAgent.cs:157)
+LittleHeroJourney.AIAgent:Awake () (at Assets/Content/Scripts/Runtime/AI/AIAgent.cs:91)
+
+[AIAgent] Entered Aggro State
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.AIAggroState:OnStateEnter (LittleHeroJourney.AIStateType) (at Assets/Content/Scripts/Runtime/AI/States/AIAggroState.cs:20)
+LittleHeroJourney.AIAgent:TransitionToState (LittleHeroJourney.AIStateType) (at Assets/Content/Scripts/Runtime/AI/AIAgent.cs:181)
+LittleHeroJourney.AIAgent:SetTarget (UnityEngine.Transform) (at Assets/Content/Scripts/Runtime/AI/AIAgent.cs:229)
+LittleHeroJourney.AIAgent:UpdateDetection () (at Assets/Content/Scripts/Runtime/AI/AIAgent.cs:196)
+LittleHeroJourney.AIAgent:Update () (at Assets/Content/Scripts/Runtime/AI/AIAgent.cs:257)
+
+[AIAgent] Transitioned from Idle to Aggro
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.AIAgent:TransitionToState (LittleHeroJourney.AIStateType) (at Assets/Content/Scripts/Runtime/AI/AIAgent.cs:183)
+LittleHeroJourney.AIAgent:SetTarget (UnityEngine.Transform) (at Assets/Content/Scripts/Runtime/AI/AIAgent.cs:229)
+LittleHeroJourney.AIAgent:UpdateDetection () (at Assets/Content/Scripts/Runtime/AI/AIAgent.cs:196)
+LittleHeroJourney.AIAgent:Update () (at Assets/Content/Scripts/Runtime/AI/AIAgent.cs:257)
+
+[PlayerCombat] TriggerAttack called - IsAttacking: False, AttackLocked: False, AttackIndex: 0
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.PlayerCombat:TriggerAttack () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:716)
+UnityEngine.EventSystems.EventSystem:Update () (at ./Library/PackageCache/com.unity.ugui@1.0.0/Runtime/EventSystem/EventSystem.cs:530)
+
+[Weapon] Damage data: base 10
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.Weapon:UpdateDamageData (LittleHeroJourney.DamageData) (at Assets/Content/Scripts/Runtime/Combat/Weapon.cs:106)
+LittleHeroJourney.PlayerCombat:ExecuteAttack (LittleHeroJourney.AttackDataSO,LittleHeroJourney.ComboSequenceSO) (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:352)
+LittleHeroJourney.PlayerCombat:PerformAttack () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:317)
+LittleHeroJourney.PlayerCombat:TriggerAttack () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:734)
+UnityEngine.EventSystems.EventSystem:Update () (at ./Library/PackageCache/com.unity.ugui@1.0.0/Runtime/EventSystem/EventSystem.cs:530)
+
+[Weapon] Damage data: base 10
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.Weapon:UpdateDamageData (LittleHeroJourney.DamageData) (at Assets/Content/Scripts/Runtime/Combat/Weapon.cs:106)
+LittleHeroJourney.PlayerCombat:ExecuteAttack (LittleHeroJourney.AttackDataSO,LittleHeroJourney.ComboSequenceSO) (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:352)
+LittleHeroJourney.PlayerCombat:PerformAttack () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:317)
+LittleHeroJourney.PlayerCombat:TriggerAttack () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:734)
+UnityEngine.EventSystems.EventSystem:Update () (at ./Library/PackageCache/com.unity.ugui@1.0.0/Runtime/EventSystem/EventSystem.cs:530)
+
+[PlayerCombat] Attack started
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.PlayerCombat:PerformAttack () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:319)
+LittleHeroJourney.PlayerCombat:TriggerAttack () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:734)
+UnityEngine.EventSystems.EventSystem:Update () (at ./Library/PackageCache/com.unity.ugui@1.0.0/Runtime/EventSystem/EventSystem.cs:530)
+
+[PlayerCombat] COMBO window OPENED at normalizedTime: 0.545 (window: 0.500-0.700)
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.PlayerCombat:UpdateComboWindowState () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:257)
+LittleHeroJourney.PlayerCombat:Update () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:162)
+
+[PlayerCombat] Combo window CLOSED - missed timing (normalizedTime: 0.712 > 0.700)
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.PlayerCombat:UpdateComboWindowState () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:267)
+LittleHeroJourney.PlayerCombat:Update () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:162)
+
+[PlayerCombat] TriggerAttack called - IsAttacking: True, AttackLocked: False, AttackIndex: 0
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.PlayerCombat:TriggerAttack () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:716)
+UnityEngine.EventSystems.EventSystem:Update () (at ./Library/PackageCache/com.unity.ugui@1.0.0/Runtime/EventSystem/EventSystem.cs:530)
+
+[PlayerCombat] COMBO window OPENED at normalizedTime: 0.511 (window: 0.500-0.700)
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.PlayerCombat:UpdateComboWindowState () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:257)
+LittleHeroJourney.PlayerCombat:Update () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:162)
+
+[PlayerCombat] TriggerAttack called - IsAttacking: True, AttackLocked: False, AttackIndex: 0
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.PlayerCombat:TriggerAttack () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:716)
+UnityEngine.EventSystems.EventSystem:Update () (at ./Library/PackageCache/com.unity.ugui@1.0.0/Runtime/EventSystem/EventSystem.cs:530)
+
+[PlayerCombat] Attack buffered for next attack via TriggerAttack at attack #0. Queue size: 1
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.PlayerCombat:TriggerAttack () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:729)
+UnityEngine.EventSystems.EventSystem:Update () (at ./Library/PackageCache/com.unity.ugui@1.0.0/Runtime/EventSystem/EventSystem.cs:530)
+
+[PlayerCombat] Combo window CLOSED - missed timing (normalizedTime: 0.708 > 0.700)
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.PlayerCombat:UpdateComboWindowState () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:267)
+LittleHeroJourney.PlayerCombat:Update () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:162)
+
+[PlayerCombat] Weapon hit: AI - Monster Plant
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.PlayerCombat:OnWeaponHitEnemy (UnityEngine.Collider) (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:97)
+LittleHeroJourney.Weapon:ProcessHit (LittleHeroJourney.Health,UnityEngine.Collider) (at Assets/Content/Scripts/Runtime/Combat/Weapon.cs:63)
+LittleHeroJourney.Weapon:OnTriggerEnter (UnityEngine.Collider) (at Assets/Content/Scripts/Runtime/Combat/Weapon.cs:56)
+
+[PlayerCombat] Attack finished
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.PlayerCombat:UpdateAttackProgress () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:491)
+LittleHeroJourney.PlayerCombat:UpdateAttackState () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:212)
+LittleHeroJourney.PlayerCombat:Update () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:204)
+
+[Weapon] Damage data: base 10
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.Weapon:UpdateDamageData (LittleHeroJourney.DamageData) (at Assets/Content/Scripts/Runtime/Combat/Weapon.cs:106)
+LittleHeroJourney.PlayerCombat:ExecuteAttack (LittleHeroJourney.AttackDataSO,LittleHeroJourney.ComboSequenceSO) (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:352)
+LittleHeroJourney.PlayerCombat:UpdateAttackProgress () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:548)
+LittleHeroJourney.PlayerCombat:UpdateAttackState () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:212)
+LittleHeroJourney.PlayerCombat:Update () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:204)
+
+[PlayerCombat] Combo continued to attack #1. Queue remaining: 0
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.PlayerCombat:UpdateAttackProgress () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:552)
+LittleHeroJourney.PlayerCombat:UpdateAttackState () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:212)
+LittleHeroJourney.PlayerCombat:Update () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:204)
+
+[PlayerCombat] COMBO window OPENED at normalizedTime: 0.403 (window: 0.400-0.600)
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.PlayerCombat:UpdateComboWindowState () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:257)
+LittleHeroJourney.PlayerCombat:Update () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:162)
+
+[PlayerCombat] Combo window CLOSED - missed timing (normalizedTime: 0.633 > 0.600)
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.PlayerCombat:UpdateComboWindowState () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:267)
+LittleHeroJourney.PlayerCombat:Update () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:162)
+
+[PlayerCombat] Weapon hit: AI - Monster Plant
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.PlayerCombat:OnWeaponHitEnemy (UnityEngine.Collider) (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:97)
+LittleHeroJourney.Weapon:ProcessHit (LittleHeroJourney.Health,UnityEngine.Collider) (at Assets/Content/Scripts/Runtime/Combat/Weapon.cs:63)
+LittleHeroJourney.Weapon:OnTriggerEnter (UnityEngine.Collider) (at Assets/Content/Scripts/Runtime/Combat/Weapon.cs:56)
+
+[PlayerCombat] Attack finished
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.PlayerCombat:UpdateAttackProgress () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:491)
+LittleHeroJourney.PlayerCombat:UpdateAttackState () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:212)
+LittleHeroJourney.PlayerCombat:Update () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:204)
+
+[PlayerCombat] Combo reset
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.PlayerCombat:ResetCombo () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:641)
+LittleHeroJourney.PlayerCombat:UpdateAttackProgress () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:570)
+LittleHeroJourney.PlayerCombat:UpdateAttackState () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:212)
+LittleHeroJourney.PlayerCombat:Update () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:204)
+
+[PlayerCombat] TriggerAttack called - IsAttacking: False, AttackLocked: False, AttackIndex: 0
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.PlayerCombat:TriggerAttack () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:716)
+UnityEngine.EventSystems.EventSystem:Update () (at ./Library/PackageCache/com.unity.ugui@1.0.0/Runtime/EventSystem/EventSystem.cs:530)
+
+[Weapon] Damage data: base 10
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.Weapon:UpdateDamageData (LittleHeroJourney.DamageData) (at Assets/Content/Scripts/Runtime/Combat/Weapon.cs:106)
+LittleHeroJourney.PlayerCombat:ExecuteAttack (LittleHeroJourney.AttackDataSO,LittleHeroJourney.ComboSequenceSO) (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:352)
+LittleHeroJourney.PlayerCombat:PerformAttack () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:317)
+LittleHeroJourney.PlayerCombat:TriggerAttack () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:734)
+UnityEngine.EventSystems.EventSystem:Update () (at ./Library/PackageCache/com.unity.ugui@1.0.0/Runtime/EventSystem/EventSystem.cs:530)
+
+[Weapon] Damage data: base 10
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.Weapon:UpdateDamageData (LittleHeroJourney.DamageData) (at Assets/Content/Scripts/Runtime/Combat/Weapon.cs:106)
+LittleHeroJourney.PlayerCombat:ExecuteAttack (LittleHeroJourney.AttackDataSO,LittleHeroJourney.ComboSequenceSO) (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:352)
+LittleHeroJourney.PlayerCombat:PerformAttack () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:317)
+LittleHeroJourney.PlayerCombat:TriggerAttack () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:734)
+UnityEngine.EventSystems.EventSystem:Update () (at ./Library/PackageCache/com.unity.ugui@1.0.0/Runtime/EventSystem/EventSystem.cs:530)
+
+[PlayerCombat] Attack started
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.PlayerCombat:PerformAttack () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:319)
+LittleHeroJourney.PlayerCombat:TriggerAttack () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:734)
+UnityEngine.EventSystems.EventSystem:Update () (at ./Library/PackageCache/com.unity.ugui@1.0.0/Runtime/EventSystem/EventSystem.cs:530)
+
+[PlayerCombat] TriggerAttack called - IsAttacking: True, AttackLocked: False, AttackIndex: 0
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.PlayerCombat:TriggerAttack () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:716)
+UnityEngine.EventSystems.EventSystem:Update () (at ./Library/PackageCache/com.unity.ugui@1.0.0/Runtime/EventSystem/EventSystem.cs:530)
+
+[PlayerCombat] COMBO window OPENED at normalizedTime: 0.511 (window: 0.500-0.700)
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.PlayerCombat:UpdateComboWindowState () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:257)
+LittleHeroJourney.PlayerCombat:Update () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:162)
+
+[PlayerCombat] TriggerAttack called - IsAttacking: True, AttackLocked: False, AttackIndex: 0
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.PlayerCombat:TriggerAttack () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:716)
+UnityEngine.EventSystems.EventSystem:Update () (at ./Library/PackageCache/com.unity.ugui@1.0.0/Runtime/EventSystem/EventSystem.cs:530)
+
+[PlayerCombat] COMBO window OPENED at normalizedTime: 0.501 (window: 0.500-0.700)
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.PlayerCombat:UpdateComboWindowState () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:257)
+LittleHeroJourney.PlayerCombat:Update () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:162)
+
+[PlayerCombat] TriggerAttack called - IsAttacking: True, AttackLocked: False, AttackIndex: 0
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.PlayerCombat:TriggerAttack () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:716)
+UnityEngine.EventSystems.EventSystem:Update () (at ./Library/PackageCache/com.unity.ugui@1.0.0/Runtime/EventSystem/EventSystem.cs:530)
+
+[PlayerCombat] Attack buffered for next attack via TriggerAttack at attack #0. Queue size: 1
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.PlayerCombat:TriggerAttack () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:729)
+UnityEngine.EventSystems.EventSystem:Update () (at ./Library/PackageCache/com.unity.ugui@1.0.0/Runtime/EventSystem/EventSystem.cs:530)
+
+[PlayerCombat] Combo window CLOSED - missed timing (normalizedTime: 0.709 > 0.700)
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.PlayerCombat:UpdateComboWindowState () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:267)
+LittleHeroJourney.PlayerCombat:Update () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:162)
+
+[PlayerCombat] Weapon hit: AI - Monster Plant
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.PlayerCombat:OnWeaponHitEnemy (UnityEngine.Collider) (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:97)
+LittleHeroJourney.Weapon:ProcessHit (LittleHeroJourney.Health,UnityEngine.Collider) (at Assets/Content/Scripts/Runtime/Combat/Weapon.cs:63)
+LittleHeroJourney.Weapon:OnTriggerEnter (UnityEngine.Collider) (at Assets/Content/Scripts/Runtime/Combat/Weapon.cs:56)
+
+[PlayerCombat] TriggerAttack called - IsAttacking: True, AttackLocked: False, AttackIndex: 0
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.PlayerCombat:TriggerAttack () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:716)
+UnityEngine.EventSystems.EventSystem:Update () (at ./Library/PackageCache/com.unity.ugui@1.0.0/Runtime/EventSystem/EventSystem.cs:530)
+
+[PlayerCombat] Attack finished
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.PlayerCombat:UpdateAttackProgress () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:491)
+LittleHeroJourney.PlayerCombat:UpdateAttackState () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:212)
+LittleHeroJourney.PlayerCombat:Update () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:204)
+
+[Weapon] Damage data: base 10
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.Weapon:UpdateDamageData (LittleHeroJourney.DamageData) (at Assets/Content/Scripts/Runtime/Combat/Weapon.cs:106)
+LittleHeroJourney.PlayerCombat:ExecuteAttack (LittleHeroJourney.AttackDataSO,LittleHeroJourney.ComboSequenceSO) (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:352)
+LittleHeroJourney.PlayerCombat:UpdateAttackProgress () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:548)
+LittleHeroJourney.PlayerCombat:UpdateAttackState () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:212)
+LittleHeroJourney.PlayerCombat:Update () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:204)
+
+[PlayerCombat] Combo continued to attack #1. Queue remaining: 0
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.PlayerCombat:UpdateAttackProgress () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:552)
+LittleHeroJourney.PlayerCombat:UpdateAttackState () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:212)
+LittleHeroJourney.PlayerCombat:Update () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:204)
+
+[PlayerCombat] COMBO window OPENED at normalizedTime: 0.402 (window: 0.400-0.600)
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.PlayerCombat:UpdateComboWindowState () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:257)
+LittleHeroJourney.PlayerCombat:Update () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:162)
+
+[PlayerCombat] TriggerAttack called - IsAttacking: True, AttackLocked: False, AttackIndex: 1
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.PlayerCombat:TriggerAttack () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:716)
+UnityEngine.EventSystems.EventSystem:Update () (at ./Library/PackageCache/com.unity.ugui@1.0.0/Runtime/EventSystem/EventSystem.cs:530)
+
+[PlayerCombat] Attack buffered for next attack via TriggerAttack at attack #1. Queue size: 1
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.PlayerCombat:TriggerAttack () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:729)
+UnityEngine.EventSystems.EventSystem:Update () (at ./Library/PackageCache/com.unity.ugui@1.0.0/Runtime/EventSystem/EventSystem.cs:530)
+
+[PlayerCombat] TriggerAttack called - IsAttacking: True, AttackLocked: False, AttackIndex: 1
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.PlayerCombat:TriggerAttack () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:716)
+UnityEngine.EventSystems.EventSystem:Update () (at ./Library/PackageCache/com.unity.ugui@1.0.0/Runtime/EventSystem/EventSystem.cs:530)
+
+[PlayerCombat] Attack buffered for next attack via TriggerAttack at attack #1. Queue size: 2
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.PlayerCombat:TriggerAttack () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:729)
+UnityEngine.EventSystems.EventSystem:Update () (at ./Library/PackageCache/com.unity.ugui@1.0.0/Runtime/EventSystem/EventSystem.cs:530)
+
+[PlayerCombat] Combo window CLOSED - missed timing (normalizedTime: 0.614 > 0.600)
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.PlayerCombat:UpdateComboWindowState () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:267)
+LittleHeroJourney.PlayerCombat:Update () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:162)
+
+[PlayerCombat] Weapon hit: AI - Monster Plant
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.PlayerCombat:OnWeaponHitEnemy (UnityEngine.Collider) (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:97)
+LittleHeroJourney.Weapon:ProcessHit (LittleHeroJourney.Health,UnityEngine.Collider) (at Assets/Content/Scripts/Runtime/Combat/Weapon.cs:63)
+LittleHeroJourney.Weapon:OnTriggerEnter (UnityEngine.Collider) (at Assets/Content/Scripts/Runtime/Combat/Weapon.cs:56)
+
+[PlayerCombat] TriggerAttack called - IsAttacking: True, AttackLocked: False, AttackIndex: 1
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.PlayerCombat:TriggerAttack () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:716)
+UnityEngine.EventSystems.EventSystem:Update () (at ./Library/PackageCache/com.unity.ugui@1.0.0/Runtime/EventSystem/EventSystem.cs:530)
+
+[PlayerCombat] TriggerAttack called - IsAttacking: True, AttackLocked: False, AttackIndex: 1
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.PlayerCombat:TriggerAttack () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:716)
+UnityEngine.EventSystems.EventSystem:Update () (at ./Library/PackageCache/com.unity.ugui@1.0.0/Runtime/EventSystem/EventSystem.cs:530)
+
+[PlayerCombat] Attack finished
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.PlayerCombat:UpdateAttackProgress () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:491)
+LittleHeroJourney.PlayerCombat:UpdateAttackState () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:212)
+LittleHeroJourney.PlayerCombat:Update () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:204)
+
+[Weapon] Damage data: base 10
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.Weapon:UpdateDamageData (LittleHeroJourney.DamageData) (at Assets/Content/Scripts/Runtime/Combat/Weapon.cs:106)
+LittleHeroJourney.PlayerCombat:ExecuteAttack (LittleHeroJourney.AttackDataSO,LittleHeroJourney.ComboSequenceSO) (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:352)
+LittleHeroJourney.PlayerCombat:UpdateAttackProgress () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:548)
+LittleHeroJourney.PlayerCombat:UpdateAttackState () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:212)
+LittleHeroJourney.PlayerCombat:Update () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:204)
+
+[Weapon] Damage data: base 10
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.Weapon:UpdateDamageData (LittleHeroJourney.DamageData) (at Assets/Content/Scripts/Runtime/Combat/Weapon.cs:106)
+LittleHeroJourney.PlayerCombat:ExecuteAttack (LittleHeroJourney.AttackDataSO,LittleHeroJourney.ComboSequenceSO) (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:352)
+LittleHeroJourney.PlayerCombat:UpdateAttackProgress () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:548)
+LittleHeroJourney.PlayerCombat:UpdateAttackState () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:212)
+LittleHeroJourney.PlayerCombat:Update () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:204)
+
+[PlayerCombat] Combo continued to attack #2. Queue remaining: 1
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.PlayerCombat:UpdateAttackProgress () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:552)
+LittleHeroJourney.PlayerCombat:UpdateAttackState () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:212)
+LittleHeroJourney.PlayerCombat:Update () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:204)
+
+[PlayerCombat] TriggerAttack called - IsAttacking: True, AttackLocked: False, AttackIndex: 2
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.PlayerCombat:TriggerAttack () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:716)
+UnityEngine.EventSystems.EventSystem:Update () (at ./Library/PackageCache/com.unity.ugui@1.0.0/Runtime/EventSystem/EventSystem.cs:530)
+
+[PlayerCombat] Weapon hit: AI - Monster Plant
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.PlayerCombat:OnWeaponHitEnemy (UnityEngine.Collider) (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:97)
+LittleHeroJourney.Weapon:ProcessHit (LittleHeroJourney.Health,UnityEngine.Collider) (at Assets/Content/Scripts/Runtime/Combat/Weapon.cs:63)
+LittleHeroJourney.Weapon:OnTriggerEnter (UnityEngine.Collider) (at Assets/Content/Scripts/Runtime/Combat/Weapon.cs:56)
+
+[PlayerCombat] TriggerAttack called - IsAttacking: True, AttackLocked: False, AttackIndex: 2
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.PlayerCombat:TriggerAttack () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:716)
+UnityEngine.EventSystems.EventSystem:Update () (at ./Library/PackageCache/com.unity.ugui@1.0.0/Runtime/EventSystem/EventSystem.cs:530)
+
+[PlayerCombat] TriggerAttack called - IsAttacking: True, AttackLocked: False, AttackIndex: 2
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.PlayerCombat:TriggerAttack () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:716)
+UnityEngine.EventSystems.EventSystem:Update () (at ./Library/PackageCache/com.unity.ugui@1.0.0/Runtime/EventSystem/EventSystem.cs:530)
+
+[PlayerCombat] TriggerAttack called - IsAttacking: True, AttackLocked: False, AttackIndex: 2
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.PlayerCombat:TriggerAttack () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:716)
+UnityEngine.EventSystems.EventSystem:Update () (at ./Library/PackageCache/com.unity.ugui@1.0.0/Runtime/EventSystem/EventSystem.cs:530)
+
+[AIAgent] STUCK DETECTED: Distance=2.82, StopDist=2.00, Velocity=0.000, IsStopped=False | State: Aggro
+UnityEngine.Debug:LogWarning (object)
+LittleHeroJourney.AIAgent:UpdateMovementAnimation (single) (at Assets/Content/Scripts/Runtime/AI/AIAgent.cs:376)
+LittleHeroJourney.AIAggroState:UpdateMovementAnimation () (at Assets/Content/Scripts/Runtime/AI/States/AIAggroState.cs:156)
+LittleHeroJourney.AIAggroState:Update (single) (at Assets/Content/Scripts/Runtime/AI/States/AIAggroState.cs:128)
+LittleHeroJourney.AIAgent:Update () (at Assets/Content/Scripts/Runtime/AI/AIAgent.cs:261)
+
+[PlayerCombat] COMBO window OPENED at normalizedTime: 0.804 (window: 0.800-1.000)
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.PlayerCombat:UpdateComboWindowState () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:257)
+LittleHeroJourney.PlayerCombat:Update () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:162)
+
+[PlayerCombat] TriggerAttack called - IsAttacking: True, AttackLocked: False, AttackIndex: 2
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.PlayerCombat:TriggerAttack () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:716)
+UnityEngine.EventSystems.EventSystem:Update () (at ./Library/PackageCache/com.unity.ugui@1.0.0/Runtime/EventSystem/EventSystem.cs:530)
+
+[PlayerCombat] Attack buffered for next attack via TriggerAttack at attack #2. Queue size: 2
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.PlayerCombat:TriggerAttack () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:729)
+UnityEngine.EventSystems.EventSystem:Update () (at ./Library/PackageCache/com.unity.ugui@1.0.0/Runtime/EventSystem/EventSystem.cs:530)
+
+[AIAgent] STUCK DETECTED: Distance=2.82, StopDist=2.00, Velocity=0.000, IsStopped=False | State: Aggro
+UnityEngine.Debug:LogWarning (object)
+LittleHeroJourney.AIAgent:UpdateMovementAnimation (single) (at Assets/Content/Scripts/Runtime/AI/AIAgent.cs:376)
+LittleHeroJourney.AIAggroState:UpdateMovementAnimation () (at Assets/Content/Scripts/Runtime/AI/States/AIAggroState.cs:156)
+LittleHeroJourney.AIAggroState:Update (single) (at Assets/Content/Scripts/Runtime/AI/States/AIAggroState.cs:128)
+LittleHeroJourney.AIAgent:Update () (at Assets/Content/Scripts/Runtime/AI/AIAgent.cs:261)
+
+[AIAgent] STUCK DETECTED: Distance=2.82, StopDist=2.00, Velocity=0.093, IsStopped=False | State: Aggro
+UnityEngine.Debug:LogWarning (object)
+LittleHeroJourney.AIAgent:UpdateMovementAnimation (single) (at Assets/Content/Scripts/Runtime/AI/AIAgent.cs:376)
+LittleHeroJourney.AIAggroState:UpdateMovementAnimation () (at Assets/Content/Scripts/Runtime/AI/States/AIAggroState.cs:156)
+LittleHeroJourney.AIAggroState:Update (single) (at Assets/Content/Scripts/Runtime/AI/States/AIAggroState.cs:128)
+LittleHeroJourney.AIAgent:Update () (at Assets/Content/Scripts/Runtime/AI/AIAgent.cs:261)
+
+[PlayerCombat] TriggerAttack called - IsAttacking: True, AttackLocked: False, AttackIndex: 2
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.PlayerCombat:TriggerAttack () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:716)
+UnityEngine.EventSystems.EventSystem:Update () (at ./Library/PackageCache/com.unity.ugui@1.0.0/Runtime/EventSystem/EventSystem.cs:530)
+
+[PlayerCombat] Attack finished
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.PlayerCombat:UpdateAttackProgress () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:491)
+LittleHeroJourney.PlayerCombat:UpdateAttackState () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:212)
+LittleHeroJourney.PlayerCombat:Update () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:204)
+
+[Weapon] Damage data: base 10
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.Weapon:UpdateDamageData (LittleHeroJourney.DamageData) (at Assets/Content/Scripts/Runtime/Combat/Weapon.cs:106)
+LittleHeroJourney.PlayerCombat:ExecuteAttack (LittleHeroJourney.AttackDataSO,LittleHeroJourney.ComboSequenceSO) (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:352)
+LittleHeroJourney.PlayerCombat:UpdateAttackProgress () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:548)
+LittleHeroJourney.PlayerCombat:UpdateAttackState () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:212)
+LittleHeroJourney.PlayerCombat:Update () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:204)
+
+[PlayerCombat] Combo continued to attack #3. Queue remaining: 1
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.PlayerCombat:UpdateAttackProgress () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:552)
+LittleHeroJourney.PlayerCombat:UpdateAttackState () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:212)
+LittleHeroJourney.PlayerCombat:Update () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:204)
+
+[PlayerCombat] Weapon hit: AI - Monster Plant
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.PlayerCombat:OnWeaponHitEnemy (UnityEngine.Collider) (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:97)
+LittleHeroJourney.Weapon:ProcessHit (LittleHeroJourney.Health,UnityEngine.Collider) (at Assets/Content/Scripts/Runtime/Combat/Weapon.cs:63)
+LittleHeroJourney.Weapon:OnTriggerEnter (UnityEngine.Collider) (at Assets/Content/Scripts/Runtime/Combat/Weapon.cs:56)
+
+[PlayerCombat] TriggerAttack called - IsAttacking: True, AttackLocked: False, AttackIndex: 3
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.PlayerCombat:TriggerAttack () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:716)
+UnityEngine.EventSystems.EventSystem:Update () (at ./Library/PackageCache/com.unity.ugui@1.0.0/Runtime/EventSystem/EventSystem.cs:530)
+
+[PlayerCombat] TriggerAttack called - IsAttacking: True, AttackLocked: False, AttackIndex: 3
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.PlayerCombat:TriggerAttack () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:716)
+UnityEngine.EventSystems.EventSystem:Update () (at ./Library/PackageCache/com.unity.ugui@1.0.0/Runtime/EventSystem/EventSystem.cs:530)
+
+[AIAgent] STUCK DETECTED: Distance=2.64, StopDist=2.00, Velocity=0.000, IsStopped=False | State: Aggro
+UnityEngine.Debug:LogWarning (object)
+LittleHeroJourney.AIAgent:UpdateMovementAnimation (single) (at Assets/Content/Scripts/Runtime/AI/AIAgent.cs:376)
+LittleHeroJourney.AIAggroState:UpdateMovementAnimation () (at Assets/Content/Scripts/Runtime/AI/States/AIAggroState.cs:156)
+LittleHeroJourney.AIAggroState:Update (single) (at Assets/Content/Scripts/Runtime/AI/States/AIAggroState.cs:128)
+LittleHeroJourney.AIAgent:Update () (at Assets/Content/Scripts/Runtime/AI/AIAgent.cs:261)
+
+[AIAgent] STUCK DETECTED: Distance=2.64, StopDist=2.00, Velocity=0.065, IsStopped=False | State: Aggro
+UnityEngine.Debug:LogWarning (object)
+LittleHeroJourney.AIAgent:UpdateMovementAnimation (single) (at Assets/Content/Scripts/Runtime/AI/AIAgent.cs:376)
+LittleHeroJourney.AIAggroState:UpdateMovementAnimation () (at Assets/Content/Scripts/Runtime/AI/States/AIAggroState.cs:156)
+LittleHeroJourney.AIAggroState:Update (single) (at Assets/Content/Scripts/Runtime/AI/States/AIAggroState.cs:128)
+LittleHeroJourney.AIAgent:Update () (at Assets/Content/Scripts/Runtime/AI/AIAgent.cs:261)
+
+[PlayerCombat] TriggerAttack called - IsAttacking: True, AttackLocked: False, AttackIndex: 3
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.PlayerCombat:TriggerAttack () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:716)
+UnityEngine.EventSystems.EventSystem:Update () (at ./Library/PackageCache/com.unity.ugui@1.0.0/Runtime/EventSystem/EventSystem.cs:530)
+
+[PlayerCombat] Weapon hit: AI - Monster Plant
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.PlayerCombat:OnWeaponHitEnemy (UnityEngine.Collider) (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:97)
+LittleHeroJourney.Weapon:ProcessHit (LittleHeroJourney.Health,UnityEngine.Collider) (at Assets/Content/Scripts/Runtime/Combat/Weapon.cs:63)
+LittleHeroJourney.Weapon:OnTriggerEnter (UnityEngine.Collider) (at Assets/Content/Scripts/Runtime/Combat/Weapon.cs:56)
+
+[PlayerCombat] TriggerAttack called - IsAttacking: True, AttackLocked: False, AttackIndex: 3
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.PlayerCombat:TriggerAttack () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:716)
+UnityEngine.EventSystems.EventSystem:Update () (at ./Library/PackageCache/com.unity.ugui@1.0.0/Runtime/EventSystem/EventSystem.cs:530)
+
+[PlayerCombat] NEW COMBO window OPENED at normalizedTime: 0.799 (window: 0.800-0.950)
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.PlayerCombat:UpdateComboWindowState () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:257)
+LittleHeroJourney.PlayerCombat:Update () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:162)
+
+[PlayerCombat] TriggerAttack called - IsAttacking: True, AttackLocked: False, AttackIndex: 3
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.PlayerCombat:TriggerAttack () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:716)
+UnityEngine.EventSystems.EventSystem:Update () (at ./Library/PackageCache/com.unity.ugui@1.0.0/Runtime/EventSystem/EventSystem.cs:530)
+
+[PlayerCombat] Attack buffered for NEW COMBO via TriggerAttack at attack #3. Queue size: 2
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.PlayerCombat:TriggerAttack () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:729)
+UnityEngine.EventSystems.EventSystem:Update () (at ./Library/PackageCache/com.unity.ugui@1.0.0/Runtime/EventSystem/EventSystem.cs:530)
+
+[PlayerCombat] Attack finished
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.PlayerCombat:UpdateAttackProgress () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:491)
+LittleHeroJourney.PlayerCombat:UpdateAttackState () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:212)
+LittleHeroJourney.PlayerCombat:Update () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:204)
+
+[PlayerCombat] Last attack finished, starting NEW COMBO from buffered input.
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.PlayerCombat:UpdateAttackProgress () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:556)
+LittleHeroJourney.PlayerCombat:UpdateAttackState () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:212)
+LittleHeroJourney.PlayerCombat:Update () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:204)
+
+[PlayerCombat] Combo reset
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.PlayerCombat:ResetCombo () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:641)
+LittleHeroJourney.PlayerCombat:UpdateAttackProgress () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:557)
+LittleHeroJourney.PlayerCombat:UpdateAttackState () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:212)
+LittleHeroJourney.PlayerCombat:Update () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:204)
+
+[Weapon] Damage data: base 10
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.Weapon:UpdateDamageData (LittleHeroJourney.DamageData) (at Assets/Content/Scripts/Runtime/Combat/Weapon.cs:106)
+LittleHeroJourney.PlayerCombat:ExecuteAttack (LittleHeroJourney.AttackDataSO,LittleHeroJourney.ComboSequenceSO) (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:352)
+LittleHeroJourney.PlayerCombat:PerformAttack () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:317)
+LittleHeroJourney.PlayerCombat:UpdateAttackProgress () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:558)
+LittleHeroJourney.PlayerCombat:UpdateAttackState () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:212)
+LittleHeroJourney.PlayerCombat:Update () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:204)
+
+[Weapon] Damage data: base 10
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.Weapon:UpdateDamageData (LittleHeroJourney.DamageData) (at Assets/Content/Scripts/Runtime/Combat/Weapon.cs:106)
+LittleHeroJourney.PlayerCombat:ExecuteAttack (LittleHeroJourney.AttackDataSO,LittleHeroJourney.ComboSequenceSO) (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:352)
+LittleHeroJourney.PlayerCombat:PerformAttack () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:317)
+LittleHeroJourney.PlayerCombat:UpdateAttackProgress () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:558)
+LittleHeroJourney.PlayerCombat:UpdateAttackState () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:212)
+LittleHeroJourney.PlayerCombat:Update () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:204)
+
+[PlayerCombat] Attack started
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.PlayerCombat:PerformAttack () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:319)
+LittleHeroJourney.PlayerCombat:UpdateAttackProgress () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:558)
+LittleHeroJourney.PlayerCombat:UpdateAttackState () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:212)
+LittleHeroJourney.PlayerCombat:Update () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:204)
+
+[PlayerCombat] TriggerAttack called - IsAttacking: True, AttackLocked: False, AttackIndex: 0
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.PlayerCombat:TriggerAttack () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:716)
+UnityEngine.EventSystems.EventSystem:Update () (at ./Library/PackageCache/com.unity.ugui@1.0.0/Runtime/EventSystem/EventSystem.cs:530)
+
+[AIAgent] Entered Combat State
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.AICombatState:OnStateEnter (LittleHeroJourney.AIStateType) (at Assets/Content/Scripts/Runtime/AI/States/AICombatState.cs:16)
+LittleHeroJourney.AIAgent:TransitionToState (LittleHeroJourney.AIStateType) (at Assets/Content/Scripts/Runtime/AI/AIAgent.cs:181)
+LittleHeroJourney.AIAggroState:Update (single) (at Assets/Content/Scripts/Runtime/AI/States/AIAggroState.cs:109)
+LittleHeroJourney.AIAgent:Update () (at Assets/Content/Scripts/Runtime/AI/AIAgent.cs:261)
+
+[AIAgent] Transitioned from Aggro to Combat
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.AIAgent:TransitionToState (LittleHeroJourney.AIStateType) (at Assets/Content/Scripts/Runtime/AI/AIAgent.cs:183)
+LittleHeroJourney.AIAggroState:Update (single) (at Assets/Content/Scripts/Runtime/AI/States/AIAggroState.cs:109)
+LittleHeroJourney.AIAgent:Update () (at Assets/Content/Scripts/Runtime/AI/AIAgent.cs:261)
+
+[PlayerCombat] TriggerAttack called - IsAttacking: True, AttackLocked: False, AttackIndex: 0
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.PlayerCombat:TriggerAttack () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:716)
+UnityEngine.EventSystems.EventSystem:Update () (at ./Library/PackageCache/com.unity.ugui@1.0.0/Runtime/EventSystem/EventSystem.cs:530)
+
+[PlayerCombat] COMBO window OPENED at normalizedTime: 0.500 (window: 0.500-0.700)
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.PlayerCombat:UpdateComboWindowState () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:257)
+LittleHeroJourney.PlayerCombat:Update () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:162)
+
+[AIAgent] CombatState: Stopping agent - in attack range
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.AICombatState:UpdateCombatBehavior (single) (at Assets/Content/Scripts/Runtime/AI/States/AICombatState.cs:94)
+LittleHeroJourney.AICombatState:Update (single) (at Assets/Content/Scripts/Runtime/AI/States/AICombatState.cs:64)
+LittleHeroJourney.AIAgent:Update () (at Assets/Content/Scripts/Runtime/AI/AIAgent.cs:261)
+
+[AIAgent] Attack triggered, cooldown: 10s
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.AICombatState:TryAttack () (at Assets/Content/Scripts/Runtime/AI/States/AICombatState.cs:121)
+LittleHeroJourney.AICombatState:UpdateCombatBehavior (single) (at Assets/Content/Scripts/Runtime/AI/States/AICombatState.cs:97)
+LittleHeroJourney.AICombatState:Update (single) (at Assets/Content/Scripts/Runtime/AI/States/AICombatState.cs:64)
+LittleHeroJourney.AIAgent:Update () (at Assets/Content/Scripts/Runtime/AI/AIAgent.cs:261)
+
+[PlayerCombat] Weapon hit: AI - Monster Plant
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.PlayerCombat:OnWeaponHitEnemy (UnityEngine.Collider) (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:97)
+LittleHeroJourney.Weapon:ProcessHit (LittleHeroJourney.Health,UnityEngine.Collider) (at Assets/Content/Scripts/Runtime/Combat/Weapon.cs:63)
+LittleHeroJourney.Weapon:OnTriggerEnter (UnityEngine.Collider) (at Assets/Content/Scripts/Runtime/Combat/Weapon.cs:56)
+
+[PlayerCombat] TriggerAttack called - IsAttacking: True, AttackLocked: False, AttackIndex: 0
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.PlayerCombat:TriggerAttack () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:716)
+UnityEngine.EventSystems.EventSystem:Update () (at ./Library/PackageCache/com.unity.ugui@1.0.0/Runtime/EventSystem/EventSystem.cs:530)
+
+[PlayerCombat] Attack buffered for next attack via TriggerAttack at attack #0. Queue size: 1
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.PlayerCombat:TriggerAttack () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:729)
+UnityEngine.EventSystems.EventSystem:Update () (at ./Library/PackageCache/com.unity.ugui@1.0.0/Runtime/EventSystem/EventSystem.cs:530)
+
+[PlayerCombat] Combo window CLOSED - missed timing (normalizedTime: 0.709 > 0.700)
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.PlayerCombat:UpdateComboWindowState () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:267)
+LittleHeroJourney.PlayerCombat:Update () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:162)
+
+[PlayerCombat] TriggerAttack called - IsAttacking: True, AttackLocked: False, AttackIndex: 0
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.PlayerCombat:TriggerAttack () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:716)
+UnityEngine.EventSystems.EventSystem:Update () (at ./Library/PackageCache/com.unity.ugui@1.0.0/Runtime/EventSystem/EventSystem.cs:530)
+
+[AIAgent] CombatState: Stopping agent - in attack range
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.AICombatState:UpdateCombatBehavior (single) (at Assets/Content/Scripts/Runtime/AI/States/AICombatState.cs:94)
+LittleHeroJourney.AICombatState:Update (single) (at Assets/Content/Scripts/Runtime/AI/States/AICombatState.cs:64)
+LittleHeroJourney.AIAgent:Update () (at Assets/Content/Scripts/Runtime/AI/AIAgent.cs:261)
+
+[PlayerCombat] Attack finished
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.PlayerCombat:UpdateAttackProgress () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:491)
+LittleHeroJourney.PlayerCombat:UpdateAttackState () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:212)
+LittleHeroJourney.PlayerCombat:Update () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:204)
+
+[Weapon] Damage data: base 10
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.Weapon:UpdateDamageData (LittleHeroJourney.DamageData) (at Assets/Content/Scripts/Runtime/Combat/Weapon.cs:106)
+LittleHeroJourney.PlayerCombat:ExecuteAttack (LittleHeroJourney.AttackDataSO,LittleHeroJourney.ComboSequenceSO) (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:352)
+LittleHeroJourney.PlayerCombat:UpdateAttackProgress () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:548)
+LittleHeroJourney.PlayerCombat:UpdateAttackState () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:212)
+LittleHeroJourney.PlayerCombat:Update () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:204)
+
+[PlayerCombat] Combo continued to attack #1. Queue remaining: 0
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.PlayerCombat:UpdateAttackProgress () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:552)
+LittleHeroJourney.PlayerCombat:UpdateAttackState () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:212)
+LittleHeroJourney.PlayerCombat:Update () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:204)
+
+[PlayerCombat] TriggerAttack called - IsAttacking: True, AttackLocked: False, AttackIndex: 1
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.PlayerCombat:TriggerAttack () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:716)
+UnityEngine.EventSystems.EventSystem:Update () (at ./Library/PackageCache/com.unity.ugui@1.0.0/Runtime/EventSystem/EventSystem.cs:530)
+
+[PlayerCombat] COMBO window OPENED at normalizedTime: 0.405 (window: 0.400-0.600)
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.PlayerCombat:UpdateComboWindowState () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:257)
+LittleHeroJourney.PlayerCombat:Update () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:162)
+
+[AIAgent] CombatState: Stopping agent - in attack range
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.AICombatState:UpdateCombatBehavior (single) (at Assets/Content/Scripts/Runtime/AI/States/AICombatState.cs:94)
+LittleHeroJourney.AICombatState:Update (single) (at Assets/Content/Scripts/Runtime/AI/States/AICombatState.cs:64)
+LittleHeroJourney.AIAgent:Update () (at Assets/Content/Scripts/Runtime/AI/AIAgent.cs:261)
+
+[PlayerCombat] TriggerAttack called - IsAttacking: True, AttackLocked: False, AttackIndex: 1
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.PlayerCombat:TriggerAttack () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:716)
+UnityEngine.EventSystems.EventSystem:Update () (at ./Library/PackageCache/com.unity.ugui@1.0.0/Runtime/EventSystem/EventSystem.cs:530)
+
+[PlayerCombat] Attack buffered for next attack via TriggerAttack at attack #1. Queue size: 1
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.PlayerCombat:TriggerAttack () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:729)
+UnityEngine.EventSystems.EventSystem:Update () (at ./Library/PackageCache/com.unity.ugui@1.0.0/Runtime/EventSystem/EventSystem.cs:530)
+
+[AIAgent] CombatState: Distance 2.43 > AttackRange 2 && <= AggroRange 8, transitioning to Aggro
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.AICombatState:ShouldTransitionToAggro (single) (at Assets/Content/Scripts/Runtime/AI/States/AICombatState.cs:76)
+LittleHeroJourney.AICombatState:Update (single) (at Assets/Content/Scripts/Runtime/AI/States/AICombatState.cs:55)
+LittleHeroJourney.AIAgent:Update () (at Assets/Content/Scripts/Runtime/AI/AIAgent.cs:261)
+
+[AIAgent] Entered Aggro State
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.AIAggroState:OnStateEnter (LittleHeroJourney.AIStateType) (at Assets/Content/Scripts/Runtime/AI/States/AIAggroState.cs:20)
+LittleHeroJourney.AIAgent:TransitionToState (LittleHeroJourney.AIStateType) (at Assets/Content/Scripts/Runtime/AI/AIAgent.cs:181)
+LittleHeroJourney.AICombatState:Update (single) (at Assets/Content/Scripts/Runtime/AI/States/AICombatState.cs:57)
+LittleHeroJourney.AIAgent:Update () (at Assets/Content/Scripts/Runtime/AI/AIAgent.cs:261)
+
+[AIAgent] Transitioned from Combat to Aggro
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.AIAgent:TransitionToState (LittleHeroJourney.AIStateType) (at Assets/Content/Scripts/Runtime/AI/AIAgent.cs:183)
+LittleHeroJourney.AICombatState:Update (single) (at Assets/Content/Scripts/Runtime/AI/States/AICombatState.cs:57)
+LittleHeroJourney.AIAgent:Update () (at Assets/Content/Scripts/Runtime/AI/AIAgent.cs:261)
+
+[PlayerCombat] Combo window CLOSED - missed timing (normalizedTime: 0.602 > 0.600)
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.PlayerCombat:UpdateComboWindowState () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:267)
+LittleHeroJourney.PlayerCombat:Update () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:162)
+
+[PlayerCombat] Weapon hit: AI - Monster Plant
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.PlayerCombat:OnWeaponHitEnemy (UnityEngine.Collider) (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:97)
+LittleHeroJourney.Weapon:ProcessHit (LittleHeroJourney.Health,UnityEngine.Collider) (at Assets/Content/Scripts/Runtime/Combat/Weapon.cs:63)
+LittleHeroJourney.Weapon:OnTriggerEnter (UnityEngine.Collider) (at Assets/Content/Scripts/Runtime/Combat/Weapon.cs:56)
+
+[PlayerCombat] TriggerAttack called - IsAttacking: True, AttackLocked: False, AttackIndex: 1
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.PlayerCombat:TriggerAttack () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:716)
+UnityEngine.EventSystems.EventSystem:Update () (at ./Library/PackageCache/com.unity.ugui@1.0.0/Runtime/EventSystem/EventSystem.cs:530)
+
+[PlayerCombat] TriggerAttack called - IsAttacking: True, AttackLocked: False, AttackIndex: 1
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.PlayerCombat:TriggerAttack () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:716)
+UnityEngine.EventSystems.EventSystem:Update () (at ./Library/PackageCache/com.unity.ugui@1.0.0/Runtime/EventSystem/EventSystem.cs:530)
+
+[PlayerCombat] Attack finished
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.PlayerCombat:UpdateAttackProgress () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:491)
+LittleHeroJourney.PlayerCombat:UpdateAttackState () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:212)
+LittleHeroJourney.PlayerCombat:Update () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:204)
+
+[Weapon] Damage data: base 10
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.Weapon:UpdateDamageData (LittleHeroJourney.DamageData) (at Assets/Content/Scripts/Runtime/Combat/Weapon.cs:106)
+LittleHeroJourney.PlayerCombat:ExecuteAttack (LittleHeroJourney.AttackDataSO,LittleHeroJourney.ComboSequenceSO) (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:352)
+LittleHeroJourney.PlayerCombat:UpdateAttackProgress () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:548)
+LittleHeroJourney.PlayerCombat:UpdateAttackState () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:212)
+LittleHeroJourney.PlayerCombat:Update () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:204)
+
+[Weapon] Damage data: base 10
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.Weapon:UpdateDamageData (LittleHeroJourney.DamageData) (at Assets/Content/Scripts/Runtime/Combat/Weapon.cs:106)
+LittleHeroJourney.PlayerCombat:ExecuteAttack (LittleHeroJourney.AttackDataSO,LittleHeroJourney.ComboSequenceSO) (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:352)
+LittleHeroJourney.PlayerCombat:UpdateAttackProgress () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:548)
+LittleHeroJourney.PlayerCombat:UpdateAttackState () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:212)
+LittleHeroJourney.PlayerCombat:Update () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:204)
+
+[PlayerCombat] Combo continued to attack #2. Queue remaining: 0
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.PlayerCombat:UpdateAttackProgress () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:552)
+LittleHeroJourney.PlayerCombat:UpdateAttackState () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:212)
+LittleHeroJourney.PlayerCombat:Update () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:204)
+
+[PlayerCombat] TriggerAttack called - IsAttacking: True, AttackLocked: False, AttackIndex: 2
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.PlayerCombat:TriggerAttack () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:716)
+UnityEngine.EventSystems.EventSystem:Update () (at ./Library/PackageCache/com.unity.ugui@1.0.0/Runtime/EventSystem/EventSystem.cs:530)
+
+[PlayerCombat] Weapon hit: AI - Monster Plant
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.PlayerCombat:OnWeaponHitEnemy (UnityEngine.Collider) (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:97)
+LittleHeroJourney.Weapon:ProcessHit (LittleHeroJourney.Health,UnityEngine.Collider) (at Assets/Content/Scripts/Runtime/Combat/Weapon.cs:63)
+LittleHeroJourney.Weapon:OnTriggerEnter (UnityEngine.Collider) (at Assets/Content/Scripts/Runtime/Combat/Weapon.cs:56)
+
+[PlayerCombat] TriggerAttack called - IsAttacking: True, AttackLocked: False, AttackIndex: 2
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.PlayerCombat:TriggerAttack () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:716)
+UnityEngine.EventSystems.EventSystem:Update () (at ./Library/PackageCache/com.unity.ugui@1.0.0/Runtime/EventSystem/EventSystem.cs:530)
+
+[PlayerCombat] TriggerAttack called - IsAttacking: True, AttackLocked: False, AttackIndex: 2
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.PlayerCombat:TriggerAttack () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:716)
+UnityEngine.EventSystems.EventSystem:Update () (at ./Library/PackageCache/com.unity.ugui@1.0.0/Runtime/EventSystem/EventSystem.cs:530)
+
+[PlayerCombat] TriggerAttack called - IsAttacking: True, AttackLocked: False, AttackIndex: 2
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.PlayerCombat:TriggerAttack () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:716)
+UnityEngine.EventSystems.EventSystem:Update () (at ./Library/PackageCache/com.unity.ugui@1.0.0/Runtime/EventSystem/EventSystem.cs:530)
+
+[PlayerCombat] TriggerAttack called - IsAttacking: True, AttackLocked: False, AttackIndex: 2
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.PlayerCombat:TriggerAttack () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:716)
+UnityEngine.EventSystems.EventSystem:Update () (at ./Library/PackageCache/com.unity.ugui@1.0.0/Runtime/EventSystem/EventSystem.cs:530)
+
+[PlayerCombat] COMBO window OPENED at normalizedTime: 0.801 (window: 0.800-1.000)
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.PlayerCombat:UpdateComboWindowState () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:257)
+LittleHeroJourney.PlayerCombat:Update () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:162)
+
+[PlayerCombat] TriggerAttack called - IsAttacking: True, AttackLocked: False, AttackIndex: 2
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.PlayerCombat:TriggerAttack () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:716)
+UnityEngine.EventSystems.EventSystem:Update () (at ./Library/PackageCache/com.unity.ugui@1.0.0/Runtime/EventSystem/EventSystem.cs:530)
+
+[PlayerCombat] Attack buffered for next attack via TriggerAttack at attack #2. Queue size: 1
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.PlayerCombat:TriggerAttack () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:729)
+UnityEngine.EventSystems.EventSystem:Update () (at ./Library/PackageCache/com.unity.ugui@1.0.0/Runtime/EventSystem/EventSystem.cs:530)
+
+[PlayerCombat] Attack finished
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.PlayerCombat:UpdateAttackProgress () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:491)
+LittleHeroJourney.PlayerCombat:UpdateAttackState () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:212)
+LittleHeroJourney.PlayerCombat:Update () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:204)
+
+[Weapon] Damage data: base 10
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.Weapon:UpdateDamageData (LittleHeroJourney.DamageData) (at Assets/Content/Scripts/Runtime/Combat/Weapon.cs:106)
+LittleHeroJourney.PlayerCombat:ExecuteAttack (LittleHeroJourney.AttackDataSO,LittleHeroJourney.ComboSequenceSO) (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:352)
+LittleHeroJourney.PlayerCombat:UpdateAttackProgress () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:548)
+LittleHeroJourney.PlayerCombat:UpdateAttackState () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:212)
+LittleHeroJourney.PlayerCombat:Update () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:204)
+
+[PlayerCombat] Combo continued to attack #3. Queue remaining: 0
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.PlayerCombat:UpdateAttackProgress () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:552)
+LittleHeroJourney.PlayerCombat:UpdateAttackState () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:212)
+LittleHeroJourney.PlayerCombat:Update () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:204)
+
+[PlayerCombat] Weapon hit: AI - Monster Plant
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.PlayerCombat:OnWeaponHitEnemy (UnityEngine.Collider) (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:97)
+LittleHeroJourney.Weapon:ProcessHit (LittleHeroJourney.Health,UnityEngine.Collider) (at Assets/Content/Scripts/Runtime/Combat/Weapon.cs:63)
+LittleHeroJourney.Weapon:OnTriggerEnter (UnityEngine.Collider) (at Assets/Content/Scripts/Runtime/Combat/Weapon.cs:56)
+
+[PlayerCombat] TriggerAttack called - IsAttacking: True, AttackLocked: False, AttackIndex: 3
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.PlayerCombat:TriggerAttack () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:716)
+UnityEngine.EventSystems.EventSystem:Update () (at ./Library/PackageCache/com.unity.ugui@1.0.0/Runtime/EventSystem/EventSystem.cs:530)
+
+[PlayerCombat] TriggerAttack called - IsAttacking: True, AttackLocked: False, AttackIndex: 3
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.PlayerCombat:TriggerAttack () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:716)
+UnityEngine.EventSystems.EventSystem:Update () (at ./Library/PackageCache/com.unity.ugui@1.0.0/Runtime/EventSystem/EventSystem.cs:530)
+
+[PlayerCombat] TriggerAttack called - IsAttacking: True, AttackLocked: False, AttackIndex: 3
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.PlayerCombat:TriggerAttack () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:716)
+UnityEngine.EventSystems.EventSystem:Update () (at ./Library/PackageCache/com.unity.ugui@1.0.0/Runtime/EventSystem/EventSystem.cs:530)
+
+[PlayerCombat] TriggerAttack called - IsAttacking: True, AttackLocked: False, AttackIndex: 3
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.PlayerCombat:TriggerAttack () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:716)
+UnityEngine.EventSystems.EventSystem:Update () (at ./Library/PackageCache/com.unity.ugui@1.0.0/Runtime/EventSystem/EventSystem.cs:530)
+
+[AIAgent] STUCK DETECTED: Distance=3.94, StopDist=2.00, Velocity=0.000, IsStopped=False | State: Aggro
+UnityEngine.Debug:LogWarning (object)
+LittleHeroJourney.AIAgent:UpdateMovementAnimation (single) (at Assets/Content/Scripts/Runtime/AI/AIAgent.cs:376)
+LittleHeroJourney.AIAggroState:UpdateMovementAnimation () (at Assets/Content/Scripts/Runtime/AI/States/AIAggroState.cs:156)
+LittleHeroJourney.AIAggroState:Update (single) (at Assets/Content/Scripts/Runtime/AI/States/AIAggroState.cs:128)
+LittleHeroJourney.AIAgent:Update () (at Assets/Content/Scripts/Runtime/AI/AIAgent.cs:261)
+
+[AIAgent] STUCK DETECTED: Distance=3.94, StopDist=2.00, Velocity=0.000, IsStopped=False | State: Aggro
+UnityEngine.Debug:LogWarning (object)
+LittleHeroJourney.AIAgent:UpdateMovementAnimation (single) (at Assets/Content/Scripts/Runtime/AI/AIAgent.cs:376)
+LittleHeroJourney.AIAggroState:UpdateMovementAnimation () (at Assets/Content/Scripts/Runtime/AI/States/AIAggroState.cs:156)
+LittleHeroJourney.AIAggroState:Update (single) (at Assets/Content/Scripts/Runtime/AI/States/AIAggroState.cs:128)
+LittleHeroJourney.AIAgent:Update () (at Assets/Content/Scripts/Runtime/AI/AIAgent.cs:261)
+
+[AIAgent] STUCK DETECTED: Distance=3.94, StopDist=2.00, Velocity=0.063, IsStopped=False | State: Aggro
+UnityEngine.Debug:LogWarning (object)
+LittleHeroJourney.AIAgent:UpdateMovementAnimation (single) (at Assets/Content/Scripts/Runtime/AI/AIAgent.cs:376)
+LittleHeroJourney.AIAggroState:UpdateMovementAnimation () (at Assets/Content/Scripts/Runtime/AI/States/AIAggroState.cs:156)
+LittleHeroJourney.AIAggroState:Update (single) (at Assets/Content/Scripts/Runtime/AI/States/AIAggroState.cs:128)
+LittleHeroJourney.AIAgent:Update () (at Assets/Content/Scripts/Runtime/AI/AIAgent.cs:261)
+
+[PlayerCombat] Weapon hit: AI - Monster Plant
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.PlayerCombat:OnWeaponHitEnemy (UnityEngine.Collider) (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:97)
+LittleHeroJourney.Weapon:ProcessHit (LittleHeroJourney.Health,UnityEngine.Collider) (at Assets/Content/Scripts/Runtime/Combat/Weapon.cs:63)
+LittleHeroJourney.Weapon:OnTriggerEnter (UnityEngine.Collider) (at Assets/Content/Scripts/Runtime/Combat/Weapon.cs:56)
+
+[PlayerCombat] NEW COMBO window OPENED at normalizedTime: 0.803 (window: 0.800-0.950)
+UnityEngine.Debug:Log (object)
+LittleHeroJourney.PlayerCombat:UpdateComboWindowState () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:257)
+LittleHeroJourney.PlayerCombat:Update () (at Assets/Content/Scripts/Runtime/Combat/PlayerCombat.cs:162)
+
