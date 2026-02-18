@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b7a6d161fda7f8c4ea9c8bd3ce38ccea, type: 3}
+  m_Name: AIPamAttackDataL1
+  m_EditorClassIdentifier: 
+  attackName: AI - MonPlant ACL1
+  attackType: 0
+  attackAnimation: {fileID: 7400000, guid: fca784bcd0449c44385d3237646e3400, type: 2}
+  animationTriggerName: Attack1
+  weaponTimings:
+  - weaponName: Pam1
+    colliderTriggerWindow: {x: 0.35, y: 0.6}
+  attackDamageData: {fileID: 11400000, guid: 64eabf777a2409f4f81e8d1a18d5247a, type: 2}
+  inputWindow: {x: 0.65, y: 0.8}
+  interruptibleWindow: {x: 0, y: 0.36}
+  movementDisableWindow: {x: 0.35, y: 0.6}
+  resetComboOnAnimationEnd: 1
+  particleEffects:
+  - effectName: 
+    triggerTime: 0
+    positionOffset: {x: 0, y: 0, z: 0}
+    followCharacter: 0
+  vfxEffects: []
+  audioEffects: []
+  aiComboContinueChance: 1

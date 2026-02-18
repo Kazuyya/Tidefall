@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86e59561028b01240bb7b3ec29339027, type: 3}
+  m_Name: ParticleSet
+  m_EditorClassIdentifier: 
+  particleEffects:
+  - effectName: SmokePop
+    particlePrefab: {fileID: 5109341668491610300, guid: 5e5e52cdeb8af5042825986259eeed26,
+      type: 3}
+    poolSize: 0
+  - effectName: atk_ds_1
+    particlePrefab: {fileID: 3033280740954087754, guid: 9901092d327a2324c88e4bc7c8b7ee67,
+      type: 3}
+    poolSize: 0
+  - effectName: enemyhit
+    particlePrefab: {fileID: 645822680666442850, guid: 1b6888a2d74350d4c80edc7049f98258,
+      type: 3}
+    poolSize: 0

@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 233c434ec9d185846b4165b0d63964f9, type: 3}
+  m_Name: SceneFlowConfig
+  m_EditorClassIdentifier: 
+  useSplash: 1
+  splashId: SplashScreen
+  mainMenuId: MainMenu
+  scenes:
+  - kind: 0
+    id: SplashScreen
+    scenePath: 
+  - kind: 1
+    id: Loading
+    scenePath: Assets/Content/Scenes/Scene Flow/Loading/Loading.unity
+  - kind: 2
+    id: MainMenu
+    scenePath: Assets/Content/Scenes/Scene Flow/Main Menu/MainMenu.unity
+  transitions:
+  - toId: MainMenu
+    fromRules:
+    - fromId: '*'
+      useLoading: 1
+      closeBeforeLoading: 0
+  - toId: level
+    fromRules:
+    - fromId: '*'
+      useLoading: 1
+      closeBeforeLoading: 0

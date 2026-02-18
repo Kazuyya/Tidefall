@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbdfdec829254204693d7ba17fc2b32b, type: 3}
+  m_Name: DoubleSwordWeaponCombatProfile
+  m_EditorClassIdentifier: 
+  weaponType: 0
+  weaponName: Double Sword
+  availableCombos:
+  - {fileID: 11400000, guid: 8e2775a2cb4584b499af22e81de19978, type: 2}
+  animatorOverride: {fileID: 22100000, guid: 4bf2ad18231b8764eb0a16d67a0f5d6e, type: 2}
+  showDebugInfo: 1
