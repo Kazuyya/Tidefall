@@ -176,72 +176,66 @@ namespace LittleHeroJourney
 
         private void FindReferences()
         {
-            // 0. Main Camera Reference
-            if (mainCamera == null)
-                mainCamera = Camera.main;
+            FindMainCamera();
+            FindCinemachineCamera();
+            FindPlayer();
+            FindEncounterZones();
+            if (showDebugLog) Debug.Log("[GameplayManager] FindReferences completed.");
+            _sceneReady = true;
+            OnReady?.Invoke();
+        }
 
+        private void FindMainCamera()
+        {
+            if (mainCamera == null) mainCamera = Camera.main;
             if (mainCamera == null)
             {
-                 if (showDebugLog) Debug.LogWarning("[GameplayManager] Main Camera NOT found via Camera.main.");
-                 // Try finding any camera tagged MainCamera manually if Camera.main failed
-                 var camObj = GameObject.FindGameObjectWithTag("MainCamera");
-                 if (camObj != null) mainCamera = camObj.GetComponent<Camera>();
+                if (showDebugLog) Debug.LogWarning("[GameplayManager] Main Camera NOT found via Camera.main.");
+                var camObj = GameObject.FindGameObjectWithTag("MainCamera");
+                if (camObj != null) mainCamera = camObj.GetComponent<Camera>();
             }
+        }
 
-            // 1. Camera Reference
-            if (currentCamera == null)
-                currentCamera = FindObjectOfType<CinemachineFreeLook>();
-            
+        private void FindCinemachineCamera()
+        {
+            if (currentCamera == null) currentCamera = FindObjectOfType<CinemachineFreeLook>();
             if (currentCamera != null)
             {
                 if (showDebugLog) Debug.Log("[GameplayManager] Found Cinemachine Camera. Broadcasting event.");
                 OnCameraInitialized?.Invoke(currentCamera);
             }
-            else
-            {
-                if (showDebugLog) Debug.LogWarning("[GameplayManager] Cinemachine Camera NOT found in this scene.");
-            }
+            else if (showDebugLog) Debug.LogWarning("[GameplayManager] Cinemachine Camera NOT found in this scene.");
+        }
 
-            // 2. Player Reference
-            if (playerController == null)
-                playerController = FindObjectOfType<PlayerMovementController>();
-
+        private void FindPlayer()
+        {
+            if (playerController == null) playerController = FindObjectOfType<PlayerMovementController>();
             if (playerController != null)
             {
                 if (showDebugLog) Debug.Log("[GameplayManager] Found Player Controller. Broadcasting event.");
                 OnPlayerInitialized?.Invoke(playerController);
-
                 var health = playerController.GetComponent<Health>();
                 if (health != null)
                 {
                     health.OnDeath -= HandlePlayerDeath;
                     health.OnDeath += HandlePlayerDeath;
-                    
                     InitializePlayerHealthBar(health);
                 }
             }
-            else
-            {
-                if (showDebugLog) Debug.LogWarning("[GameplayManager] Player Controller NOT found in this scene.");
-            }
+            else if (showDebugLog) Debug.LogWarning("[GameplayManager] Player Controller NOT found in this scene.");
+        }
 
-            // 3. Encounter Zone Reference
-            // Note: In levels with multiple encounter zones, we find all of them.
+        private void FindEncounterZones()
+        {
             if (encounterZones == null || encounterZones.Count == 0)
             {
                 var zones = FindObjectsOfType<EncounterZone>();
-                if (zones != null && zones.Length > 0)
-                {
-                    encounterZones = new List<EncounterZone>(zones);
-                }
+                if (zones != null && zones.Length > 0) encounterZones = new List<EncounterZone>(zones);
             }
-
             if (encounterZones != null && encounterZones.Count > 0)
             {
                 if (showDebugLog) Debug.Log($"[GameplayManager] Found {encounterZones.Count} Encounter Zones. Broadcasting event.");
                 OnEncounterZonesInitialized?.Invoke(encounterZones);
-                
-                // Subscribe to zone completions
                 foreach (var zone in encounterZones)
                 {
                     if (zone != null)
@@ -251,11 +245,6 @@ namespace LittleHeroJourney
                     }
                 }
             }
-            // Not finding an encounter zone is common (e.g. hub areas), so maybe no warning or just info
-
-            if (showDebugLog) Debug.Log("[GameplayManager] FindReferences completed.");
-            _sceneReady = true;
-            OnReady?.Invoke();
         }
 
         private void InitializePlayerHealthBar(Health playerHealth)

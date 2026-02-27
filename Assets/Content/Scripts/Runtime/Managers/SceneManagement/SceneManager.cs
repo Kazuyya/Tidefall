@@ -133,59 +133,39 @@ namespace LittleHeroJourney
         {
             closeBeforeLoading = false;
             if (config == null) return false;
-            
-            // Fallback kuat: dari Splash ke MainMenu pakai loading jika useSplash aktif
-            if (config.useSplash 
-                && !string.IsNullOrEmpty(config.splashId) 
-                && !string.IsNullOrEmpty(config.mainMenuId))
-            {
-                if (string.Equals(fromId, config.splashId, StringComparison.OrdinalIgnoreCase) &&
-                    string.Equals(toId, config.mainMenuId, StringComparison.OrdinalIgnoreCase))
-                {
-                    return true;
-                }
-            }
-            
-            // Cek aturan transition yang dikonfigurasi
+            if (config.useSplash && !string.IsNullOrEmpty(config.splashId) && !string.IsNullOrEmpty(config.mainMenuId) &&
+                string.Equals(fromId, config.splashId, StringComparison.OrdinalIgnoreCase) &&
+                string.Equals(toId, config.mainMenuId, StringComparison.OrdinalIgnoreCase))
+                return true;
             if (config.transitions == null) return false;
-            for (int i = 0; i < config.transitions.Count; i++)
+            if (TryGetTransitionRule(fromId, toId, out bool useLoading, out closeBeforeLoading))
+                return useLoading;
+            return false;
+        }
+
+        private bool TryGetTransitionRule(string fromId, string toId, out bool useLoading, out bool closeBeforeLoading)
+        {
+            useLoading = false;
+            closeBeforeLoading = false;
+            if (config?.transitions == null) return false;
+            var ord = StringComparison.OrdinalIgnoreCase;
+            bool IsFromWildcard(string id) => string.IsNullOrEmpty(id) || string.Equals(id, "*", ord) || string.Equals(id, "any", ord);
+            foreach (var toEntry in config.transitions)
             {
-                var toEntry = config.transitions[i];
-                if (toEntry == null) continue;
-                if (!string.Equals(toEntry.toId, toId, StringComparison.OrdinalIgnoreCase)) continue;
-                if (toEntry.fromRules == null || toEntry.fromRules.Count == 0) return false;
-                
-                // 1) Cocokkan aturan spesifik
-                for (int j = 0; j < toEntry.fromRules.Count; j++)
+                if (toEntry == null || toEntry.fromRules == null || toEntry.fromRules.Count == 0) continue;
+                if (!string.Equals(toEntry.toId, toId, ord)) continue;
+                foreach (var fr in toEntry.fromRules)
                 {
-                    var fr = toEntry.fromRules[j];
                     if (fr == null) continue;
-                    if (string.Equals(fr.fromId, fromId, StringComparison.OrdinalIgnoreCase))
-                    {
-                        closeBeforeLoading = fr.closeBeforeLoading;
-                        return fr.useLoading;
-                    }
+                    if (string.Equals(fr.fromId, fromId, ord)) { useLoading = fr.useLoading; closeBeforeLoading = fr.closeBeforeLoading; return true; }
                 }
-                
-                // 2) Wildcard: fromId kosong/"*"/"any" dianggap berlaku untuk semua sumber
-                for (int j = 0; j < toEntry.fromRules.Count; j++)
+                foreach (var fr in toEntry.fromRules)
                 {
-                    var fr = toEntry.fromRules[j];
                     if (fr == null) continue;
-                    bool isWildcard = string.IsNullOrEmpty(fr.fromId) ||
-                                      string.Equals(fr.fromId, "*", StringComparison.OrdinalIgnoreCase) ||
-                                      string.Equals(fr.fromId, "any", StringComparison.OrdinalIgnoreCase);
-                    if (isWildcard)
-                    {
-                        closeBeforeLoading = fr.closeBeforeLoading;
-                        return fr.useLoading;
-                    }
+                    if (IsFromWildcard(fr.fromId)) { useLoading = fr.useLoading; closeBeforeLoading = fr.closeBeforeLoading; return true; }
                 }
-                
-                // Tidak menemukan aturan yang cocok
                 return false;
             }
-            
             return false;
         }
 

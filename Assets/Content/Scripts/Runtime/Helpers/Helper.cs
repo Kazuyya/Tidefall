@@ -98,8 +98,12 @@ namespace LittleHeroJourney
 
         #region Target Finding (Zero-Allocation)
 
-        // Reusable cache to avoid allocations
         private static Collider[] _cachedColliders = new Collider[32];
+
+        private static int GetOverlapHits(Vector3 position, float range, int layers)
+        {
+            return Physics.OverlapSphereNonAlloc(position, range, _cachedColliders, layers);
+        }
 
         /// <summary>
         /// Find nearest target from position within range (zero-allocation)
@@ -107,22 +111,14 @@ namespace LittleHeroJourney
         public static Transform FindNearestTarget(Vector3 searchPosition,
             float detectionRange, int targetLayers, out float distance)
         {
-            int hits = Physics.OverlapSphereNonAlloc(searchPosition,
-                detectionRange, _cachedColliders, targetLayers);
-
+            int hits = GetOverlapHits(searchPosition, detectionRange, targetLayers);
             Transform nearest = null;
             distance = float.MaxValue;
-
             for (int i = 0; i < hits; i++)
             {
                 float d = Vector3.Distance(searchPosition, _cachedColliders[i].transform.position);
-                if (d < distance)
-                {
-                    distance = d;
-                    nearest = _cachedColliders[i].transform;
-                }
+                if (d < distance) { distance = d; nearest = _cachedColliders[i].transform; }
             }
-
             return nearest;
         }
 
@@ -132,26 +128,16 @@ namespace LittleHeroJourney
         public static Health FindNearestAliveTarget(Vector3 searchPosition,
             float detectionRange, int targetLayers, out float distance)
         {
-            int hits = Physics.OverlapSphereNonAlloc(searchPosition,
-                detectionRange, _cachedColliders, targetLayers);
-
+            int hits = GetOverlapHits(searchPosition, detectionRange, targetLayers);
             Health nearestHealth = null;
             distance = float.MaxValue;
-
             for (int i = 0; i < hits; i++)
             {
-                Health health = _cachedColliders[i].GetComponent<Health>();
-                if (health != null && health.IsAlive)
-                {
-                    float d = Vector3.Distance(searchPosition, _cachedColliders[i].transform.position);
-                    if (d < distance)
-                    {
-                        distance = d;
-                        nearestHealth = health;
-                    }
-                }
+                Health h = _cachedColliders[i].GetComponent<Health>();
+                if (h == null || !h.IsAlive) continue;
+                float d = Vector3.Distance(searchPosition, _cachedColliders[i].transform.position);
+                if (d < distance) { distance = d; nearestHealth = h; }
             }
-
             return nearestHealth;
         }
 
@@ -161,15 +147,9 @@ namespace LittleHeroJourney
         public static int FindAllTargets(Vector3 searchPosition,
             float detectionRange, int targetLayers, List<Transform> resultList)
         {
-            int hits = Physics.OverlapSphereNonAlloc(searchPosition,
-                detectionRange, _cachedColliders, targetLayers);
-
+            int hits = GetOverlapHits(searchPosition, detectionRange, targetLayers);
             resultList.Clear();
-            for (int i = 0; i < hits; i++)
-            {
-                resultList.Add(_cachedColliders[i].transform);
-            }
-
+            for (int i = 0; i < hits; i++) resultList.Add(_cachedColliders[i].transform);
             return hits;
         }
 
@@ -179,19 +159,13 @@ namespace LittleHeroJourney
         public static int FindAliveTargets(Vector3 searchPosition,
             float detectionRange, int targetLayers, List<Health> resultList)
         {
-            int hits = Physics.OverlapSphereNonAlloc(searchPosition,
-                detectionRange, _cachedColliders, targetLayers);
-
+            int hits = GetOverlapHits(searchPosition, detectionRange, targetLayers);
             resultList.Clear();
             for (int i = 0; i < hits; i++)
             {
-                Health health = _cachedColliders[i].GetComponent<Health>();
-                if (health != null && health.IsAlive)
-                {
-                    resultList.Add(health);
-                }
+                Health h = _cachedColliders[i].GetComponent<Health>();
+                if (h != null && h.IsAlive) resultList.Add(h);
             }
-
             return hits;
         }
 
@@ -363,6 +337,32 @@ namespace LittleHeroJourney
                 return false;
 
             return animator.parameters.Any(p => p.name == parameterName);
+        }
+
+        /// <summary>
+        /// Check if animator is currently in an attack state (by clip name or state name).
+        /// Shared by PlayerCombat, AICombat, and Weapon to avoid duplication.
+        /// </summary>
+        public static bool IsInAttackState(Animator animator, int layerIndex = 0)
+        {
+            if (animator == null) return false;
+            try
+            {
+                var clipInfo = animator.GetCurrentAnimatorClipInfo(layerIndex);
+                if (clipInfo != null && clipInfo.Length > 0)
+                {
+                    string clipName = clipInfo[0].clip.name;
+                    return clipName.Contains("attack", System.StringComparison.OrdinalIgnoreCase) ||
+                           clipName.Contains("swing", System.StringComparison.OrdinalIgnoreCase) ||
+                           clipName.Contains("slash", System.StringComparison.OrdinalIgnoreCase);
+                }
+                var stateInfo = animator.GetCurrentAnimatorStateInfo(layerIndex);
+                return stateInfo.IsName("Attack") || stateInfo.IsName("Attack1") || stateInfo.IsName("Attack2");
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         /// <summary>

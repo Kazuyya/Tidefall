@@ -125,26 +125,7 @@ namespace LittleHeroJourney
         
         private bool IsInAttackClip()
         {
-            if (_animator == null) return false;
-            try
-            {
-                var clipInfo = _animator.GetCurrentAnimatorClipInfo(0);
-                if (clipInfo.Length > 0)
-                {
-                    string clipName = clipInfo[0].clip.name;
-                    return clipName.Contains("attack", System.StringComparison.OrdinalIgnoreCase) ||
-                           clipName.Contains("swing", System.StringComparison.OrdinalIgnoreCase) ||
-                           clipName.Contains("slash", System.StringComparison.OrdinalIgnoreCase);
-                }
-            }
-            catch
-            {
-                var stateInfo = _animator.GetCurrentAnimatorStateInfo(0);
-                return stateInfo.IsName("Attack") ||
-                       stateInfo.IsName("Attack1") ||
-                       stateInfo.IsName("Attack2");
-            }
-            return false;
+            return Helper.IsInAttackState(_animator);
         }
 
         #endregion

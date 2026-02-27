@@ -246,7 +246,7 @@ namespace LittleHeroJourney
         // SceneManager handles transitions
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
-        private static void sawit()
+        private static void InitializeFrameRate()
         {
             Application.targetFrameRate = 60;
         }

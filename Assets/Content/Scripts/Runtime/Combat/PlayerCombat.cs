@@ -407,7 +407,7 @@ namespace LittleHeroJourney
             float normalizedTime = stateInfo.normalizedTime % 1.0f;  // Clamp to 0-1 to prevent double trigger on loop
 
 
-            bool animatorInAttack = IsInAttackState(stateInfo);
+            bool animatorInAttack = Helper.IsInAttackState(_animator);
             if (!animatorInAttack && Time.time - _lastAttackStartTime > 2.0f)
             {
                 if (ShowDebugLog) Debug.LogWarning($"[{GetType().Name}] STATE DESYNC: _isAttacking=true but animator not in attack state for 2+ seconds. Forcing reset.");
@@ -420,206 +420,145 @@ namespace LittleHeroJourney
 
             if (currentAttack != null && _currentAttackWeapons != null && _currentAttackWeapons.Count > 0 && animatorInAttack && _wasInAttackStateLastFrame)
             {
-                foreach (Weapon weapon in _currentAttackWeapons)
-                {
-                    if (weapon != null && weapon.WeaponCollider != null && _weaponTimingMap.ContainsKey(weapon))
-                    {
-                        Vector2 weaponTiming = _weaponTimingMap[weapon];
-                        const float EPSILON = 0.001f;
-                        // Only add EPSILON to end to prevent early trigger, keep start strict
-                        bool shouldColliderBeActive = normalizedTime >= weaponTiming.x &&
-                                                     normalizedTime <= (weaponTiming.y + EPSILON);
-
-                        if (shouldColliderBeActive && !weapon.WeaponCollider.enabled)
-                        {
-                            weapon.EnableWeaponCollider();
-                            if (ShowDebugLog)
-                            {
-                                Debug.Log($"[weapon-collider] ENABLE {weapon.gameObject.name} t={normalizedTime:F3} window={weaponTiming.x:F3}-{weaponTiming.y:F3}");
-                            }
-                        }
-                        else if (!shouldColliderBeActive && weapon.WeaponCollider.enabled)
-                        {
-                            weapon.DisableWeaponCollider();
-                            if (ShowDebugLog)
-                            {
-                                Debug.Log($"[weapon-collider] DISABLE {weapon.gameObject.name} t={normalizedTime:F3} window={weaponTiming.x:F3}-{weaponTiming.y:F3}");
-                            }
-                        }
-                    }
-                }
-
-                // Handle movement disable window
-                bool shouldMovementBeDisabled = normalizedTime >= currentAttack.movementDisableWindow.x &&
-                                               normalizedTime <= currentAttack.movementDisableWindow.y;
-
-                if (_movementController != null)
-                {
-                    _movementController.SetMovementDisabled(shouldMovementBeDisabled);
-                }
-
-                // Handle particle effects
-                if (currentAttack.particleEffects != null && currentAttack.particleEffects.Count > 0)
-                {
-                    foreach (var effectTiming in currentAttack.particleEffects)
-                    {
-                        if (effectTiming.IsValid && normalizedTime >= effectTiming.triggerTime &&
-                            !_triggeredEffects.Contains(effectTiming.effectName))
-                        {
-                            CharacterEffectManager.Instance?.PlayParticle(effectTiming.effectName, transform.position);
-                            _triggeredEffects.Add(effectTiming.effectName);
-                        }
-                    }
-                }
-
-                // Handle VFX effects
-                if (currentAttack.vfxEffects != null && currentAttack.vfxEffects.Count > 0)
-                {
-                    foreach (var effectTiming in currentAttack.vfxEffects)
-                    {
-                        if (effectTiming.IsValid && normalizedTime >= effectTiming.triggerTime &&
-                            !_triggeredEffects.Contains(effectTiming.effectName))
-                        {
-                            CharacterEffectManager.Instance?.PlayVFX(effectTiming.effectName, transform.position);
-                            _triggeredEffects.Add(effectTiming.effectName);
-                        }
-                    }
-                }
-
-                // Handle audio effects
-                if (currentAttack.audioEffects != null && currentAttack.audioEffects.Count > 0)
-                {
-                    foreach (var effectTiming in currentAttack.audioEffects)
-                    {
-                        if (effectTiming.IsValid && normalizedTime >= effectTiming.triggerTime &&
-                            !_triggeredEffects.Contains(effectTiming.effectName))
-                        {
-                            CharacterEffectManager.Instance?.PlayAudio(effectTiming.effectName, transform.position);
-                            _triggeredEffects.Add(effectTiming.effectName);
-                        }
-                    }
-                }
+                UpdateWeaponColliderTiming(normalizedTime);
+                UpdateMovementDisableFromAttack(currentAttack, normalizedTime);
+                TryTriggerAttackEffects(currentAttack, normalizedTime);
             }
 
-            bool attackFinished = false;
-
-            if (!_isAttackFinishing)
-            {
-                bool currentStateIsAttack = IsInAttackState(stateInfo);
-                if (_isAttacking && _wasInAttackStateLastFrame && !currentStateIsAttack)
-                {
-                    attackFinished = true;
-                    _isAttackFinishing = true;
-                    _attackLocked = true;
-                    _isAttacking = false;
-                    _lastAttackEndTime = Time.time;
-                    _attackLocked = false;
-                    if (ShowDebugLog) Debug.Log($"[{GetType().Name}] Attack finished");
-                }
-                else if (_isAttacking && Time.time - _lastAttackStartTime > 3.0f)
-                {
-                    attackFinished = true;
-                    _isAttackFinishing = true;
-                    _attackLocked = true;
-                    _isAttacking = false;
-                    _lastAttackEndTime = Time.time;
-                    _attackLocked = false;
-                    if (ShowDebugLog) Debug.Log($"[{GetType().Name}] Attack timeout");
-                }
-
-                _wasInAttackStateLastFrame = currentStateIsAttack;
-            }
+            bool currentStateIsAttack = Helper.IsInAttackState(_animator);
+            bool attackFinished = !_isAttackFinishing && TryDetectAttackFinished(currentStateIsAttack);
+            _wasInAttackStateLastFrame = currentStateIsAttack;
 
             if (attackFinished)
             {
-                foreach (Weapon weapon in _currentAttackWeapons)
-                {
-                    if (weapon != null && weapon.WeaponCollider != null)
-                    {
-                        weapon.DisableWeaponCollider();
-                    }
-                }
-
-                if (_animator != null)
-                {
-                    ResetAttackTriggersForSequence();
-                }
-
-                if (_comboWindowActive)
-                {
-                    _comboWindowActive = false;
-                    if (ShowDebugLog) Debug.Log($"[{GetType().Name}] Combo window CLOSED - attack finished");
-                }
-
                 int finishedAttackIndex = currentAttackIndex;
-
-                if (_inputBuffer.Count > 0)
-                {
-                    int bufferedAtAttackIndex = _inputBuffer.Dequeue();
-                    
-                    bool inputIsValid = bufferedAtAttackIndex <= finishedAttackIndex;
-                    
-                    if (inputIsValid)
-                    {
-                        bool isLastAttack = currentSequence == null || 
-                                           currentAttackIndex >= currentSequence.SequenceLength - 1;
-                        
-                        if (!isLastAttack)
-                        {
-                            currentAttackIndex++;
-
-                            _stateTransitionInProgress = true;
-
-                            ExecuteAttack(currentSequence.GetAttackAtIndex(currentAttackIndex), currentSequence);
-
-                            _stateTransitionInProgress = false;
-
-                            if (ShowDebugLog) Debug.Log($"[{GetType().Name}] Combo continued to attack #{currentAttackIndex}. Queue remaining: {_inputBuffer.Count}");
-                        }
-                        else
-                        {
-                            if (ShowDebugLog) Debug.Log($"[{GetType().Name}] Last attack finished, starting NEW COMBO from buffered input.");
-                            ResetCombo();
-                            PerformAttack();
-                        }
-                    }
-                    else
-                    {
-                        _inputBuffer.Clear();
-                        if (ShowDebugLog) Debug.Log($"[{GetType().Name}] Buffered input from old combo chain, clearing buffer.");
-                        ResetCombo();
-                    }
-                }
-                else if (!_isAttacking)
-                {
-                    ResetCombo();
-                }
+                OnAttackFinishedCleanup();
+                ProcessComboBufferOnFinish(finishedAttackIndex);
             }
         }
 
-        private bool IsInAttackState(AnimatorStateInfo stateInfo)
+        private bool TryDetectAttackFinished(bool currentStateIsAttack)
         {
-            try
+            if (_isAttacking && _wasInAttackStateLastFrame && !currentStateIsAttack)
             {
-                var clipInfo = _animator.GetCurrentAnimatorClipInfo(0);
-                if (clipInfo.Length > 0)
-                {
-                    string clipName = clipInfo[0].clip.name;
-                    return clipName.Contains("attack", System.StringComparison.OrdinalIgnoreCase) ||
-                           clipName.Contains("swing", System.StringComparison.OrdinalIgnoreCase) ||
-                           clipName.Contains("slash", System.StringComparison.OrdinalIgnoreCase);
-                }
+                if (ShowDebugLog) Debug.Log($"[{GetType().Name}] Attack finished");
+                MarkAttackFinished();
+                return true;
             }
-            catch
+            if (_isAttacking && Time.time - _lastAttackStartTime > 3.0f)
             {
-                return stateInfo.IsName("Attack") ||
-                       stateInfo.IsName("Attack1") ||
-                       stateInfo.IsName("Attack2");
+                if (ShowDebugLog) Debug.Log($"[{GetType().Name}] Attack timeout");
+                MarkAttackFinished();
+                return true;
             }
-
             return false;
         }
 
+        private void MarkAttackFinished()
+        {
+            _isAttackFinishing = true;
+            _attackLocked = true;
+            _isAttacking = false;
+            _lastAttackEndTime = Time.time;
+            _attackLocked = false;
+        }
+
+        private void OnAttackFinishedCleanup()
+        {
+            foreach (Weapon weapon in _currentAttackWeapons)
+            {
+                if (weapon != null && weapon.WeaponCollider != null) weapon.DisableWeaponCollider();
+            }
+            if (_animator != null) ResetAttackTriggersForSequence();
+            if (_comboWindowActive)
+            {
+                _comboWindowActive = false;
+                if (ShowDebugLog) Debug.Log($"[{GetType().Name}] Combo window CLOSED - attack finished");
+            }
+        }
+
+        private void ProcessComboBufferOnFinish(int finishedAttackIndex)
+        {
+            if (_inputBuffer.Count > 0)
+            {
+                int bufferedAtAttackIndex = _inputBuffer.Dequeue();
+                if (bufferedAtAttackIndex <= finishedAttackIndex)
+                {
+                    bool isLastAttack = currentSequence == null || currentAttackIndex >= currentSequence.SequenceLength - 1;
+                    if (!isLastAttack)
+                    {
+                        currentAttackIndex++;
+                        _stateTransitionInProgress = true;
+                        ExecuteAttack(currentSequence.GetAttackAtIndex(currentAttackIndex), currentSequence);
+                        _stateTransitionInProgress = false;
+                        if (ShowDebugLog) Debug.Log($"[{GetType().Name}] Combo continued to attack #{currentAttackIndex}. Queue remaining: {_inputBuffer.Count}");
+                    }
+                    else
+                    {
+                        if (ShowDebugLog) Debug.Log($"[{GetType().Name}] Last attack finished, starting NEW COMBO from buffered input.");
+                        ResetCombo();
+                        PerformAttack();
+                    }
+                }
+                else
+                {
+                    _inputBuffer.Clear();
+                    if (ShowDebugLog) Debug.Log($"[{GetType().Name}] Buffered input from old combo chain, clearing buffer.");
+                    ResetCombo();
+                }
+            }
+            else if (!_isAttacking)
+                ResetCombo();
+        }
+
+        protected void UpdateWeaponColliderTiming(float normalizedTime)
+        {
+            if (_currentAttackWeapons == null) return;
+            const float EPSILON = 0.001f;
+            foreach (Weapon weapon in _currentAttackWeapons)
+            {
+                if (weapon == null || weapon.WeaponCollider == null || !_weaponTimingMap.ContainsKey(weapon)) continue;
+                Vector2 weaponTiming = _weaponTimingMap[weapon];
+                bool shouldColliderBeActive = normalizedTime >= weaponTiming.x && normalizedTime <= (weaponTiming.y + EPSILON);
+                if (shouldColliderBeActive && !weapon.WeaponCollider.enabled)
+                {
+                    weapon.EnableWeaponCollider();
+                    if (ShowDebugLog) Debug.Log($"[weapon-collider] ENABLE {weapon.gameObject.name} t={normalizedTime:F3} window={weaponTiming.x:F3}-{weaponTiming.y:F3}");
+                }
+                else if (!shouldColliderBeActive && weapon.WeaponCollider.enabled)
+                {
+                    weapon.DisableWeaponCollider();
+                    if (ShowDebugLog) Debug.Log($"[weapon-collider] DISABLE {weapon.gameObject.name} t={normalizedTime:F3} window={weaponTiming.x:F3}-{weaponTiming.y:F3}");
+                }
+            }
+        }
+
+        protected virtual void UpdateMovementDisableFromAttack(AttackDataSO currentAttack, float normalizedTime)
+        {
+            if (currentAttack == null) return;
+            bool shouldMovementBeDisabled = normalizedTime >= currentAttack.movementDisableWindow.x &&
+                                           normalizedTime <= currentAttack.movementDisableWindow.y;
+            SetMovementDisabled(shouldMovementBeDisabled);
+        }
+
+        protected void TryTriggerAttackEffects(AttackDataSO currentAttack, float normalizedTime)
+        {
+            if (currentAttack == null) return;
+            Vector3 pos = transform.position;
+            var manager = CharacterEffectManager.Instance;
+            if (currentAttack.particleEffects != null)
+                foreach (var e in currentAttack.particleEffects)
+                    if (e.IsValid && normalizedTime >= e.triggerTime && !_triggeredEffects.Contains(e.effectName))
+                    { manager?.PlayParticle(e.effectName, pos); _triggeredEffects.Add(e.effectName); }
+            if (currentAttack.vfxEffects != null)
+                foreach (var e in currentAttack.vfxEffects)
+                    if (e.IsValid && normalizedTime >= e.triggerTime && !_triggeredEffects.Contains(e.effectName))
+                    { manager?.PlayVFX(e.effectName, pos); _triggeredEffects.Add(e.effectName); }
+            if (currentAttack.audioEffects != null)
+                foreach (var e in currentAttack.audioEffects)
+                    if (e.IsValid && normalizedTime >= e.triggerTime && !_triggeredEffects.Contains(e.effectName))
+                    { manager?.PlayAudio(e.effectName, pos); _triggeredEffects.Add(e.effectName); }
+        }
 
         protected virtual void ResetCombo()
         {

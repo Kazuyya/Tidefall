@@ -153,31 +153,25 @@ namespace LittleHeroJourney
             {
                 case CanvasFlowConfigSO.TransitionMode.Direct:
                     if (rule.closeAfterInComplete)
-                    {
-                        if (showDebugLog) Debug.Log($"[{GetType().Name}] Direct+CloseAfterIN: show {nextCanvasID} then close {currentActiveCanvas.ID}");
-                        StartCoroutine(DirectOpenThenCloseRoutine(currentActiveCanvas, targetCanvas));
-                    }
+                        StartCoroutine(RunTransitionRoutine(rule.mode, currentActiveCanvas, targetCanvas, true));
                     else
                     {
-                        if (showDebugLog) Debug.Log($"[{GetType().Name}] Direct: just show {nextCanvasID} tanpa closing {currentActiveCanvas.ID}");
+                        if (showDebugLog) Debug.Log($"[{GetType().Name}] Direct: just show {nextCanvasID}");
                         targetCanvas.Show();
+                        currentActiveCanvas = targetCanvas;
                     }
                     break;
 
                 case CanvasFlowConfigSO.TransitionMode.SnapOutThenIn:
-                    if (showDebugLog) Debug.Log($"[{GetType().Name}] SnapOutThenIn: snap close {currentActiveCanvas.ID}, then IN {nextCanvasID}");
-                    StartCoroutine(SnapOutThenInRoutine(currentActiveCanvas, targetCanvas));
+                    StartCoroutine(RunTransitionRoutine(rule.mode, currentActiveCanvas, targetCanvas, rule.closeAfterInComplete));
                     break;
 
                 case CanvasFlowConfigSO.TransitionMode.SnapSwitch:
                     if (rule.closeAfterInComplete)
-                    {
-                        if (showDebugLog) Debug.Log($"[{GetType().Name}] SnapSwitch+CloseAfterIN: show {nextCanvasID} then close {currentActiveCanvas.ID}");
-                        StartCoroutine(SnapSwitchOpenThenCloseRoutine(currentActiveCanvas, targetCanvas));
-                    }
+                        StartCoroutine(RunTransitionRoutine(rule.mode, currentActiveCanvas, targetCanvas, true));
                     else
                     {
-                        if (showDebugLog) Debug.Log($"[{GetType().Name}] SnapSwitch: hiding {currentActiveCanvas.ID}, showing {nextCanvasID}");
+                        if (showDebugLog) Debug.Log($"[{GetType().Name}] SnapSwitch: {currentActiveCanvas.ID} -> {nextCanvasID}");
                         currentActiveCanvas.Hide();
                         targetCanvas.Show();
                         currentActiveCanvas = targetCanvas;
@@ -185,23 +179,13 @@ namespace LittleHeroJourney
                     break;
 
                 case CanvasFlowConfigSO.TransitionMode.WaitOutThenIn:
-                    if (showDebugLog) Debug.Log($"[{GetType().Name}] WaitOutThenIn: starting transition from {currentActiveCanvas.ID} to {nextCanvasID}");
-                    StartCoroutine(WaitOutThenInRoutine(currentActiveCanvas, targetCanvas, rule.closeAfterInComplete));
+                case CanvasFlowConfigSO.TransitionMode.WaitOutThenSnapIn:
+                    StartCoroutine(RunTransitionRoutine(rule.mode, currentActiveCanvas, targetCanvas, rule.closeAfterInComplete));
                     break;
 
-                case CanvasFlowConfigSO.TransitionMode.WaitOutThenSnapIn:
-                    if (showDebugLog) Debug.Log($"[{GetType().Name}] WaitOutThenSnapIn: starting transition from {currentActiveCanvas.ID} to {nextCanvasID}");
-                    StartCoroutine(WaitOutThenSnapInRoutine(currentActiveCanvas, targetCanvas, rule.closeAfterInComplete));
-                    break;
-                
                 case CanvasFlowConfigSO.TransitionMode.ParallelInOut:
-                    if (showDebugLog) Debug.Log($"[{GetType().Name}] ParallelInOut: starting parallel transition {currentActiveCanvas.ID} -> {nextCanvasID}");
-                    StartCoroutine(ParallelInOutRoutine(currentActiveCanvas, targetCanvas));
-                    break;
-                
                 case CanvasFlowConfigSO.TransitionMode.ParallelOutSnapIn:
-                    if (showDebugLog) Debug.Log($"[{GetType().Name}] ParallelOutSnapIn: snap {nextCanvasID} while OUT {currentActiveCanvas.ID}");
-                    StartCoroutine(ParallelOutSnapInRoutine(currentActiveCanvas, targetCanvas));
+                    StartCoroutine(RunTransitionRoutine(rule.mode, currentActiveCanvas, targetCanvas, rule.closeAfterInComplete));
                     break;
             }
         }
@@ -316,59 +300,26 @@ namespace LittleHeroJourney
 
         #region Transition Helpers
 
+        private static bool IsCanvasIdWildcard(string id)
+        {
+            return string.IsNullOrEmpty(id) ||
+                   string.Equals(id, "*", System.StringComparison.OrdinalIgnoreCase) ||
+                   string.Equals(id, "any", System.StringComparison.OrdinalIgnoreCase);
+        }
+
         private (CanvasFlowConfigSO.TransitionMode mode, bool closeAfterInComplete) GetTransitionRule(string fromId, string toId)
         {
-            if (config == null || config.transitionRules == null)
-                return GetDefaultRule();
-            
-            // 1. Exact match: To group then From rule exact
+            if (config == null || config.transitionRules == null) return GetDefaultRule();
+            var ord = System.StringComparison.OrdinalIgnoreCase;
             foreach (var group in config.transitionRules)
             {
-                if (string.Equals(group.toCanvasId, toId, System.StringComparison.OrdinalIgnoreCase))
-                {
-                    foreach (var r in group.fromRules)
-                    {
-                        if (string.Equals(r.fromCanvasId, fromId, System.StringComparison.OrdinalIgnoreCase))
-                            return (r.mode, r.closeAfterInComplete);
-                    }
-                }
+                bool toMatch = string.Equals(group.toCanvasId, toId, ord) || IsCanvasIdWildcard(group.toCanvasId);
+                if (!toMatch) continue;
+                foreach (var r in group.fromRules)
+                    if (string.Equals(r.fromCanvasId, fromId, ord)) return (r.mode, r.closeAfterInComplete);
+                foreach (var r in group.fromRules)
+                    if (IsCanvasIdWildcard(r.fromCanvasId)) return (r.mode, r.closeAfterInComplete);
             }
-            
-            // 2. Wildcard match (specific TO, wildcard FROM)
-            foreach (var group in config.transitionRules)
-            {
-                if (string.Equals(group.toCanvasId, toId, System.StringComparison.OrdinalIgnoreCase))
-                {
-                    foreach (var r in group.fromRules)
-                    {
-                        bool isWildcard = string.IsNullOrEmpty(r.fromCanvasId) ||
-                                          string.Equals(r.fromCanvasId, "*", System.StringComparison.OrdinalIgnoreCase) ||
-                                          string.Equals(r.fromCanvasId, "any", System.StringComparison.OrdinalIgnoreCase);
-                        if (isWildcard)
-                            return (r.mode, r.closeAfterInComplete);
-                    }
-                }
-            }
-            
-            // 3. Global wildcard (wildcard TO, wildcard FROM)
-            foreach (var group in config.transitionRules)
-            {
-                bool isToWildcard = string.IsNullOrEmpty(group.toCanvasId) ||
-                                    string.Equals(group.toCanvasId, "*", System.StringComparison.OrdinalIgnoreCase) ||
-                                    string.Equals(group.toCanvasId, "any", System.StringComparison.OrdinalIgnoreCase);
-                if (isToWildcard)
-                {
-                    foreach (var r in group.fromRules)
-                    {
-                        bool isFromWildcard = string.IsNullOrEmpty(r.fromCanvasId) ||
-                                              string.Equals(r.fromCanvasId, "*", System.StringComparison.OrdinalIgnoreCase) ||
-                                              string.Equals(r.fromCanvasId, "any", System.StringComparison.OrdinalIgnoreCase);
-                        if (isFromWildcard)
-                            return (r.mode, r.closeAfterInComplete);
-                    }
-                }
-            }
-            
             return GetDefaultRule();
         }
 
@@ -377,107 +328,57 @@ namespace LittleHeroJourney
             return (CanvasFlowConfigSO.TransitionMode.WaitOutThenIn, true);
         }
 
-        private System.Collections.IEnumerator WaitOutThenInRoutine(GameCanvas oldCanvas, GameCanvas newCanvas, bool closeAfterIn)
+        private System.Collections.IEnumerator RunTransitionRoutine(CanvasFlowConfigSO.TransitionMode mode, GameCanvas oldCanvas, GameCanvas newCanvas, bool closeAfterInComplete)
         {
             if (isTransitioning) yield break;
             isTransitioning = true;
-            if (oldCanvas != null && oldCanvas.gameObject.activeInHierarchy)
+            bool oldActive = oldCanvas != null && oldCanvas.gameObject.activeInHierarchy;
+
+            switch (mode)
             {
-                if (showDebugLog) Debug.Log($"[CanvasManager] Playing full close sequence for: {oldCanvas.ID}");
-                yield return oldCanvas.CloseForTransitionRoutine();
+                case CanvasFlowConfigSO.TransitionMode.WaitOutThenIn:
+                    if (oldActive) { if (showDebugLog) Debug.Log($"[CanvasManager] Close: {oldCanvas.ID}"); yield return oldCanvas.CloseForTransitionRoutine(); }
+                    if (showDebugLog) Debug.Log($"[CanvasManager] ShowAndWait: {newCanvas.ID}");
+                    yield return newCanvas.ShowAndWait();
+                    break;
+                case CanvasFlowConfigSO.TransitionMode.WaitOutThenSnapIn:
+                    if (oldActive) { if (showDebugLog) Debug.Log($"[CanvasManager] Close: {oldCanvas.ID}"); yield return oldCanvas.CloseForTransitionRoutine(); }
+                    if (showDebugLog) Debug.Log($"[CanvasManager] Snap: {newCanvas.ID}");
+                    newCanvas.Show();
+                    break;
+                case CanvasFlowConfigSO.TransitionMode.Direct:
+                case CanvasFlowConfigSO.TransitionMode.SnapSwitch:
+                    yield return newCanvas.ShowAndWait();
+                    if (closeAfterInComplete && oldActive) yield return oldCanvas.CloseForTransitionRoutine();
+                    break;
+                case CanvasFlowConfigSO.TransitionMode.SnapOutThenIn:
+                    if (oldActive) oldCanvas.HideImmediate();
+                    yield return newCanvas.ShowAndWait();
+                    break;
+                case CanvasFlowConfigSO.TransitionMode.ParallelInOut:
+                    bool inDone = false, outDone = false;
+                    StartCoroutine(ParallelRunner(newCanvas.ShowAndWait(), () => inDone = true));
+                    if (oldActive) StartCoroutine(ParallelRunner(oldCanvas.CloseForTransitionRoutine(), () => outDone = true));
+                    else outDone = true;
+                    while (!inDone || !outDone) yield return null;
+                    break;
+                case CanvasFlowConfigSO.TransitionMode.ParallelOutSnapIn:
+                    newCanvas.Show();
+                    bool outDoneSnap = false;
+                    if (oldActive) StartCoroutine(ParallelRunner(oldCanvas.CloseForTransitionRoutine(), () => outDoneSnap = true));
+                    else outDoneSnap = true;
+                    while (!outDoneSnap) yield return null;
+                    break;
+                default:
+                    if (oldActive) yield return oldCanvas.CloseForTransitionRoutine();
+                    yield return newCanvas.ShowAndWait();
+                    break;
             }
-            if (showDebugLog) Debug.Log($"[CanvasManager] Playing IN: {newCanvas.ID}");
-            yield return newCanvas.ShowAndWait();
-            
+
             currentActiveCanvas = newCanvas;
             isTransitioning = false;
         }
 
-        private System.Collections.IEnumerator WaitOutThenSnapInRoutine(GameCanvas oldCanvas, GameCanvas newCanvas, bool closeAfterIn)
-        {
-            if (isTransitioning) yield break;
-            isTransitioning = true;
-            if (oldCanvas != null && oldCanvas.gameObject.activeInHierarchy)
-            {
-                if (showDebugLog) Debug.Log($"[CanvasManager] Playing full close sequence for: {oldCanvas.ID}");
-                yield return oldCanvas.CloseForTransitionRoutine();
-            }
-            if (showDebugLog) Debug.Log($"[CanvasManager] Snapping IN: {newCanvas.ID}");
-            newCanvas.Show();
-            
-            currentActiveCanvas = newCanvas;
-            isTransitioning = false;
-        }
-        
-        private System.Collections.IEnumerator DirectOpenThenCloseRoutine(GameCanvas oldCanvas, GameCanvas newCanvas)
-        {
-            if (isTransitioning) yield break;
-            isTransitioning = true;
-            yield return newCanvas.ShowAndWait();
-            if (oldCanvas != null && oldCanvas.gameObject.activeInHierarchy)
-                yield return oldCanvas.CloseForTransitionRoutine();
-            currentActiveCanvas = newCanvas;
-            isTransitioning = false;
-        }
-        
-        private System.Collections.IEnumerator SnapOutThenInRoutine(GameCanvas oldCanvas, GameCanvas newCanvas)
-        {
-            if (isTransitioning) yield break;
-            isTransitioning = true;
-            if (oldCanvas != null && oldCanvas.gameObject.activeInHierarchy)
-                oldCanvas.HideImmediate();
-            yield return newCanvas.ShowAndWait();
-            currentActiveCanvas = newCanvas;
-            isTransitioning = false;
-        }
-        
-        private System.Collections.IEnumerator SnapSwitchOpenThenCloseRoutine(GameCanvas oldCanvas, GameCanvas newCanvas)
-        {
-            if (isTransitioning) yield break;
-            isTransitioning = true;
-            yield return newCanvas.ShowAndWait();
-            if (oldCanvas != null && oldCanvas.gameObject.activeInHierarchy)
-                yield return oldCanvas.CloseForTransitionRoutine();
-            currentActiveCanvas = newCanvas;
-            isTransitioning = false;
-        }
-        
-        private System.Collections.IEnumerator ParallelInOutRoutine(GameCanvas oldCanvas, GameCanvas newCanvas)
-        {
-            if (isTransitioning) yield break;
-            isTransitioning = true;
-            bool inDone = false;
-            bool outDone = false;
-            System.Action markIn = () => inDone = true;
-            System.Action markOut = () => outDone = true;
-            
-            StartCoroutine(ParallelRunner(newCanvas.ShowAndWait(), markIn));
-            if (oldCanvas != null && oldCanvas.gameObject.activeInHierarchy)
-                StartCoroutine(ParallelRunner(oldCanvas.CloseForTransitionRoutine(), markOut));
-            else
-                outDone = true;
-            
-            while (!inDone || !outDone) yield return null;
-            currentActiveCanvas = newCanvas;
-            isTransitioning = false;
-        }
-        
-        private System.Collections.IEnumerator ParallelOutSnapInRoutine(GameCanvas oldCanvas, GameCanvas newCanvas)
-        {
-            if (isTransitioning) yield break;
-            isTransitioning = true;
-            newCanvas.Show();
-            bool outDone = false;
-            System.Action markOut = () => outDone = true;
-            if (oldCanvas != null && oldCanvas.gameObject.activeInHierarchy)
-                StartCoroutine(ParallelRunner(oldCanvas.CloseForTransitionRoutine(), markOut));
-            else
-                outDone = true;
-            while (!outDone) yield return null;
-            currentActiveCanvas = newCanvas;
-            isTransitioning = false;
-        }
-        
         private System.Collections.IEnumerator ParallelRunner(System.Collections.IEnumerator routine, System.Action onComplete)
         {
             yield return routine;

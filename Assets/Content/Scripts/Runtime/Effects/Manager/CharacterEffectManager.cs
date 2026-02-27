@@ -228,6 +228,22 @@ namespace LittleHeroJourney
 
         #endregion
 
+        private void ApplyEffectTransform(Transform t, Vector3 position, Quaternion rotation, Vector3 positionOffset, Transform parentTransform, bool followCharacter)
+        {
+            if (followCharacter && parentTransform != null)
+            {
+                t.SetParent(parentTransform);
+                t.localPosition = positionOffset;
+                t.localRotation = rotation;
+            }
+            else
+            {
+                t.SetParent(_poolContainer);
+                t.position = position + positionOffset;
+                t.rotation = rotation;
+            }
+        }
+
         #region VFX Methods
 
         /// <summary>
@@ -248,24 +264,7 @@ namespace LittleHeroJourney
             VisualEffect vfx = GetVFXFromPool(effectName, vfxData.vfxPrefab);
             if (vfx == null) return;
 
-            // Position adjustment
-            Vector3 finalPos = position + positionOffset;
-
-            if (followCharacter && parentTransform != null)
-            {
-                // Parent to character, set local position as offset
-                vfx.transform.SetParent(parentTransform);
-                vfx.transform.localPosition = positionOffset;
-                vfx.transform.localRotation = rotation;
-            }
-            else
-            {
-                // World position
-                vfx.transform.SetParent(_poolContainer);
-                vfx.transform.position = finalPos;
-                vfx.transform.rotation = rotation;
-            }
-
+            ApplyEffectTransform(vfx.transform, position, rotation, positionOffset, parentTransform, followCharacter);
             vfx.gameObject.SetActive(true);
             vfx.Reinit();
             vfx.Play();
@@ -273,7 +272,7 @@ namespace LittleHeroJourney
             _activeVFX.Add(vfx);
 
             if (showDebugLog)
-                Debug.Log($"[{GetType().Name}] Playing VFX '{effectName}' at {finalPos} (Follow: {followCharacter})");
+                Debug.Log($"[{GetType().Name}] Playing VFX '{effectName}' at {position + positionOffset} (Follow: {followCharacter})");
 
             // Return to pool after duration
             StartCoroutine(ReturnVFXToPoolAfterDuration(vfx, effectName));
@@ -539,32 +538,14 @@ namespace LittleHeroJourney
             if (particle == null) return;
 
             particle.Clear(true);
-
-            // Position adjustment
-            Vector3 finalPos = position + positionOffset;
-
-            if (followCharacter && parentTransform != null)
-            {
-                // Parent to character, set local position as offset
-                particle.transform.SetParent(parentTransform);
-                particle.transform.localPosition = positionOffset;
-                particle.transform.localRotation = rotation;
-            }
-            else
-            {
-                // World position
-                particle.transform.SetParent(_poolContainer);
-                particle.transform.position = finalPos;
-                particle.transform.rotation = rotation;
-            }
-
+            ApplyEffectTransform(particle.transform, position, rotation, positionOffset, parentTransform, followCharacter);
             particle.gameObject.SetActive(true);
             particle.Play();
 
             _activeParticles.Add(particle);
 
             if (showDebugLog)
-                Debug.Log($"[{GetType().Name}] Playing Particle '{effectName}' at {finalPos} (Follow: {followCharacter})");
+                Debug.Log($"[{GetType().Name}] Playing Particle '{effectName}' at {position + positionOffset} (Follow: {followCharacter})");
 
             float duration = particle.main.duration;
             var startLifetimeCurve = particle.main.startLifetime;

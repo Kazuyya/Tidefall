@@ -60,44 +60,10 @@ namespace LittleHeroJourney
         public IEnumerator LoadSceneSequence(string sceneName, LoadSceneMode mode, float minDisplayTime, Action onComplete, bool closeBeforeLoading)
         {
             if (showDebugLog) Debug.Log($"[LoadingManager] LoadSceneSequence: Starting for scene '{sceneName}'");
-            
             IsLoading = true;
             OnLoadingStart?.Invoke(sceneName);
 
-            if (closeBeforeLoading)
-            {
-                if (showDebugLog) Debug.Log("[LoadingManager] LoadSceneSequence: Closing current canvases before loading");
-                yield return CloseCurrentCanvasesRoutine();
-            }
-
-            if (showDebugLog) Debug.Log("[LoadingManager] LoadSceneSequence: Showing loading scene...");
-            yield return ShowLoadingSceneRoutine();
-            
-            if (showDebugLog) Debug.Log("[LoadingManager] LoadSceneSequence: Loading scene shown");
-            UpdateProgress(0f);
-            
-            if (_ui != null)
-            {
-                if (showDebugLog) Debug.Log("[LoadingManager] LoadSceneSequence: Playing open sequence...");
-                yield return _ui.PlayOpenSequenceRoutine();
-                if (showDebugLog) Debug.Log("[LoadingManager] LoadSceneSequence: Open sequence completed");
-            }
-            else
-            {
-                if (showDebugLog) Debug.LogWarning("[LoadingManager] LoadSceneSequence: LoadingUIController is NULL! Skipping open sequence");
-            }
-            
-            if (!closeBeforeLoading)
-            {
-                var canvasManager = GameManager.Instance != null ? GameManager.Instance.CanvasManager : null;
-                if (canvasManager != null)
-                {
-                    canvasManager.CloseAllCanvasesImmediate();
-                }
-            }
-
-            if (showDebugLog) Debug.Log("[LoadingManager] LoadSceneSequence: Unloading previous scene...");
-            UnloadAllScenesExcept(default(Scene), GetLoadingSceneName());
+            yield return OpenPhaseRoutine(closeBeforeLoading);
 
             for (int i = 0; i < _preLoadTasks.Count; i++)
             {
@@ -160,9 +126,44 @@ namespace LittleHeroJourney
                 UnityEngine.SceneManagement.SceneManager.SetActiveScene(targetScene);
             }
 
-            // Prepare target scene canvases: disable target parents so open sequence can run correctly after we fire OnLoadingFinished
+            yield return ClosePhaseRoutine(mode, targetScene, loadedSceneName);
+            if (showDebugLog) Debug.Log("[LoadingManager] LoadSceneSequence: Completed! Firing OnLoadingFinished for '" + loadedSceneName + "'");
+            IsLoading = false;
+            OnLoadingFinished?.Invoke(loadedSceneName);
+            onComplete?.Invoke();
+        }
+
+        private IEnumerator OpenPhaseRoutine(bool closeBeforeLoading)
+        {
+            if (closeBeforeLoading)
+            {
+                if (showDebugLog) Debug.Log("[LoadingManager] LoadSceneSequence: Closing current canvases before loading");
+                yield return CloseCurrentCanvasesRoutine();
+            }
+            if (showDebugLog) Debug.Log("[LoadingManager] LoadSceneSequence: Showing loading scene...");
+            yield return ShowLoadingSceneRoutine();
+            if (showDebugLog) Debug.Log("[LoadingManager] LoadSceneSequence: Loading scene shown");
+            UpdateProgress(0f);
+            if (_ui != null)
+            {
+                if (showDebugLog) Debug.Log("[LoadingManager] LoadSceneSequence: Playing open sequence...");
+                yield return _ui.PlayOpenSequenceRoutine();
+                if (showDebugLog) Debug.Log("[LoadingManager] LoadSceneSequence: Open sequence completed");
+            }
+            else if (showDebugLog)
+                Debug.LogWarning("[LoadingManager] LoadSceneSequence: LoadingUIController is NULL! Skipping open sequence");
+            if (!closeBeforeLoading)
+            {
+                var canvasManager = GameManager.Instance != null ? GameManager.Instance.CanvasManager : null;
+                if (canvasManager != null) canvasManager.CloseAllCanvasesImmediate();
+            }
+            if (showDebugLog) Debug.Log("[LoadingManager] LoadSceneSequence: Unloading previous scene...");
+            UnloadAllScenesExcept(default(Scene), GetLoadingSceneName());
+        }
+
+        private IEnumerator ClosePhaseRoutine(LoadSceneMode mode, Scene targetScene, string loadedSceneName)
+        {
             PrepareTargetSceneCanvases(loadedSceneName);
-            
             if (showDebugLog) Debug.Log("[LoadingManager] LoadSceneSequence: Playing close sequence...");
             if (_ui != null)
             {
@@ -170,24 +171,15 @@ namespace LittleHeroJourney
                 yield return _ui.PlayCloseSequenceRoutine();
                 if (showDebugLog) Debug.Log("[LoadingManager] PlayCloseSequenceRoutine: Close sequence completed");
             }
-            else
-            {
-                if (showDebugLog) Debug.LogWarning("[LoadingManager] PlayCloseSequenceRoutine: UI Controller is NULL!");
-            }
-            
+            else if (showDebugLog)
+                Debug.LogWarning("[LoadingManager] PlayCloseSequenceRoutine: UI Controller is NULL!");
             if (mode == LoadSceneMode.Single)
             {
                 if (showDebugLog) Debug.Log("[LoadingManager] LoadSceneSequence: Unloading remaining scenes except target...");
                 UnloadAllScenesExcept(targetScene, GetLoadingSceneName());
             }
-            
             if (showDebugLog) Debug.Log("[LoadingManager] LoadSceneSequence: Hiding loading scene...");
             yield return HideLoadingSceneRoutine();
-            
-            if (showDebugLog) Debug.Log("[LoadingManager] LoadSceneSequence: Completed! Firing OnLoadingFinished for '" + loadedSceneName + "'");
-            IsLoading = false;
-            OnLoadingFinished?.Invoke(loadedSceneName);
-            onComplete?.Invoke();
         }
 
         private AsyncOperation CreateLoadOperation(string sceneString, LoadSceneMode mode)

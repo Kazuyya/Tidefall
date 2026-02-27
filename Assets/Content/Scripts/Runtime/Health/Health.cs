@@ -206,141 +206,58 @@ namespace LittleHeroJourney
         private void MonitorDeathAnimationForEffects()
         {
             if (_animator == null || deathEffectsSO == null) return;
-
-            AnimatorStateInfo deathState = _animator.GetCurrentAnimatorStateInfo(0);
-            float normalizedTime = deathState.normalizedTime;
-
-            // Initialize tracking arrays
-            if (_deathVFXTriggered == null)
-            {
-                _deathVFXTriggered = new bool[deathEffectsSO.VFXEffects.Count];
-                _deathAudioTriggered = new bool[deathEffectsSO.AudioEffects.Count];
-                _deathParticleTriggered = new bool[deathEffectsSO.ParticleEffects.Count];
-            }
-
-            // Check VFX effects
-            for (int i = 0; i < deathEffectsSO.VFXEffects.Count; i++)
-            {
-                var effect = deathEffectsSO.VFXEffects[i];
-                if (!effect.IsValid || _deathVFXTriggered[i]) continue;
-
-                if (normalizedTime >= effect.triggerTime)
-                {
-                    CharacterEffectManager.Instance?.PlayVFX(
-                        effect.effectName, 
-                        transform.position, 
-                        Quaternion.identity,
-                        effect.positionOffset,
-                        effect.followCharacter ? transform : null,
-                        effect.followCharacter
-                    );
-                    _deathVFXTriggered[i] = true;
-                }
-            }
-
-            // Check Audio effects
-            for (int i = 0; i < deathEffectsSO.AudioEffects.Count; i++)
-            {
-                var effect = deathEffectsSO.AudioEffects[i];
-                if (!effect.IsValid || _deathAudioTriggered[i]) continue;
-
-                if (normalizedTime >= effect.triggerTime)
-                {
-                    Vector3 effectPos = transform.position + effect.positionOffset;
-                    CharacterEffectManager.Instance?.PlayAudio(effect.effectName, effectPos);
-                    _deathAudioTriggered[i] = true;
-                }
-            }
-
-            // Check Particle effects
-            for (int i = 0; i < deathEffectsSO.ParticleEffects.Count; i++)
-            {
-                var effect = deathEffectsSO.ParticleEffects[i];
-                if (!effect.IsValid || _deathParticleTriggered[i]) continue;
-
-                if (normalizedTime >= effect.triggerTime)
-                {
-                    CharacterEffectManager.Instance?.PlayParticle(
-                        effect.effectName, 
-                        transform.position,
-                        Quaternion.identity,
-                        effect.positionOffset,
-                        effect.followCharacter ? transform : null,
-                        effect.followCharacter
-                    );
-                    _deathParticleTriggered[i] = true;
-                }
-            }
+            float normalizedTime = _animator.GetCurrentAnimatorStateInfo(0).normalizedTime;
+            MonitorTimedEffects(normalizedTime, deathEffectsSO.VFXEffects, deathEffectsSO.AudioEffects, deathEffectsSO.ParticleEffects,
+                ref _deathVFXTriggered, ref _deathAudioTriggered, ref _deathParticleTriggered);
         }
 
         private void MonitorDamageAnimationForEffects()
         {
             if (_animator == null || damageEffectsSO == null || !_isInDamageFeedback) return;
+            float normalizedTime = _animator.GetCurrentAnimatorStateInfo(0).normalizedTime;
+            MonitorTimedEffects(normalizedTime, damageEffectsSO.VFXEffects, damageEffectsSO.AudioEffects, damageEffectsSO.ParticleEffects,
+                ref _damageVFXTriggered, ref _damageAudioTriggered, ref _damageParticleTriggered);
+        }
 
-            AnimatorStateInfo damageState = _animator.GetCurrentAnimatorStateInfo(0);
-            float normalizedTime = damageState.normalizedTime;
+        private void MonitorTimedEffects(float normalizedTime,
+            System.Collections.Generic.IReadOnlyList<VFXEffectTiming> vfxList,
+            System.Collections.Generic.IReadOnlyList<AudioEffectTiming> audioList,
+            System.Collections.Generic.IReadOnlyList<ParticleEffectTiming> particleList,
+            ref bool[] vfxTriggered, ref bool[] audioTriggered, ref bool[] particleTriggered)
+        {
+            if (vfxTriggered == null && vfxList != null) vfxTriggered = new bool[vfxList.Count];
+            if (audioTriggered == null && audioList != null) audioTriggered = new bool[audioList.Count];
+            if (particleTriggered == null && particleList != null) particleTriggered = new bool[particleList.Count];
 
-            // Initialize tracking arrays
-            if (_damageVFXTriggered == null)
-            {
-                _damageVFXTriggered = new bool[damageEffectsSO.VFXEffects.Count];
-                _damageAudioTriggered = new bool[damageEffectsSO.AudioEffects.Count];
-                _damageParticleTriggered = new bool[damageEffectsSO.ParticleEffects.Count];
-            }
+            var manager = CharacterEffectManager.Instance;
+            Vector3 pos = transform.position;
 
-            // Check VFX effects
-            for (int i = 0; i < damageEffectsSO.VFXEffects.Count; i++)
-            {
-                var effect = damageEffectsSO.VFXEffects[i];
-                if (!effect.IsValid || _damageVFXTriggered[i]) continue;
-
-                if (normalizedTime >= effect.triggerTime)
+            if (vfxList != null && vfxTriggered != null)
+                for (int i = 0; i < vfxList.Count; i++)
                 {
-                    CharacterEffectManager.Instance?.PlayVFX(
-                        effect.effectName, 
-                        transform.position,
-                        Quaternion.identity,
-                        effect.positionOffset,
-                        effect.followCharacter ? transform : null,
-                        effect.followCharacter
-                    );
-                    _damageVFXTriggered[i] = true;
+                    var e = vfxList[i];
+                    if (!e.IsValid || vfxTriggered[i] || normalizedTime < e.triggerTime) continue;
+                    manager?.PlayVFX(e.effectName, pos, Quaternion.identity, e.positionOffset, e.followCharacter ? transform : null, e.followCharacter);
+                    vfxTriggered[i] = true;
                 }
-            }
 
-            // Check Audio effects
-            for (int i = 0; i < damageEffectsSO.AudioEffects.Count; i++)
-            {
-                var effect = damageEffectsSO.AudioEffects[i];
-                if (!effect.IsValid || _damageAudioTriggered[i]) continue;
-
-                if (normalizedTime >= effect.triggerTime)
+            if (audioList != null && audioTriggered != null)
+                for (int i = 0; i < audioList.Count; i++)
                 {
-                    Vector3 effectPos = transform.position + effect.positionOffset;
-                    CharacterEffectManager.Instance?.PlayAudio(effect.effectName, effectPos);
-                    _damageAudioTriggered[i] = true;
+                    var e = audioList[i];
+                    if (!e.IsValid || audioTriggered[i] || normalizedTime < e.triggerTime) continue;
+                    manager?.PlayAudio(e.effectName, pos + e.positionOffset);
+                    audioTriggered[i] = true;
                 }
-            }
 
-            // Check Particle effects
-            for (int i = 0; i < damageEffectsSO.ParticleEffects.Count; i++)
-            {
-                var effect = damageEffectsSO.ParticleEffects[i];
-                if (!effect.IsValid || _damageParticleTriggered[i]) continue;
-
-                if (normalizedTime >= effect.triggerTime)
+            if (particleList != null && particleTriggered != null)
+                for (int i = 0; i < particleList.Count; i++)
                 {
-                    CharacterEffectManager.Instance?.PlayParticle(
-                        effect.effectName, 
-                        transform.position,
-                        Quaternion.identity,
-                        effect.positionOffset,
-                        effect.followCharacter ? transform : null,
-                        effect.followCharacter
-                    );
-                    _damageParticleTriggered[i] = true;
+                    var e = particleList[i];
+                    if (!e.IsValid || particleTriggered[i] || normalizedTime < e.triggerTime) continue;
+                    manager?.PlayParticle(e.effectName, pos, Quaternion.identity, e.positionOffset, e.followCharacter ? transform : null, e.followCharacter);
+                    particleTriggered[i] = true;
                 }
-            }
         }
 
         private void EndDamageFeedback()

@@ -82,80 +82,73 @@ namespace LittleHeroJourney
 
         private void UpdateCombatBehavior(float distanceToTarget)
         {
-            if (Agent.NavMeshAgent == null || Agent.Target == null || Agent.IsDead) return;
-
+            if (Agent.NavMeshAgent == null || Agent.Target == null || Agent.IsDead || !Agent.NavMeshAgent.enabled) return;
             Agent.FaceTarget();
-            if (!Agent.NavMeshAgent.enabled) return;
-
             if (distanceToTarget <= Agent.Settings.AttackRange)
-            {
-                var combat = Agent.Combatant as AICombat;
-                // Move hanya ketika open window disable movement tidak aktif; transisi combo = diam.
-                bool movementDisabledByWindow = combat != null && combat.GetIsInsideMovementDisableWindow();
+                HandleInAttackRange();
+            else
+                HandleOutOfAttackRange();
+        }
 
-                if (Agent.IsAttacking)
+        private void HandleInAttackRange()
+        {
+            var combat = Agent.Combatant as AICombat;
+            bool movementDisabledByWindow = combat != null && combat.GetIsInsideMovementDisableWindow();
+            if (Agent.IsAttacking)
+            {
+                if (movementDisabledByWindow)
                 {
-                    // During attack: stand still only when inside movementDisableWindow (open window 0–1 = full attack in place).
-                    if (movementDisabledByWindow)
-                    {
-                        if (_usingAttackMoveStoppingDistance)
-                        {
-                            Agent.NavMeshAgent.stoppingDistance = Agent.Settings.StoppingDistance;
-                            _usingAttackMoveStoppingDistance = false;
-                        }
-                        if (!Agent.NavMeshAgent.isStopped)
-                        {
-                            Agent.NavMeshAgent.isStopped = true;
-                            Agent.NavMeshAgent.velocity = Vector3.zero;
-                            Agent.NavMeshAgent.ResetPath();
-                        }
-                        Agent.UpdateAnimationSpeed(0f);
-                    }
-                    else
-                    {
-                        // Outside window: allow movement toward target while attacking (aim/follow player).
-                        if (Agent.NavMeshAgent.isStopped) Agent.NavMeshAgent.isStopped = false;
-                        // Saat attack+move pakai stopping distance kecil supaya agent jalan (dalam attack range biasanya <= default stopping jadi velocity 0).
-                        if (!_usingAttackMoveStoppingDistance)
-                        {
-                            Agent.NavMeshAgent.stoppingDistance = ATTACK_MOVE_STOPPING_DISTANCE;
-                            _usingAttackMoveStoppingDistance = true;
-                        }
-                        Agent.NavMeshAgent.SetDestination(Agent.Target.position);
-                    }
-                }
-                else
-                {
-                    if (_usingAttackMoveStoppingDistance)
-                    {
-                        Agent.NavMeshAgent.stoppingDistance = Agent.Settings.StoppingDistance;
-                        _usingAttackMoveStoppingDistance = false;
-                    }
+                    ResetAttackMoveStoppingDistance();
                     if (!Agent.NavMeshAgent.isStopped)
                     {
                         Agent.NavMeshAgent.isStopped = true;
                         Agent.NavMeshAgent.velocity = Vector3.zero;
                         Agent.NavMeshAgent.ResetPath();
-                        if (Agent.Settings.ShowDebugLog) Debug.Log($"[{Agent.GetType().Name}] CombatState: Stopping agent - in attack range");
                     }
                     Agent.UpdateAnimationSpeed(0f);
-                    TryAttack();
+                }
+                else
+                {
+                    Agent.NavMeshAgent.isStopped = false;
+                    if (!_usingAttackMoveStoppingDistance)
+                    {
+                        Agent.NavMeshAgent.stoppingDistance = ATTACK_MOVE_STOPPING_DISTANCE;
+                        _usingAttackMoveStoppingDistance = true;
+                    }
+                    Agent.NavMeshAgent.SetDestination(Agent.Target.position);
                 }
             }
             else
             {
-                if (_usingAttackMoveStoppingDistance)
+                ResetAttackMoveStoppingDistance();
+                if (!Agent.NavMeshAgent.isStopped)
                 {
-                    Agent.NavMeshAgent.stoppingDistance = Agent.Settings.StoppingDistance;
-                    _usingAttackMoveStoppingDistance = false;
+                    Agent.NavMeshAgent.isStopped = true;
+                    Agent.NavMeshAgent.velocity = Vector3.zero;
+                    Agent.NavMeshAgent.ResetPath();
+                    if (Agent.Settings.ShowDebugLog) Debug.Log($"[{Agent.GetType().Name}] CombatState: Stopping agent - in attack range");
                 }
-                if (Agent.NavMeshAgent.isStopped)
-                {
-                    Agent.NavMeshAgent.isStopped = false;
-                    if (Agent.Settings.ShowDebugLog) Debug.Log($"[{Agent.GetType().Name}] CombatState: Resuming agent movement - moving to target");
-                }
-                Agent.NavMeshAgent.SetDestination(Agent.Target.position);
+                Agent.UpdateAnimationSpeed(0f);
+                TryAttack();
             }
+        }
+
+        private void HandleOutOfAttackRange()
+        {
+            ResetAttackMoveStoppingDistance();
+            if (Agent.NavMeshAgent.isStopped)
+            {
+                Agent.NavMeshAgent.isStopped = false;
+                if (Agent.Settings.ShowDebugLog) Debug.Log($"[{Agent.GetType().Name}] CombatState: Resuming agent movement - moving to target");
+            }
+            Agent.NavMeshAgent.SetDestination(Agent.Target.position);
+        }
+
+        private void ResetAttackMoveStoppingDistance()
+        {
+            if (!_usingAttackMoveStoppingDistance) return;
+            Agent.NavMeshAgent.stoppingDistance = Agent.Settings.StoppingDistance;
+            _usingAttackMoveStoppingDistance = false;
         }
 
 

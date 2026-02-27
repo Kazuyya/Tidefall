@@ -230,7 +230,7 @@ namespace LittleHeroJourney
 
             // Check if attack finished BEFORE base class handles it
             AnimatorStateInfo stateInfo = Animator.GetCurrentAnimatorStateInfo(0);
-            bool currentStateIsAttack = IsInAttackState(stateInfo);
+            bool currentStateIsAttack = Helper.IsInAttackState(Animator);
 
             // Check if attack just finished (transition from attack to non-attack)
             bool attackJustFinished = IsAttacking && _aiWasInAttackStateLastFrame && !currentStateIsAttack;
@@ -253,110 +253,17 @@ namespace LittleHeroJourney
             UpdateWeaponTimingAndEffects(stateInfo);
         }
 
-        // Handle weapon timing and effects without triggering base class attack finish logic
         private void UpdateWeaponTimingAndEffects(AnimatorStateInfo stateInfo)
         {
             if (currentSequence == null) return;
-
             float normalizedTime = stateInfo.normalizedTime % 1.0f;
-            bool animatorInAttack = IsInAttackState(stateInfo);
+            bool animatorInAttack = Helper.IsInAttackState(Animator);
             if (!(animatorInAttack && _aiWasInAttackStateLastFrame)) return;
             AttackDataSO currentAttack = currentSequence.GetAttackAtIndex(currentAttackIndex);
-
-            if (currentAttack != null && _currentAttackWeapons != null && _currentAttackWeapons.Count > 0)
-            {
-                // Handle weapon collider timing (from base class logic)
-                foreach (Weapon weapon in _currentAttackWeapons)
-                {
-                    if (weapon != null && weapon.WeaponCollider != null && _weaponTimingMap.ContainsKey(weapon))
-                    {
-                        Vector2 weaponTiming = _weaponTimingMap[weapon];
-                        const float EPSILON = 0.001f;
-                        bool shouldColliderBeActive = normalizedTime >= weaponTiming.x &&
-                                                     normalizedTime <= (weaponTiming.y + EPSILON);
-
-                        if (shouldColliderBeActive && !weapon.WeaponCollider.enabled)
-                        {
-                            weapon.EnableWeaponCollider();
-                        }
-                        else if (!shouldColliderBeActive && weapon.WeaponCollider.enabled)
-                        {
-                            weapon.DisableWeaponCollider();
-                        }
-                    }
-                }
-
-                // Handle movement disable window
-                bool shouldMovementBeDisabled = normalizedTime >= currentAttack.movementDisableWindow.x &&
-                                               normalizedTime <= currentAttack.movementDisableWindow.y;
-
-                SetMovementDisabled(shouldMovementBeDisabled);
-
-                // Handle effects (particle, VFX, audio) - trigger via CharacterEffectManager
-                CharacterEffectManager effectManager = CharacterEffectManager.Instance;
-                if (effectManager == null) return;
-
-                if (currentAttack.particleEffects != null && currentAttack.particleEffects.Count > 0)
-                {
-                    foreach (var effectTiming in currentAttack.particleEffects)
-                    {
-                        if (effectTiming.IsValid && normalizedTime >= effectTiming.triggerTime &&
-                            !_triggeredEffects.Contains(effectTiming.effectName))
-                        {
-                            effectManager.PlayParticle(effectTiming.effectName, transform.position);
-                            _triggeredEffects.Add(effectTiming.effectName);
-                        }
-                    }
-                }
-
-                if (currentAttack.vfxEffects != null && currentAttack.vfxEffects.Count > 0)
-                {
-                    foreach (var effectTiming in currentAttack.vfxEffects)
-                    {
-                        if (effectTiming.IsValid && normalizedTime >= effectTiming.triggerTime &&
-                            !_triggeredEffects.Contains(effectTiming.effectName))
-                        {
-                            effectManager.PlayVFX(effectTiming.effectName, transform.position);
-                            _triggeredEffects.Add(effectTiming.effectName);
-                        }
-                    }
-                }
-
-                if (currentAttack.audioEffects != null && currentAttack.audioEffects.Count > 0)
-                {
-                    foreach (var effectTiming in currentAttack.audioEffects)
-                    {
-                        if (effectTiming.IsValid && normalizedTime >= effectTiming.triggerTime &&
-                            !_triggeredEffects.Contains(effectTiming.effectName))
-                        {
-                            effectManager.PlayAudio(effectTiming.effectName, transform.position);
-                            _triggeredEffects.Add(effectTiming.effectName);
-                        }
-                    }
-                }
-            }
-        }
-
-        private bool IsInAttackState(AnimatorStateInfo stateInfo)
-        {
-            try
-            {
-                var clipInfo = Animator.GetCurrentAnimatorClipInfo(0);
-                if (clipInfo.Length > 0)
-                {
-                    string currentStateName = clipInfo[0].clip.name.ToLower();
-                    return currentStateName.Contains("attack") ||
-                           currentStateName.Contains("swing") ||
-                           currentStateName.Contains("slash");
-                }
-            }
-            catch
-            {
-                return stateInfo.IsName("Attack") ||
-                       stateInfo.IsName("Attack1") ||
-                       stateInfo.IsName("Attack2");
-            }
-            return false;
+            if (currentAttack == null || _currentAttackWeapons == null || _currentAttackWeapons.Count == 0) return;
+            UpdateWeaponColliderTiming(normalizedTime);
+            UpdateMovementDisableFromAttack(currentAttack, normalizedTime);
+            TryTriggerAttackEffects(currentAttack, normalizedTime);
         }
 
         private void HandleAttackFinished()

@@ -407,21 +407,20 @@ namespace LittleHeroJourney
             }
         }
 
+        private Vector3 GetLockOnTargetPosition(Transform fallbackTransform)
+        {
+            return _currentTargetLockOnPoint != null
+                ? _currentTargetLockOnPoint.GetLockOnTransform().position
+                : fallbackTransform.position;
+        }
+
         private void NewInputTarget(Transform target)
         {
             if (!currentTarget || !_mainCamera) return;
 
-            // Gunakan lock-on point position kalau ada, fallback ke target.position
-            Vector3 targetPosition = _currentTargetLockOnPoint != null 
-                ? _currentTargetLockOnPoint.GetLockOnTransform().position 
-                : target.position;
+            Vector3 targetPosition = GetLockOnTargetPosition(target);
 
             Vector3 viewPos = _mainCamera.WorldToViewportPoint(targetPosition);
-            
-            if (showDebugLog)
-            {
-                Debug.Log($"{GetType().Name}: NewInputTarget called. Target={target.name}, ViewportPos={viewPos}, Distance={(_playerTransform ? (targetPosition - _playerTransform.position).magnitude : -1f):F2}f");
-            }
 
             if (aimIcon)
                 aimIcon.transform.position = _mainCamera.WorldToScreenPoint(targetPosition);
@@ -434,22 +433,12 @@ namespace LittleHeroJourney
                 return;
             }
 
-            // Reduced sensitivity to prevent camera oscillation
-            // Original: * 3f caused excessive camera movement when player rotates
-            float oldMouseX = mouseX;
-            float oldMouseY = mouseY;
-            
             float dx = (viewPos.x - 0.5f + targetLockOffset.x);
             float dy = (viewPos.y - 0.5f + targetLockOffset.y);
             if (Mathf.Abs(dx) < centerDeadZone) dx = 0f;
             if (Mathf.Abs(dy) < centerDeadZone) dy = 0f;
             mouseX = dx * lockGain;
             mouseY = dy * lockGain;
-            
-            if (showDebugLog)
-            {
-                Debug.Log($"{GetType().Name}: Calculated input -> ViewX={viewPos.x:F3}, ViewY={viewPos.y:F3} | Old: mouseX={oldMouseX:F3}, mouseY={oldMouseY:F3} | New: mouseX={mouseX:F3}, mouseY={mouseY:F3}");
-            }
         }
         #endregion
 
@@ -484,10 +473,7 @@ namespace LittleHeroJourney
                 return;
             }
 
-            // Gunakan lock-on point position kalau ada, fallback ke currentTarget.position
-            Vector3 targetPosition = _currentTargetLockOnPoint != null 
-                ? _currentTargetLockOnPoint.GetLockOnTransform().position 
-                : currentTarget.position;
+            Vector3 targetPosition = GetLockOnTargetPosition(currentTarget);
 
             Vector3 directionToTarget = (targetPosition - _playerTransform.position).normalized;
             directionToTarget.y = 0f;
@@ -512,9 +498,7 @@ namespace LittleHeroJourney
         private void UpdateVerticalRig()
         {
             if (_freeLookCamera == null || !isTargeting || currentTarget == null || _playerTransform == null) return;
-            Vector3 targetPosition = _currentTargetLockOnPoint != null
-                ? _currentTargetLockOnPoint.GetLockOnTransform().position
-                : currentTarget.position;
+            Vector3 targetPosition = GetLockOnTargetPosition(currentTarget);
             float dist = Vector3.Distance(_playerTransform.position, targetPosition);
 
             float lowThreshold = Mathf.Max(0.1f, minDistance);
@@ -586,16 +570,7 @@ namespace LittleHeroJourney
                     }
                 }
                 
-                if (showDebugLog)
-                {
-                    Debug.Log($"[{GetType().Name}] Enemies found: {_cachedEnemies.Count}");
-                }
-                
-                if (showDebugLog)
-                {
-                    Debug.Log($"[{GetType().Name}] Enemies after removing player: {_cachedEnemies.Count}");
-                }
-                
+                if (showDebugLog) Debug.Log($"[{GetType().Name}] Enemy cache updated: {_cachedEnemies.Count}");
                 _cacheTime = Time.time;
             }
         }
