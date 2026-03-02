@@ -4,7 +4,6 @@ using UnityEngine;
 
 namespace LittleHeroJourney
 {
-    [CreateAssetMenu(fileName = "PrefabBrushSettings", menuName = "Tools/Prefab Brush Settings")]
     public class PrefabBrushSettings : ScriptableObject
 {
     [Header("Brush Settings")]

@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace LittleHeroJourney
 {
-    [CreateAssetMenu(fileName = "CanvasFlowConfig", menuName = "Canvas/Canvas Flow Config")]
+    [CreateAssetMenu(fileName = "CanvasFlowConfig", menuName = "Little Hero Journey/UI/Canvas Flow Config")]
     public class CanvasFlowConfigSO : ScriptableObject
     {
         public enum TransitionMode

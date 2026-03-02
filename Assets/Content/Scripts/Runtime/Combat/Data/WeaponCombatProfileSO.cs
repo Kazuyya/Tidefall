@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace LittleHeroJourney
 {
-    [CreateAssetMenu(fileName = "WeaponCombatProfile", menuName = "Combat/Weapon Combat Profile")]
+    [CreateAssetMenu(fileName = "WeaponCombatProfile", menuName = "Little Hero Journey/Combat/Weapon Combat Profile")]
     public class WeaponCombatProfileSO : ScriptableObject
     {
         [Header("Weapon Info")]

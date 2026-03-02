@@ -65,6 +65,12 @@ namespace LittleHeroJourney
         private Health _health;
         private AutoAimController _autoAimController;
         private EyeframeManager _eyeframeManager;
+        private LevelableStats _levelable;
+
+        /// <summary>Move speed from LevelableStats if present and &gt; 0, else from MovementSettings.</summary>
+        public float EffectiveMaxStableMoveSpeed => _levelable != null && _levelable.MoveSpeed > 0f ? _levelable.MoveSpeed : (movementSettings != null ? movementSettings.MaxStableMoveSpeed : 0f);
+        /// <summary>Air move speed from LevelableStats if present and &gt; 0, else from MovementSettings.</summary>
+        public float EffectiveMaxAirMoveSpeed => _levelable != null && _levelable.MoveSpeed > 0f ? _levelable.MoveSpeed : (movementSettings != null ? movementSettings.MaxAirMoveSpeed : 0f);
 
         // Cached values for performance
         private bool _hasValidAnimatorSetup = false;
@@ -196,6 +202,7 @@ namespace LittleHeroJourney
             _health = GetComponent<Health>();
             _autoAimController = GetComponent<AutoAimController>();
             _eyeframeManager = GetComponent<EyeframeManager>();
+            _levelable = GetComponent<LevelableStats>();
 
             _playerAnimator = GetComponentInChildren<Animator>();
             if (_playerAnimator == null)

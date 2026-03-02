@@ -6,7 +6,7 @@ namespace LittleHeroJourney
     /// ScriptableObject untuk data satu level (CONFIG SAJA - FIXED)
     /// Unlock status disimpan terpisah di GameStateSO runtime state
     /// </summary>
-    [CreateAssetMenu(fileName = "Level_", menuName = "LittleHeroJourney/Levels/Level")]
+    [CreateAssetMenu(fileName = "Level_", menuName = "Little Hero Journey/Levels/Level")]
     public class LevelSO : ScriptableObject
     {
         [Header("Level Info")]

@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace LittleHeroJourney
 {
-    [CreateAssetMenu(fileName = "MovementSettings", menuName = "Player/Movement Settings")]
+    [CreateAssetMenu(fileName = "MovementSettings", menuName = "Little Hero Journey/Player/Movement Settings")]
     public class MovementSettingsSO : ScriptableObject
     {
         [Header("Stable Movement")]

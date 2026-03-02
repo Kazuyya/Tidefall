@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace LittleHeroJourney
 {
-    [CreateAssetMenu(fileName = "AISettings", menuName = "AI/AI Settings")]
+    [CreateAssetMenu(fileName = "AISettings", menuName = "Little Hero Journey/AI/AI Settings")]
     public class AISettingsSO : ScriptableObject
     {
         [Header("Movement Settings")]

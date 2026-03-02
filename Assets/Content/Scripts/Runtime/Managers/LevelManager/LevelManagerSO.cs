@@ -6,7 +6,7 @@ namespace LittleHeroJourney
     /// <summary>
     /// ScriptableObject untuk konfigurasi semua level
     /// </summary>
-    [CreateAssetMenu(fileName = "LevelManager_Config", menuName = "LittleHeroJourney/Levels/Manager")]
+    [CreateAssetMenu(fileName = "LevelManager_Config", menuName = "Little Hero Journey/Levels/Manager")]
     public class LevelManagerSO : ScriptableObject
     {
         [Header("Level List")]

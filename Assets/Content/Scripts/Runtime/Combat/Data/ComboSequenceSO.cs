@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace LittleHeroJourney
 {
-    [CreateAssetMenu(fileName = "ComboSequence", menuName = "Combat/Combo Sequence")]
+    [CreateAssetMenu(fileName = "ComboSequence", menuName = "Little Hero Journey/Combat/Combo Sequence")]
     public class ComboSequenceSO : ScriptableObject
     {
         [Header("Sequence Info")]

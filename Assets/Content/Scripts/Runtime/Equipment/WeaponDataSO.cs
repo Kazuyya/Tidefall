@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace LittleHeroJourney
 {
-    [CreateAssetMenu(fileName = "WeaponData", menuName = "Equipment/Weapon Data")]
+    [CreateAssetMenu(fileName = "WeaponData", menuName = "Little Hero Journey/Equipment/Weapon Data")]
     public class WeaponDataSO : ScriptableObject
     {
         [Header("Basic Info")]

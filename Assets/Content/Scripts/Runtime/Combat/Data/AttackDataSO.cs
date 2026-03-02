@@ -15,7 +15,7 @@ namespace LittleHeroJourney
     }
 
 
-    [CreateAssetMenu(fileName = "AttackData", menuName = "Combat/Attack Data")]
+    [CreateAssetMenu(fileName = "AttackData", menuName = "Little Hero Journey/Combat/Attack Data")]
     public class AttackDataSO : ScriptableObject
     {
     public enum AttackType

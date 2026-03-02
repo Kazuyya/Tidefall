@@ -19,7 +19,7 @@ namespace LittleHeroJourney
 
             if (Agent.NavMeshAgent != null && Agent.NavMeshAgent.enabled && Agent.NavMeshAgent.isOnNavMesh)
             {
-                Agent.NavMeshAgent.speed = Agent.Settings.MoveSpeed;
+                Agent.NavMeshAgent.speed = Agent.EffectiveMoveSpeed;
 
                 float distanceToTarget = Agent.Target != null ? Vector3.Distance(Agent.transform.position, Agent.Target.position) : float.MaxValue;
                 if (distanceToTarget <= Agent.Settings.AttackRange)
@@ -160,9 +160,9 @@ namespace LittleHeroJourney
             if (combat != null)
             {
                 combat.TriggerAIAttack();
-                Agent.SetCombatCooldownTimer(Agent.Settings.CombatCooldownTime);
+                Agent.SetCombatCooldownTimer(Agent.EffectiveCombatCooldownTime);
                 if (Agent.Settings.ShowDebugLog)
-                    Debug.Log($"[{Agent.GetType().Name}] Attack triggered, cooldown: {Agent.Settings.CombatCooldownTime}s");
+                    Debug.Log($"[{Agent.GetType().Name}] Attack triggered, cooldown: {Agent.EffectiveCombatCooldownTime}s");
             }
         }
 

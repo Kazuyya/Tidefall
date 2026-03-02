@@ -41,7 +41,7 @@ namespace LittleHeroJourney
                 Agent.StartMovementPreparation();
                 if (Agent.NavMeshAgent != null && Agent.NavMeshAgent.enabled && Agent.NavMeshAgent.isOnNavMesh)
                 {
-                    Agent.NavMeshAgent.speed = Agent.Settings.MoveSpeed;
+                    Agent.NavMeshAgent.speed = Agent.EffectiveMoveSpeed;
                 }
             }
         }
@@ -70,7 +70,7 @@ namespace LittleHeroJourney
                     Agent.StartMovementPreparation();
                     if (Agent.NavMeshAgent != null && Agent.NavMeshAgent.enabled && Agent.NavMeshAgent.isOnNavMesh)
                     {
-                        Agent.NavMeshAgent.speed = Agent.Settings.MoveSpeed;
+                        Agent.NavMeshAgent.speed = Agent.EffectiveMoveSpeed;
                     }
                 }
                 else

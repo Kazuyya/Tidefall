@@ -73,7 +73,7 @@ namespace LittleHeroJourney
 
         Vector3 inputRight = Vector3.Cross(effectiveMoveInput, Motor.CharacterUp);
         Vector3 reorientedInput = Vector3.Cross(effectiveGroundNormal, inputRight).normalized * effectiveMoveInput.magnitude;
-            Vector3 targetMovementVelocity = reorientedInput * Controller.movementSettings.MaxStableMoveSpeed;
+            Vector3 targetMovementVelocity = reorientedInput * Controller.EffectiveMaxStableMoveSpeed;
 
             currentVelocity = Vector3.Lerp(currentVelocity, targetMovementVelocity, 1f - Mathf.Exp(-Controller.movementSettings.StableMovementSharpness * deltaTime));
         }
@@ -84,9 +84,9 @@ namespace LittleHeroJourney
                 Vector3 addedVelocity = effectiveMoveInput * Controller.movementSettings.AirAccelerationSpeed * deltaTime;
                 Vector3 currentVelocityOnInputsPlane = Vector3.ProjectOnPlane(currentVelocity, Motor.CharacterUp);
 
-                if (currentVelocityOnInputsPlane.magnitude < Controller.movementSettings.MaxAirMoveSpeed)
+                if (currentVelocityOnInputsPlane.magnitude < Controller.EffectiveMaxAirMoveSpeed)
                 {
-                    Vector3 newTotal = Vector3.ClampMagnitude(currentVelocityOnInputsPlane + addedVelocity, Controller.movementSettings.MaxAirMoveSpeed);
+                    Vector3 newTotal = Vector3.ClampMagnitude(currentVelocityOnInputsPlane + addedVelocity, Controller.EffectiveMaxAirMoveSpeed);
                     addedVelocity = newTotal - currentVelocityOnInputsPlane;
                 }
                 else
@@ -115,7 +115,7 @@ namespace LittleHeroJourney
 
         Vector3 horizontalVelocity = Vector3.ProjectOnPlane(currentVelocity, Motor.CharacterUp);
         float currentSpeedMagnitude = horizontalVelocity.magnitude;
-        float normalizedSpeed = Mathf.Clamp01(currentSpeedMagnitude / Controller.movementSettings.MaxStableMoveSpeed);
+        float normalizedSpeed = Mathf.Clamp01(currentSpeedMagnitude / Mathf.Max(0.001f, Controller.EffectiveMaxStableMoveSpeed));
         Controller.UpdateAnimationSpeed(normalizedSpeed);
     }
 }

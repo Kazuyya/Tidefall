@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace LittleHeroJourney
 {
-    [CreateAssetMenu(fileName = "SceneFlowConfig", menuName = "SceneManagement/Scene Flow Config")]
+    [CreateAssetMenu(fileName = "SceneFlowConfig", menuName = "Little Hero Journey/Scene/Scene Flow Config")]
     public class SceneFlowConfigSO : ScriptableObject
     {
         public enum SceneKind

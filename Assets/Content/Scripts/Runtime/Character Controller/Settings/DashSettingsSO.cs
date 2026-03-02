@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace LittleHeroJourney
 {
-    [CreateAssetMenu(fileName = "DashSettings", menuName = "Player/Dash Settings")]
+    [CreateAssetMenu(fileName = "DashSettings", menuName = "Little Hero Journey/Player/Dash Settings")]
     public class DashSettingsSO : ScriptableObject
     {
         [Header("Dash Settings")]

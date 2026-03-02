@@ -40,8 +40,13 @@ namespace LittleHeroJourney
         protected float _currentAnimationSpeed = 0f;
         private int _cachedSpeedParameterHash = -1;
         private bool _isDead = false;
+        private LevelableStats _levelable;
 
         public NavMeshAgent NavMeshAgent => _navMeshAgent;
+        /// <summary>Move speed from LevelableStats if present and &gt; 0, else from Settings.</summary>
+        public float EffectiveMoveSpeed => _levelable != null && _levelable.MoveSpeed > 0f ? _levelable.MoveSpeed : (Settings != null ? Settings.MoveSpeed : 0f);
+        /// <summary>Cooldown from LevelableStats if present and &gt; 0, else from Settings.</summary>
+        public float EffectiveCombatCooldownTime => _levelable != null && _levelable.AttackCooldown > 0f ? _levelable.AttackCooldown : (Settings != null ? Settings.CombatCooldownTime : 0f);
         public Animator Animator => _animator;
         public Transform Target => _target;
         public bool HasTarget => _hasTarget;
@@ -163,6 +168,7 @@ namespace LittleHeroJourney
                 if (Settings.ShowDebugLog) Debug.LogWarning($"[{GetType().Name}] ICombatant component not found!");
             }
 
+            _levelable = GetComponent<LevelableStats>();
             _health = GetComponent<Health>();
             if (_health != null)
             {
@@ -171,7 +177,7 @@ namespace LittleHeroJourney
 
             if (_navMeshAgent != null)
             {
-                _navMeshAgent.speed = Settings.MoveSpeed;
+                _navMeshAgent.speed = EffectiveMoveSpeed;
                 _navMeshAgent.angularSpeed = Settings.RotationSpeed;
                 _navMeshAgent.stoppingDistance = Settings.StoppingDistance;
                 _navMeshAgent.updateRotation = true;
@@ -420,7 +426,7 @@ namespace LittleHeroJourney
                 return;
             }
 
-            float maxSpeed = Settings.MoveSpeed * speedMultiplier;
+            float maxSpeed = EffectiveMoveSpeed * speedMultiplier;
             float normalizedSpeed = Mathf.Clamp01(currentSpeed / maxSpeed);
             UpdateAnimationSpeed(normalizedSpeed);
         }
