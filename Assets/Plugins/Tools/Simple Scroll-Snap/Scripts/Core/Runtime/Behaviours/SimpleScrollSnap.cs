@@ -1,4 +1,4 @@
-﻿// Simple Scroll-Snap - https://assetstore.unity.com/packages/tools/gui/simple-scroll-snap-140884
+// Simple Scroll-Snap - https://assetstore.unity.com/packages/tools/gui/simple-scroll-snap-140884
 // Copyright (c) Daniel Lochner
 
 using System;
@@ -621,6 +621,15 @@ namespace DanielLochner.Assets.SimpleScrollSnap
                 ScrollRect.inertia = false;
             }
         }
+
+        /// <summary>
+        /// Re-run setup (layout + starting panel position). Call after content or layout changes, or when shown after being disabled.
+        /// </summary>
+        public void Refresh()
+        {
+            if (NumberOfPanels > 0) Setup();
+        }
+
         public void GoToPreviousPanel()
         {
             int nearestPanel = GetNearestPanel();

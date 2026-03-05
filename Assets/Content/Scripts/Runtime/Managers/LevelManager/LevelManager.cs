@@ -1,7 +1,9 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
 using LittleHeroJourney.UI;
+using DanielLochner.Assets.SimpleScrollSnap;
 
 namespace LittleHeroJourney
 {
@@ -18,12 +20,13 @@ namespace LittleHeroJourney
 
         [Header("UI")]
         [SerializeField] private Transform levelButtonContainer;
+        [SerializeField] private SimpleScrollSnap simpleScrollSnap;
 
         [Header("Debug")]
         [SerializeField] private bool showDebugLog = false;
 
         private LevelButton[] spawnedLevelButtons;
-        private int currentLevelNumber = 0; // Track level yang sedang dimainkan
+        private int currentLevelNumber = 0; 
         
         [System.Serializable]
         public class LevelState
@@ -40,13 +43,16 @@ namespace LittleHeroJourney
 
         private void Awake()
         {
-            // Setup singleton - tapi jangan destroy karena dia 1 GameObject dengan GameManager (DontDestroyOnLoad)
             if (Instance == null)
             {
                 Instance = this;
             }
-            // Jika ada Instance lain, reference ke yang existing aja, jangan destroy
-            // karena dia protected oleh GameManager's DontDestroyOnLoad
+
+            if (levelConfig != null)
+            {
+                SpawnLevelButtons();
+                SetScrollSnapToLastPanel();
+            }
         }
 
         private void Start()
@@ -67,16 +73,37 @@ namespace LittleHeroJourney
                 InitializeLevelStates(levelConfig.Levels);
             }
 
-            SpawnLevelButtons();
+            RefreshAllLevelButtons();
+
+            var canvasManager = GameManager.Instance != null ? GameManager.Instance.CanvasManager : null;
+            if (canvasManager != null)
+                canvasManager.OnOpenComplete += OnCanvasOpenComplete;
+        }
+
+        private void OnDestroy()
+        {
+            var canvasManager = GameManager.Instance != null ? GameManager.Instance.CanvasManager : null;
+            if (canvasManager != null)
+                canvasManager.OnOpenComplete -= OnCanvasOpenComplete;
+        }
+
+        private void OnCanvasOpenComplete(GameCanvas canvas)
+        {
+            if (canvas == null || canvas.ID != "Level") return;
+            StartCoroutine(RefreshScrollSnapAfterLayout());
+        }
+
+        private IEnumerator RefreshScrollSnapAfterLayout()
+        {
+            yield return null;
+            yield return null;
+            EnsureScrollSnapAtLastPanel();
         }
 
         #endregion
 
         #region Level Button Spawning
 
-        /// <summary>
-        /// Spawn level buttons based on LevelManagerSO
-        /// </summary>
         private void SpawnLevelButtons()
         {
             // Clear existing buttons
@@ -88,7 +115,7 @@ namespace LittleHeroJourney
             int totalLevels = levelConfig.GetTotalLevels();
             spawnedLevelButtons = new LevelButton[totalLevels];
 
-            for (int i = 0; i < totalLevels; i++)
+            for (int i = totalLevels - 1; i >= 0; i--)
             {
                 LevelSO level = levelConfig.GetLevelByIndex(i);
                 if (level == null) continue;
@@ -114,6 +141,33 @@ namespace LittleHeroJourney
 
             if (showDebugLog)
                 Debug.Log($"[{GetType().Name}] Spawned {totalLevels} level buttons");
+        }
+
+        private void SetScrollSnapToLastPanel()
+        {
+            if (simpleScrollSnap == null) return;
+            int totalLevels = levelConfig.GetTotalLevels();
+            if (totalLevels <= 0) return;
+            int lastPanelIndex = totalLevels - 1;
+            simpleScrollSnap.StartingPanel = lastPanelIndex;
+            if (showDebugLog) Debug.Log($"[{GetType().Name}] SetScrollSnapToLastPanel: StartingPanel = {lastPanelIndex} (10 level = index 9).");
+        }
+
+                public void EnsureScrollSnapAtLastPanel()
+        {
+            if (simpleScrollSnap == null) return;
+            Canvas.ForceUpdateCanvases();
+            simpleScrollSnap.Refresh();
+        }
+
+        private void RefreshAllLevelButtons()
+        {
+            if (spawnedLevelButtons == null) return;
+            for (int i = 0; i < spawnedLevelButtons.Length; i++)
+            {
+                if (spawnedLevelButtons[i] != null)
+                    spawnedLevelButtons[i].UpdateVisual();
+            }
         }
 
         #endregion
@@ -249,6 +303,8 @@ namespace LittleHeroJourney
                 ApplyData(data);
             }
             SpawnLevelButtons();
+            SetScrollSnapToLastPanel();
+            RefreshAllLevelButtons();
         }
         [ContextMenu("Progress/Reset to Default")]
         public void ResetAllProgress()
@@ -257,6 +313,8 @@ namespace LittleHeroJourney
             currentPlayerHealth = 100;
             ES3.Save("GameState", ToData());
             SpawnLevelButtons();
+            SetScrollSnapToLastPanel();
+            RefreshAllLevelButtons();
         }
         [ContextMenu("Progress/Delete Save")]
         public void DeleteSave()
