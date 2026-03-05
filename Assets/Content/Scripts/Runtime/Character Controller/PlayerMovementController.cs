@@ -7,7 +7,6 @@ using UnityEngine.InputSystem;
 using Terresquall;
 using LittleHeroJourney.InputSystem;
 
-// Suppress obsolete warnings from KinematicCharacterController plugin
 #pragma warning disable CS0618
 
 namespace LittleHeroJourney
@@ -24,16 +23,12 @@ namespace LittleHeroJourney
         TowardsMovement,
     }
 
-    /// <summary>
-    /// Tracks which system is currently locking player movement (if any)
-    /// Prevents race conditions between Knockback, DamageFeedback, Stun, etc
-    /// </summary>
     public enum MovementLockReason
     {
-        None,              // Movement is free
-        Knockback,         // Currently being knocked back
-        DamageFeedback,    // Currently playing damage feedback animation
-        Stun,              // Currently stunned
+        None,              
+        Knockback,         
+        DamageFeedback,    
+        Stun,             
     }
 
     public struct PlayerMovementInputs
@@ -54,9 +49,10 @@ namespace LittleHeroJourney
         [Header("Dash Settings")]
         public DashSettingsSO dashSettings;
 
-        [Header("Input Settings")]
+        [Tooltip("Move + Dash actions. Joystick (virtualJoystickId) dipakai untuk move bila ada.")]
         public InputActionAsset inputActionAsset;
         public Camera playerCamera;
+        [Tooltip("ID untuk VirtualJoystick (mobile). Move = joystick prioritas, lalu Input Action.")]
         public int virtualJoystickId;
 
         // Core Components
@@ -117,7 +113,6 @@ namespace LittleHeroJourney
         private Vector3 _dashTargetPosition;
         private float _currentDashSpeed = 0f;
 
-        // Input Actions
         private InputAction moveAction;
         private InputAction dashAction;
 
@@ -245,21 +240,11 @@ namespace LittleHeroJourney
                 if (showDebugLog) Debug.LogWarning($"[{GetType().Name}] InputActionAsset is not assigned!");
                 return;
             }
-
-            try
-            {
-                moveAction = inputActionAsset.FindAction("Move");
-                dashAction = inputActionAsset.FindAction("Dash");
-
-                if (moveAction != null) moveAction.Enable();
-                if (dashAction != null) dashAction.Enable();
-
-                inputActionAsset.Enable();
-            }
-            catch (System.Exception e)
-            {
-                if (showDebugLog) Debug.LogWarning($"[{GetType().Name}] Failed to setup input actions: {e.Message}");
-            }
+            moveAction = inputActionAsset.FindAction("Move");
+            dashAction = inputActionAsset.FindAction("Dash");
+            if (moveAction != null) moveAction.Enable();
+            if (dashAction != null) dashAction.Enable();
+            inputActionAsset.Enable();
         }
 
         private void SetupAnimator()
@@ -349,9 +334,9 @@ namespace LittleHeroJourney
 
         private void Update()
         {
+            HandleDashRequest();
             HandleDashInput();
             HandleMovementInput();
-            HandleDashRequest();
             UpdateStateAnimation();
         }
 
@@ -374,31 +359,27 @@ namespace LittleHeroJourney
 
         private void HandleDashInput()
         {
-            if (_dashCooldownTimer > 0f)
-            {
-                _dashCooldownTimer -= Time.deltaTime;
-            }
+            if (_dashCooldownTimer > 0f) _dashCooldownTimer -= Time.deltaTime;
+            if (dashAction != null && dashAction.triggered) TriggerDash();
         }
 
         private Vector2 GetCombinedMoveInput()
         {
-            Vector2 joystickInput = GetJoystickInput();
-            Vector2 keyboardInput = GetKeyboardInput();
-
-            if (joystickInput.sqrMagnitude > 0.01f) return joystickInput;
-            if (keyboardInput.sqrMagnitude > 0.01f) return keyboardInput;
-
+            Vector2 joystick = GetJoystickInput();
+            if (joystick.sqrMagnitude > 0.01f) return joystick;
+            Vector2 fromActions = GetMoveFromInputActions();
+            if (fromActions.sqrMagnitude > 0.01f) return fromActions;
             return Vector2.zero;
         }
 
         private Vector2 GetJoystickInput()
         {
             if (VirtualJoystick.CountActiveInstances() == 0) return Vector2.zero;
-            VirtualJoystick joystick = VirtualJoystick.GetInstance(virtualJoystickId);
-            return (joystick != null && joystick.isActiveAndEnabled) ? joystick.GetAxis() : Vector2.zero;
+            VirtualJoystick j = VirtualJoystick.GetInstance(virtualJoystickId);
+            return (j != null && j.isActiveAndEnabled) ? j.GetAxis() : Vector2.zero;
         }
 
-        private Vector2 GetKeyboardInput()
+        private Vector2 GetMoveFromInputActions()
         {
             if (moveAction == null) return Vector2.zero;
             return moveAction.ReadValue<Vector2>();
@@ -406,20 +387,16 @@ namespace LittleHeroJourney
 
         private void HandleDashRequest()
         {
-            if (_dashRequested && CurrentPlayerState == PlayerState.Default)
-            {
-                if (_playerCombat != null && _playerCombat.IsAttacking)
-                {
-                    _playerCombat.OnInterrupted();
-                }
+            if (!_dashRequested || CurrentPlayerState != PlayerState.Default) return;
 
-                if (_playerAnimator != null && !string.IsNullOrEmpty(dashSettings?.dashParameterName))
-                {
-                    _playerAnimator.SetTrigger(dashSettings.dashParameterName);
-                }
-                TransitionToState(PlayerState.Dashing);
-                _dashRequested = false;
-            }
+            bool wasAttacking = _playerCombat != null && _playerCombat.IsAttacking;
+            if (wasAttacking)
+                _playerCombat.OnInterrupted();
+
+            if (_playerAnimator != null && dashSettings != null && !string.IsNullOrEmpty(dashSettings.dashParameterName))
+                _playerAnimator.SetTrigger(dashSettings.dashParameterName);
+            TransitionToState(PlayerState.Dashing);
+            _dashRequested = false;
         }
 
         private void UpdateStateAnimation()
@@ -444,18 +421,15 @@ namespace LittleHeroJourney
 
         public void UpdateRotation(ref Quaternion currentRotation, float deltaTime)
         {
-            // If movement is disabled (disable window), don't update rotation at all
             if (IsMovementDisabled)
             {
                 return;
             }
 
-            // Priority 1: Forced rotation (damage feedback to damager)
             if (_isForcedRotating && _forcedRotationTarget != null)
             {
                 currentRotation = ApplyForcedRotation(currentRotation, deltaTime);
             }
-            // Priority 2: Normal state rotation
             else if (_currentState != null)
             {
                 _currentState.UpdateRotation(ref currentRotation, deltaTime);
@@ -503,31 +477,28 @@ namespace LittleHeroJourney
 
         #region Public Methods
 
-        /// <summary>
-        /// Triggered via GameInputEvents.OnDash
-        /// </summary>
         private void TriggerDash()
         {
             if (_health != null && !_health.IsAlive) return;
+            if (_health != null && _health.IsInDamageFeedback) return; 
+            if (dashSettings != null && !dashSettings.dashOverridesAttack && _playerCombat != null && _playerCombat.IsAttacking)
+                return;
 
             bool isCombatInterruptible = _playerCombat != null && _playerCombat.IsAttacking && _playerCombat.IsInterruptible;
             bool isMovementAllowed = _movementLockReason == MovementLockReason.None || isCombatInterruptible;
-            
-            // Allow dash if cooldown is ready, not already requested, movement is allowed (or interruptible), and grounded
-            if (_dashCooldownTimer <= 0f && !_dashRequested && isMovementAllowed && CurrentPlayerState == PlayerState.Default)
-            {
-                if (_playerCombat != null && _playerCombat.IsAttacking && !_playerCombat.IsInterruptible)
-                {
-                    // Combat is blocking and NOT interruptible
-                    return;
-                }
 
-                if (Motor != null && Motor.GroundingStatus.IsStableOnGround)
-                {
-                    _dashRequested = true;
-                    HandleDashRequest(); // Execute immediately to avoid 1-frame delay
-                }
+            if (CurrentPlayerState != PlayerState.Default || _dashCooldownTimer > 0f || !isMovementAllowed)
+                return;
+            if (_playerCombat != null && _playerCombat.IsAttacking && !_playerCombat.IsInterruptible)
+                return;
+
+            if (Motor != null && Motor.GroundingStatus.IsStableOnGround)
+            {
+                _dashRequested = true;
+                HandleDashRequest();
             }
+            else
+                _dashRequested = true;
         }
 
         public void AddVelocity(Vector3 velocity)
@@ -820,14 +791,8 @@ namespace LittleHeroJourney
             _forcedRotationThreshold = rotationThreshold;
         }
 
-        /// <summary>
-        /// Get current forced rotation state
-        /// </summary>
         public bool IsForcedRotating => _isForcedRotating;
 
-        /// <summary>
-        /// Apply forced rotation (smooth rotate to target)
-        /// </summary>
         public Quaternion ApplyForcedRotation(Quaternion currentRotation, float deltaTime)
         {
             if (!_isForcedRotating || _forcedRotationTarget == null)

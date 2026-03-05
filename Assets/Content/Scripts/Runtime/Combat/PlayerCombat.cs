@@ -201,6 +201,8 @@ namespace LittleHeroJourney
 
         void Update()
         {
+            if (attackAction != null && attackAction.triggered)
+                TriggerAttack();
             UpdateComboWindowState();
             UpdateAttackState();
             UpdateTimers();
@@ -664,19 +666,11 @@ namespace LittleHeroJourney
         public void TriggerAttack()
         {
             if (_movementController != null && _movementController.IsDashing)
-            {
-                if (ShowDebugLog) Debug.Log($"[{GetType().Name}] TriggerAttack BLOCKED - Currently dashing");
                 return;
-            }
+            if (_health != null && !_health.IsAlive) return;
+            if (_attackLocked) return;
 
-            // Check if player is dead
-            if (_health != null && !_health.IsAlive)
-            {
-                if (ShowDebugLog) Debug.Log($"[{GetType().Name}] TriggerAttack BLOCKED - Player is dead");
-                return;
-            }
-
-            if (ShowDebugLog) Debug.Log($"[{GetType().Name}] TriggerAttack called - IsAttacking: {_isAttacking}, AttackLocked: {_attackLocked}, AttackIndex: {currentAttackIndex}");
+            if (ShowDebugLog) Debug.Log($"[{GetType().Name}] TriggerAttack called - IsAttacking: {_isAttacking}, AttackIndex: {currentAttackIndex}");
 
             if (currentCombatProfile != null)
             {

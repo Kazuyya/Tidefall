@@ -31,7 +31,7 @@ namespace LittleHeroJourney
 
         Motor.ForceUnground();
         Controller.DashVelocity = Controller.DashDirection * Controller.dashSettings.DashSpeed;
-        Controller.CurrentDashSpeed = 0f;
+        Controller.CurrentDashSpeed = Controller.dashSettings.DashSpeed;
 
         if (Controller.EyeframeManager != null)
         {

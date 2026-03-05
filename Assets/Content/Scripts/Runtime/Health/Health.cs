@@ -164,12 +164,12 @@ namespace LittleHeroJourney
         private void TriggerDamageFeedback()
         {
             if (_animator == null) return;
+            SetDamageFeedbackState(true);
             if (!string.IsNullOrEmpty(damageAnimationTrigger))
                 _animator.SetTrigger(damageAnimationTrigger);
             float len = Helper.GetCurrentAnimationLength(_animator);
             _isInDamageFeedback = true;
             _damageFeedbackEndTime = Time.time + len;
-            SetDamageFeedbackState(true);
             
             _damageVFXTriggered = null;
             _damageAudioTriggered = null;

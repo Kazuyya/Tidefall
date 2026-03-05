@@ -21,5 +21,6 @@ MonoBehaviour:
   MaxGroundSmoothFactor: 50
   GroundSmoothScaleThreshold: 0.5
   dashParameterName: Dash
+  dashOverridesAttack: 1
   ShowDebugGizmos: 1
   ShowDebugLog: 0
