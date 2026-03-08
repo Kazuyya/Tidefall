@@ -23,6 +23,5 @@ MonoBehaviour:
   - {fileID: 11400000, guid: fe967bdb3c080e64c8979676508f22d6, type: 2}
   - {fileID: 11400000, guid: d362a55a21de57c4b9532149b8ebb8da, type: 2}
   - {fileID: 11400000, guid: e3c49fb3c260dc343ae2214713579812, type: 2}
-  levelButtonPrefab: {fileID: 1260068822098540529, guid: 4a06d3cdf89aa8a4fa4f7e74ed88cddd,
-    type: 3}
+  levelButtonPrefab: {fileID: 1902229583767353898, guid: 14f684514edc3544ca13a26c94b1a9a9, type: 3}
   showDebugLog: 0

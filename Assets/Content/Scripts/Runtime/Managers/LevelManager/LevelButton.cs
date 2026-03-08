@@ -9,6 +9,8 @@ namespace LittleHeroJourney
     {
         [Header("UI Components")]
         [SerializeField] private TextMeshProUGUI levelNumberText;
+        [SerializeField] private TextMeshProUGUI levelNameText;
+        [SerializeField] private TextMeshProUGUI storySummaryText;
         [SerializeField] private GameObject lockedIcon;
 
         [Header("Debug")]
@@ -27,148 +29,49 @@ namespace LittleHeroJourney
 
         #endregion
 
-        #region Setup
-
-        /// <summary>
-        /// Setup button berdasarkan LevelSO dan game state
-        /// </summary>
         private void Setup()
         {
-            if (levelData == null)
-            {
-                if (showDebugLog) Debug.LogWarning($"[{GetType().Name}] LevelData not set! (Should be set by LevelManager on spawn)");
-                return;
-            }
-
-            // Get references
+            if (levelData == null) return;
             levelManager = FindObjectOfType<LevelManager>();
             levelButton = GetComponent<Button>();
-
-            if (levelButton == null)
-            {
-                if (showDebugLog) Debug.LogWarning($"[{GetType().Name}] Button component not found!");
-                return;
-            }
-
-            if (showDebugLog)
-                Debug.Log($"[{GetType().Name}] Setup Level {levelData.LevelNumber}");
-
-            // Update visual
+            if (levelButton == null) return;
             UpdateVisual();
-
-            // Setup button listener
             levelButton.onClick.AddListener(OnButtonClicked);
-            if (showDebugLog)
-                Debug.Log($"[{GetType().Name}] onClick listener added for Level {levelData.LevelNumber}");
         }
 
-        #endregion
+        public void OnPointerClick(PointerEventData eventData) => OnButtonClicked();
 
-        #region Pointer Click Handler (untuk click detection)
-
-        public void OnPointerClick(PointerEventData eventData)
-        {
-            if (showDebugLog) Debug.Log($"[{GetType().Name}] OnPointerClick called for Level {levelData?.LevelNumber}");
-            OnButtonClicked();
-        }
-
-        #endregion
-
-        #region Visual Update
-
-        /// <summary>
-        /// Update button visual berdasarkan unlock status
-        /// Unlocked: Show level number text, hide lock icon, button enabled
-        /// Locked: Hide level number text, show lock icon, button disabled
-        /// </summary>
         public void UpdateVisual()
         {
             if (levelData == null) return;
-
             bool isUnlocked = levelManager != null && levelManager.IsLevelUnlocked(levelData.LevelNumber);
 
-            if (showDebugLog)
-                Debug.Log($"[{GetType().Name}] Level {levelData.LevelNumber} - Unlocked: {isUnlocked}");
-
-            // UNLOCKED STATE
-            if (isUnlocked)
-            {
-                // Show level number
-                if (levelNumberText != null)
-                {
-                    levelNumberText.gameObject.SetActive(true);
-                    levelNumberText.text = levelData.LevelNumber.ToString();
-                }
-
-                // Hide lock icon
-                if (lockedIcon != null)
-                {
-                    lockedIcon.SetActive(false);
-                }
-
-                // Enable button
-                if (levelButton != null)
-                {
-                    levelButton.interactable = true;
-                }
-            }
-            // LOCKED STATE
-            else
-            {
-                // Hide level number
-                if (levelNumberText != null)
-                {
-                    levelNumberText.gameObject.SetActive(false);
-                }
-
-                // Show lock icon
-                if (lockedIcon != null)
-                {
-                    lockedIcon.SetActive(true);
-                }
-
-                // Disable button
-                if (levelButton != null)
-                {
-                    levelButton.interactable = false;
-                }
-            }
-
-            if (showDebugLog)
-                Debug.Log($"[{GetType().Name}] Updated visual: Level {levelData.LevelNumber} (Text: {(isUnlocked ? "visible" : "hidden")}, Lock Icon: {(!isUnlocked ? "visible" : "hidden")})");
+            if (levelNumberText != null) { levelNumberText.gameObject.SetActive(isUnlocked); levelNumberText.text = levelData.LevelNumber.ToString(); }
+            if (levelNameText != null) { levelNameText.gameObject.SetActive(true); levelNameText.text = string.IsNullOrEmpty(levelData.LevelName) ? $"Story {levelData.LevelNumber}" : levelData.LevelName; }
+            if (storySummaryText != null) { storySummaryText.gameObject.SetActive(true); storySummaryText.text = CleanSummary(levelData.StorySummary); }
+            if (lockedIcon != null) lockedIcon.SetActive(!isUnlocked);
+            if (levelButton != null) levelButton.interactable = isUnlocked;
         }
 
-        #endregion
-
-        #region Button Click Handler
-
-        /// <summary>
-        /// Called ketika button di-click
-        /// </summary>
         private void OnButtonClicked()
         {
-            if (showDebugLog) Debug.Log($"[{GetType().Name}] OnButtonClicked called for Level {levelData?.LevelNumber}");
-
-            if (levelManager == null)
-            {
-                if (showDebugLog) Debug.LogWarning($"[{GetType().Name}] LevelManager is NULL!");
-                return;
-            }
-
-            bool isUnlocked = levelManager.IsLevelUnlocked(levelData.LevelNumber);
-            
-            if (!isUnlocked)
-            {
-                if (showDebugLog) Debug.LogWarning($"[{GetType().Name}] Level {levelData.LevelNumber} is locked!");
-                return;
-            }
-
-            if (showDebugLog) Debug.Log($"[{GetType().Name}] Loading level: {levelData.LevelName}");
-            // Load level
+            if (levelManager == null || !levelManager.IsLevelUnlocked(levelData.LevelNumber)) return;
             levelManager.LoadLevel(levelData);
         }
 
-        #endregion
+        private static string CleanSummary(string raw)
+        {
+            if (string.IsNullOrEmpty(raw)) return "";
+            var sb = new System.Text.StringBuilder();
+            foreach (var line in raw.Split('\n'))
+            {
+                var t = line.Trim();
+                if (t.StartsWith("//") || t.StartsWith("<!--")) continue;
+                var noHtml = System.Text.RegularExpressions.Regex.Replace(t, "<[^>]+>", " ").Trim();
+                if (noHtml.Length > 0) { if (sb.Length > 0) sb.Append('\n'); sb.Append(noHtml); }
+            }
+            return sb.ToString();
+        }
 
         #region Getters & Setters
 

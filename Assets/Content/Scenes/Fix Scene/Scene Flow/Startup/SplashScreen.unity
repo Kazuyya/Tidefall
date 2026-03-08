@@ -501,8 +501,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   levelConfig: {fileID: 11400000, guid: d31e8e87835779f4db1a123d0ae07b3b, type: 2}
-  levelButtonContainer: {fileID: 1939392903}
-  simpleScrollSnap: {fileID: 1183579167}
+  levelButtonContainer: {fileID: 1390479378}
   showDebugLog: 1
 --- !u!114 &209297266
 MonoBehaviour:
@@ -1206,17 +1205,6 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 7225048428805089171, guid: 7aeabe250985651479c41e1c844618c2, type: 3}
   m_PrefabInstance: {fileID: 3517062816713651315}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1183579167 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3746072173929308962, guid: 343af9fbb8a05d147bdfcb15baf3c68c, type: 3}
-  m_PrefabInstance: {fileID: 3619406436231267953}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 54aaa385a9b88e84e9d50b9804aaa24e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1216059047
 GameObject:
   m_ObjectHideFlags: 0
@@ -1618,6 +1606,11 @@ Transform:
   - {fileID: 1138394567}
   m_Father: {fileID: 209297264}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!224 &1390479378 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 7063119032702519145, guid: 343af9fbb8a05d147bdfcb15baf3c68c, type: 3}
+  m_PrefabInstance: {fileID: 3619406436231267953}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1905972888
 GameObject:
   m_ObjectHideFlags: 0
@@ -1752,11 +1745,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1905972888}
   m_CullTransparentMesh: 1
---- !u!224 &1939392903 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 976580425343929322, guid: 343af9fbb8a05d147bdfcb15baf3c68c, type: 3}
-  m_PrefabInstance: {fileID: 3619406436231267953}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2036418926
 GameObject:
   m_ObjectHideFlags: 0
@@ -2453,6 +2441,30 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 209297262}
+    - target: {fileID: 7063119032702519145, guid: 343af9fbb8a05d147bdfcb15baf3c68c, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 7063119032702519145, guid: 343af9fbb8a05d147bdfcb15baf3c68c, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -0.000061035156
+      objectReference: {fileID: 0}
+    - target: {fileID: 7519069353888951412, guid: 343af9fbb8a05d147bdfcb15baf3c68c, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7519069353888951412, guid: 343af9fbb8a05d147bdfcb15baf3c68c, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0.621673
+      objectReference: {fileID: 0}
+    - target: {fileID: 7519069353888951412, guid: 343af9fbb8a05d147bdfcb15baf3c68c, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8427028125441838865, guid: 343af9fbb8a05d147bdfcb15baf3c68c, type: 3}
+      propertyPath: m_Value
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

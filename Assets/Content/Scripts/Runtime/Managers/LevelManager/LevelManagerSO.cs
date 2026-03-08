@@ -4,16 +4,16 @@ using System.Collections.Generic;
 namespace LittleHeroJourney
 {
     /// <summary>
-    /// ScriptableObject untuk konfigurasi semua level
+    /// Konfigurasi semua stage story (1 stage = 1 level di logic).
     /// </summary>
-    [CreateAssetMenu(fileName = "LevelManager_Config", menuName = "Little Hero Journey/Levels/Manager")]
+    [CreateAssetMenu(fileName = "StoryManager_Config", menuName = "Little Hero Journey/Story/Manager")]
     public class LevelManagerSO : ScriptableObject
     {
-        [Header("Level List")]
+        [Header("Story List")]
         [SerializeField] private List<LevelSO> levels = new List<LevelSO>();
 
         [Header("UI Prefab")]
-        [Tooltip("Prefab untuk level button di level selector")]
+        [Tooltip("Prefab untuk story stage button di story selector")]
         [SerializeField] private GameObject levelButtonPrefab;
 
         [Header("Settings")]

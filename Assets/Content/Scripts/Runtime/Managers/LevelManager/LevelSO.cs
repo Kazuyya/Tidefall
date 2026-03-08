@@ -3,18 +3,17 @@ using UnityEngine;
 namespace LittleHeroJourney
 {
     /// <summary>
-    /// ScriptableObject untuk data satu level (CONFIG SAJA - FIXED)
-    /// Unlock status disimpan terpisah di GameStateSO runtime state
+    /// Satu stage story (1 stage = 1 "level" di logic). Unlock status di GameState.
     /// </summary>
-    [CreateAssetMenu(fileName = "Level_", menuName = "Little Hero Journey/Levels/Level")]
+    [CreateAssetMenu(fileName = "Story_", menuName = "Little Hero Journey/Story/Stage")]
     public class LevelSO : ScriptableObject
     {
-        [Header("Level Info")]
+        [Header("Story Info")]
         [SerializeField] private int levelNumber;
         [SerializeField] private string levelName;
         [SerializeField] private string storySummary;
         [SerializeField] private float maxDurationSeconds = 300f;
-        [SerializeField] private string loadTargetId = "level";
+        [SerializeField] private string loadTargetId = "story";
         
         [SerializeField]
         [SceneAttribute]
