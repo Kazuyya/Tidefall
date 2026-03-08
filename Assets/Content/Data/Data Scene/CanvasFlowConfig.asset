@@ -13,14 +13,14 @@ MonoBehaviour:
   m_Name: CanvasFlowConfig
   m_EditorClassIdentifier: 
   transitionRules:
-  - toCanvasId: Level
+  - toCanvasId: Story
     fromRules:
     - fromCanvasId: MainMenu
       mode: 0
       closeAfterInComplete: 1
   - toCanvasId: MainMenu
     fromRules:
-    - fromCanvasId: Level
+    - fromCanvasId: Story
       mode: 5
       closeAfterInComplete: 0
   - toCanvasId: Gameplay

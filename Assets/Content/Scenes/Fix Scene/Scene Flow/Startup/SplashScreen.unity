@@ -2431,7 +2431,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5036495668845454003, guid: 343af9fbb8a05d147bdfcb15baf3c68c, type: 3}
       propertyPath: m_Name
-      value: Canvas - Level Selector
+      value: Canvas - Story Selector
       objectReference: {fileID: 0}
     - target: {fileID: 5036495668845454003, guid: 343af9fbb8a05d147bdfcb15baf3c68c, type: 3}
       propertyPath: m_IsActive

@@ -18,10 +18,5 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 9a4d017e2c217f14a944de3562874d20, type: 2}
   - {fileID: 11400000, guid: 51ae223e35b22bb42a9a65b21467993b, type: 2}
   - {fileID: 11400000, guid: bfa2424114454a24a9792104e97be9f0, type: 2}
-  - {fileID: 11400000, guid: 2df9297e9dba8e545a3654c2578d61a1, type: 2}
-  - {fileID: 11400000, guid: 6b49e1987b8ac224bb4d3d383d371be4, type: 2}
-  - {fileID: 11400000, guid: fe967bdb3c080e64c8979676508f22d6, type: 2}
-  - {fileID: 11400000, guid: d362a55a21de57c4b9532149b8ebb8da, type: 2}
-  - {fileID: 11400000, guid: e3c49fb3c260dc343ae2214713579812, type: 2}
   levelButtonPrefab: {fileID: 1902229583767353898, guid: 14f684514edc3544ca13a26c94b1a9a9, type: 3}
   showDebugLog: 0
