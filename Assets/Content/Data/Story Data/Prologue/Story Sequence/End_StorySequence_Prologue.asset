@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5519bc30cdf3bbd4ca0e9f53ea1b1da7, type: 3}
-  m_Name: StorySequence_prologue
+  m_Name: End_StorySequence_Prologue
   m_EditorClassIdentifier: 
   sequenceId: Prologue
   steps:

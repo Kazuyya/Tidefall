@@ -10,17 +10,9 @@ namespace LittleHeroJourney
 
         public static JourneyManager Instance { get; private set; }
 
-        [Serializable]
-        public class StageEntry
-        {
-            public int stageNumber = 1;
-            [SceneAttribute]
-            public string sceneName;
-            public string journeyTitle = "Stage 1";
-        }
-
-        [Header("Stages")]
-        [SerializeField] private List<StageEntry> stages = new List<StageEntry>();
+        [Header("Journey Data")]
+        [SerializeField] private string storyCanvasId = "";
+        [SerializeField] private JourneysDataSO journeysData;
 
         [Header("Debug")]
         [SerializeField] private bool showDebugLog = false;
@@ -46,7 +38,7 @@ namespace LittleHeroJourney
 
         private void Start()
         {
-            if (stages == null || stages.Count == 0) return;
+            if (journeysData == null || journeysData.JourneyCount == 0) return;
             if (ES3.KeyExists(CurrentSaveKey))
                 ApplySaveData(ES3.Load<JourneySaveData>(CurrentSaveKey));
             else if (levelStates.Count == 0)
@@ -64,11 +56,11 @@ namespace LittleHeroJourney
 
         public void LoadStage(int stageNumber)
         {
-            var entry = GetStageByNumber(stageNumber);
-            if (entry == null || string.IsNullOrEmpty(entry.sceneName)) return;
+            var journey = GetJourneyByNumber(stageNumber);
+            if (journey == null || string.IsNullOrEmpty(journey.SceneName)) return;
             currentLevelNumber = stageNumber;
             if (GameManager.Instance?.SceneManager != null)
-                GameManager.Instance.SceneManager.StartStageScene(entry.sceneName);
+                GameManager.Instance.SceneManager.StartStageScene(journey.SceneName);
         }
 
         #endregion
@@ -93,7 +85,7 @@ namespace LittleHeroJourney
 
         #region Getters
 
-        public int GetTotalLevels() => stages != null ? stages.Count : 0;
+        public int GetTotalLevels() => journeysData != null ? journeysData.JourneyCount : 0;
         public int GetCurrentLevelNumber() => currentLevelNumber;
 
         public int GetFirstUncompletedStageNumber()
@@ -113,24 +105,23 @@ namespace LittleHeroJourney
 
         private string GetStageDisplayNameForStageNumber(int stageNumber)
         {
-            var entry = GetStageByNumber(stageNumber);
-            if (entry != null && !string.IsNullOrEmpty(entry.journeyTitle)) return entry.journeyTitle;
-            return $"Stage {stageNumber}";
+            var journey = GetJourneyByNumber(stageNumber);
+            if (journey != null && !string.IsNullOrEmpty(journey.JourneyTitle)) return journey.JourneyTitle;
+            return $"Journey {stageNumber}";
         }
 
-        private StageEntry GetStageByNumber(int stageNumber)
+        public JourneyDataSO GetJourneyByNumber(int stageNumber)
         {
-            if (stages == null) return null;
-            foreach (var s in stages)
-                if (s != null && s.stageNumber == stageNumber) return s;
-            return null;
+            return journeysData?.GetJourneyByNumber(stageNumber);
         }
 
-        private StageEntry GetStageByIndex(int index)
-        {
-            if (stages == null || index < 0 || index >= stages.Count) return null;
-            return stages[index];
-        }
+        public JourneyDataSO GetCurrentJourney() => GetJourneyByNumber(currentLevelNumber);
+
+        public string StoryCanvasId => storyCanvasId ?? "";
+        public StorySequenceSO StartStorySequence => GetCurrentJourney()?.StartStorySequence;
+        public StorySequenceSO EndStorySequence => GetCurrentJourney()?.EndStorySequence;
+        public StorySequenceSO GetStartStoryForJourney(int stageNumber) => GetJourneyByNumber(stageNumber)?.StartStorySequence;
+        public StorySequenceSO GetEndStoryForJourney(int stageNumber) => GetJourneyByNumber(stageNumber)?.EndStorySequence;
 
         #endregion
 
@@ -146,7 +137,7 @@ namespace LittleHeroJourney
 
         public void InitializeNewJourney()
         {
-            if (stages == null || stages.Count == 0) return;
+            if (journeysData == null || journeysData.JourneyCount == 0) return;
             InitializeLevelStates();
             currentPlayerHealth = 100;
         }
@@ -202,13 +193,12 @@ namespace LittleHeroJourney
         private void InitializeLevelStates()
         {
             levelStates.Clear();
-            if (stages == null) return;
-            for (int i = 0; i < stages.Count; i++)
+            if (journeysData == null) return;
+            for (int i = 0; i < journeysData.JourneyCount; i++)
             {
-                var entry = GetStageByIndex(i);
-                if (entry == null) continue;
-                bool unlock = entry.stageNumber == 1;
-                levelStates.Add(new LevelState { levelNumber = entry.stageNumber, isUnlocked = unlock, bestScore = 0, isCompleted = false });
+                int levelNumber = i + 1;
+                bool unlock = levelNumber == 1;
+                levelStates.Add(new LevelState { levelNumber = levelNumber, isUnlocked = unlock, bestScore = 0, isCompleted = false });
             }
         }
 

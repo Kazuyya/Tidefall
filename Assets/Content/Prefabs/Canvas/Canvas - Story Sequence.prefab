@@ -1256,7 +1256,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff3cbc12af3841e4581c12c51637cb70, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  canvasID: Story
+  canvasID: StorySequence
   openSequence:
   - targetParent: {fileID: 8154151583384069890}
     disableTargetParentWhenHidden: 1
@@ -1288,8 +1288,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d0ba32cb8f65f384a9165ee73953fc12, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  textTop: {fileID: 152606681614561184}
-  textBottom: {fileID: 4047059659884088727}
+  textNarrative: {fileID: 0}
+  textDialogue: {fileID: 0}
   solidColorImage: {fileID: 6859032048961276262}
   customImage: {fileID: 8266902815508339711}
 --- !u!1 &3971365351901606974

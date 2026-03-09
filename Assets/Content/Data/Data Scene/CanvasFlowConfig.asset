@@ -13,16 +13,6 @@ MonoBehaviour:
   m_Name: CanvasFlowConfig
   m_EditorClassIdentifier: 
   transitionRules:
-  - toCanvasId: Story
-    fromRules:
-    - fromCanvasId: MainMenu
-      mode: 0
-      closeAfterInComplete: 1
-  - toCanvasId: MainMenu
-    fromRules:
-    - fromCanvasId: Story
-      mode: 5
-      closeAfterInComplete: 0
   - toCanvasId: Gameplay
     fromRules:
     - fromCanvasId: Pause
