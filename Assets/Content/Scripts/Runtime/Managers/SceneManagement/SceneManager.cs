@@ -82,18 +82,18 @@ namespace LittleHeroJourney
             _currentId = targetId;
         }
 
-        public void StartLevel(LevelSO level)
+        public void StartStageScene(string sceneName, string targetId = "gameplay")
         {
-            if (level == null || string.IsNullOrEmpty(level.SceneName)) return;
-            string targetId = string.IsNullOrEmpty(level.LoadTargetId) ? "level" : level.LoadTargetId;
+            if (string.IsNullOrEmpty(sceneName)) return;
+            if (string.IsNullOrEmpty(targetId)) targetId = "gameplay";
             bool useLoading = ShouldUseLoading(_currentId, targetId, out bool closeBeforeLoading);
             if (useLoading && GameManager.Instance != null && GameManager.Instance.LoadingManager != null)
             {
-                GameManager.Instance.LoadingManager.LoadSceneWithLoading(level.SceneName, LoadSceneMode.Single, -1f, null, closeBeforeLoading);
+                GameManager.Instance.LoadingManager.LoadSceneWithLoading(sceneName, LoadSceneMode.Single, -1f, null, closeBeforeLoading);
             }
             else
             {
-                StartCoroutine(LoadSceneWithoutLoadingRoutine(level.SceneName, null));
+                StartCoroutine(LoadSceneWithoutLoadingRoutine(sceneName, null));
             }
             _currentId = targetId;
         }
@@ -115,8 +115,6 @@ namespace LittleHeroJourney
                 }
             }
         }
-
-        // SplashScreenManager handles transition to MainMenu after sequence completes
 
         public string ResolvePathById(string id)
         {

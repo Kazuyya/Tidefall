@@ -286,37 +286,29 @@ namespace LittleHeroJourney
         {
             if (showDebugLog) Debug.Log("[GameplayManager] Loading Finished -> Starting Level Sequence...");
 
-            // 1. Reset State
             isLevelEnded = false;
             SetInputActive(false);
 
             yield return null;
 
-            // 2. Trigger Gameplay Canvas "In"
             if (GameManager.Instance != null && GameManager.Instance.CanvasManager != null)
             {
                 if (!string.IsNullOrEmpty(gameplayCanvasId))
                     GameManager.Instance.CanvasManager.SwitchCanvas(gameplayCanvasId); 
             }
 
-            // 3. Wait for Gameplay Canvas Animation
             yield return new WaitForSeconds(startDelay);
 
-            // 4. Enable Input
             SetInputActive(true);
             
             if (showDebugLog) Debug.Log("[GameplayManager] Level Started. Input Active.");
         }
 
-        /// <summary>
-        /// Check if all encounter zones are completed. If yes, trigger win.
-        /// </summary>
         private void CheckAllEncountersCompleted()
         {
             if (encounterZones == null || encounterZones.Count == 0)
                 return;
 
-            // Check jika semua zone sudah completed
             bool allCompleted = true;
             foreach (var zone in encounterZones)
             {
@@ -355,11 +347,10 @@ namespace LittleHeroJourney
             isLevelEnded = true;
             SetInputActive(false);
             
-            // Mark level as completed dan auto-unlock next level
-            if (LevelManager.Instance != null)
+            if (JourneyManager.Instance != null)
             {
-                int currentLevel = LevelManager.Instance.GetCurrentLevelNumber();
-                LevelManager.Instance.CompleteLevel(currentLevel);
+                int currentLevel = JourneyManager.Instance.GetCurrentLevelNumber();
+                JourneyManager.Instance.CompleteLevel(currentLevel);
             }
             
             GameManager.Instance.TriggerGameWin();

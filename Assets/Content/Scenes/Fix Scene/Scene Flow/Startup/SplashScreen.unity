@@ -431,8 +431,8 @@ GameObject:
   m_Component:
   - component: {fileID: 209297264}
   - component: {fileID: 209297263}
+  - component: {fileID: 209297273}
   - component: {fileID: 209297262}
-  - component: {fileID: 209297265}
   - component: {fileID: 209297266}
   - component: {fileID: 209297269}
   - component: {fileID: 209297271}
@@ -488,21 +488,6 @@ Transform:
   - {fileID: 1387920466}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &209297265
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 209297261}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 56c347ba7a313d444bd4be55f7ff6a54, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  levelConfig: {fileID: 11400000, guid: d31e8e87835779f4db1a123d0ae07b3b, type: 2}
-  levelButtonContainer: {fileID: 1390479378}
-  showDebugLog: 1
 --- !u!114 &209297266
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -550,6 +535,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   config: {fileID: 11400000, guid: 621927fb0885c514b846207dd5f0160a, type: 2}
   showDebugLog: 1
+--- !u!114 &209297273
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 209297261}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62df28f99990e8443bc13ba8ad6b044f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  journeyConfig: {fileID: 11400000, guid: 724d7da900ff77d4f9865f25a4f3d74c, type: 2}
+  showDebugLog: 0
 --- !u!1 &333094475
 GameObject:
   m_ObjectHideFlags: 0
@@ -1602,15 +1601,10 @@ Transform:
   - {fileID: 6698409306867509542}
   - {fileID: 1307802571}
   - {fileID: 6285704353716687407}
-  - {fileID: 2081254176}
   - {fileID: 1138394567}
+  - {fileID: 2081254176}
   m_Father: {fileID: 209297264}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!224 &1390479378 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 7063119032702519145, guid: 343af9fbb8a05d147bdfcb15baf3c68c, type: 3}
-  m_PrefabInstance: {fileID: 3619406436231267953}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1905972888
 GameObject:
   m_ObjectHideFlags: 0
@@ -2436,34 +2430,6 @@ PrefabInstance:
     - target: {fileID: 5036495668845454003, guid: 343af9fbb8a05d147bdfcb15baf3c68c, type: 3}
       propertyPath: m_IsActive
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6284176595141199263, guid: 343af9fbb8a05d147bdfcb15baf3c68c, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 209297262}
-    - target: {fileID: 7063119032702519145, guid: 343af9fbb8a05d147bdfcb15baf3c68c, type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 20
-      objectReference: {fileID: 0}
-    - target: {fileID: 7063119032702519145, guid: 343af9fbb8a05d147bdfcb15baf3c68c, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: -0.000061035156
-      objectReference: {fileID: 0}
-    - target: {fileID: 7519069353888951412, guid: 343af9fbb8a05d147bdfcb15baf3c68c, type: 3}
-      propertyPath: m_AnchorMax.x
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7519069353888951412, guid: 343af9fbb8a05d147bdfcb15baf3c68c, type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0.621673
-      objectReference: {fileID: 0}
-    - target: {fileID: 7519069353888951412, guid: 343af9fbb8a05d147bdfcb15baf3c68c, type: 3}
-      propertyPath: m_AnchorMin.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8427028125441838865, guid: 343af9fbb8a05d147bdfcb15baf3c68c, type: 3}
-      propertyPath: m_Value
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

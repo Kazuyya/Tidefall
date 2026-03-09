@@ -17,7 +17,6 @@ namespace LittleHeroJourney
 
         #region Manager References
 
-        // CanvasManager is a required component on this same GameObject
         public CanvasManager CanvasManager => GetComponent<CanvasManager>();
         public LoadingManager LoadingManager => GetComponent<LoadingManager>();
         public SceneManager SceneManager => GetComponent<SceneManager>();
@@ -29,6 +28,8 @@ namespace LittleHeroJourney
         private bool isPaused = false;
 
         public bool IsPaused => isPaused;
+
+        public bool HasAnyJourneySave => JourneyManager.HasAnySave();
 
         #endregion
 
@@ -53,7 +54,6 @@ namespace LittleHeroJourney
 
         private void Awake()
         {
-            // Singleton pattern with proper cleanup
             if (Instance != null && Instance != this)
             {
                 if (showDebugLog)
@@ -82,9 +82,6 @@ namespace LittleHeroJourney
 
         #region Game State Management
 
-        /// <summary>
-        /// Pause the game
-        /// </summary>
         public void PauseGame()
         {
             if (isPaused)
@@ -143,39 +140,30 @@ namespace LittleHeroJourney
                 Debug.Log($"[{GetType().Name}] Game win event triggered");
         }
 
-        /// <summary>
-        /// Load next level dari level saat ini
-        /// </summary>
         public void LoadNextLevel()
         {
-            if (LevelManager.Instance == null)
+            if (JourneyManager.Instance == null)
             {
-                if (showDebugLog) Debug.LogWarning("[GameManager] LevelManager not found!");
+                if (showDebugLog) Debug.LogWarning("[GameManager] JourneyManager not found!");
                 return;
             }
 
-            int nextLevelNumber = LevelManager.Instance.GetCurrentLevelNumber() + 1;
+            int nextLevelNumber = JourneyManager.Instance.GetCurrentLevelNumber() + 1;
             LoadLevel(nextLevelNumber);
         }
 
-        /// <summary>
-        /// Retry level saat ini
-        /// </summary>
         public void RetryLevel()
         {
-            if (LevelManager.Instance == null)
+            if (JourneyManager.Instance == null)
             {
-                if (showDebugLog) Debug.LogWarning("[GameManager] LevelManager not found!");
+                if (showDebugLog) Debug.LogWarning("[GameManager] JourneyManager not found!");
                 return;
             }
 
-            int currentLevelNumber = LevelManager.Instance.GetCurrentLevelNumber();
+            int currentLevelNumber = JourneyManager.Instance.GetCurrentLevelNumber();
             LoadLevel(currentLevelNumber);
         }
 
-        /// <summary>
-        /// Load level berdasarkan number
-        /// </summary>
         public void LoadLevel(int levelNumber)
         {
             if (showDebugLog)
@@ -184,15 +172,12 @@ namespace LittleHeroJourney
             Time.timeScale = 1f; // Resume time
             ResetGameState();
             
-            if (LevelManager.Instance != null)
+            if (JourneyManager.Instance != null)
             {
-                LevelManager.Instance.LoadLevel(levelNumber);
+                JourneyManager.Instance.LoadStage(levelNumber);
             }
         }
 
-        /// <summary>
-        /// Kembali ke main menu
-        /// </summary>
         public void ReturnToMainMenu()
         {
             if (showDebugLog)
@@ -223,15 +208,12 @@ namespace LittleHeroJourney
 
         #region Application Control
 
-        /// <summary>
-        /// Exit the game application
-        /// </summary>
         public void ExitGame()
         {
             if (showDebugLog)
                 Debug.Log($"[{GetType().Name}] Exiting game...");
 
-            Time.timeScale = 1f; // Reset time scale
+            Time.timeScale = 1f;
 
 #if UNITY_EDITOR
                 UnityEditor.EditorApplication.isPlaying = false;
@@ -243,7 +225,6 @@ namespace LittleHeroJourney
         #endregion
 
         #region Scene Management
-        // SceneManager handles transitions
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         private static void InitializeFrameRate()
