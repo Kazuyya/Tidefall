@@ -436,6 +436,7 @@ GameObject:
   - component: {fileID: 209297266}
   - component: {fileID: 209297269}
   - component: {fileID: 209297271}
+  - component: {fileID: 209297274}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -547,8 +548,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62df28f99990e8443bc13ba8ad6b044f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  journeyConfig: {fileID: 11400000, guid: 724d7da900ff77d4f9865f25a4f3d74c, type: 2}
+  stages: []
   showDebugLog: 0
+--- !u!114 &209297274
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 209297261}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 105f5096f990c87418721730aedad39a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sequence: {fileID: 0}
+  display: {fileID: 0}
+  findDisplayIfNull: 0
+  showDebugLog: 0
+  _currentStepIndex: -1
 --- !u!1 &333094475
 GameObject:
   m_ObjectHideFlags: 0

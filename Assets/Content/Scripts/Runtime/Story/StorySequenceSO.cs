@@ -10,6 +10,12 @@ namespace LittleHeroJourney
         Custom
     }
 
+    public enum StoryContentType
+    {
+        Narrative,
+        Dialogue
+    }
+
     public enum StoryTextEffect
     {
         None,
@@ -27,24 +33,43 @@ namespace LittleHeroJourney
     public class StorySequenceSO : ScriptableObject
     {
         [Header("Identity")]
-        [Tooltip("Unique id or name for this sequence (e.g. stage1_intro).")]
         [SerializeField] private string sequenceId = "";
 
         [Serializable]
         public class StoryStep
         {
+            public string stepId = "";
             public StoryBackgroundType backgroundType = StoryBackgroundType.Solid;
             [HideInInspector] public Sprite backgroundImage;
             [HideInInspector] public Color backgroundColor = Color.black;
 
-            [TextArea(2, 4)]
-            public string textTop = "";
-
-            [TextArea(2, 4)]
-            public string textBottom = "";
+            public StoryContentType contentType = StoryContentType.Narrative;
+            [HideInInspector] public string narrativeText = "";
+            [HideInInspector] public string speakerName = "";
+            [HideInInspector] public string dialogueLine = "";
 
             public StoryTextEffect textInEffect = StoryTextEffect.None;
             public StoryTextOutEffect textOutEffect = StoryTextOutEffect.None;
+
+            public Color GetDisplayColor()
+            {
+                return backgroundType == StoryBackgroundType.Solid ? backgroundColor : Color.white;
+            }
+
+            public Sprite GetDisplayImage()
+            {
+                return backgroundType == StoryBackgroundType.Custom ? backgroundImage : null;
+            }
+
+            public bool IsNarrative => contentType == StoryContentType.Narrative;
+
+            public string GetDisplayNarrativeText() => narrativeText ?? "";
+
+            public string GetDisplayDialogueText()
+            {
+                if (string.IsNullOrEmpty(speakerName)) return dialogueLine ?? "";
+                return (speakerName ?? "").Trim() + ": " + (dialogueLine ?? "");
+            }
         }
 
         [Header("Steps (play in order)")]
