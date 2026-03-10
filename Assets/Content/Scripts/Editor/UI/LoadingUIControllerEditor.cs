@@ -7,7 +7,7 @@ using LittleHeroJourney.UI;
 namespace LittleHeroJourney
 {
     [CustomEditor(typeof(LoadingUIController))]
-    public class LoadingUIControllerEditor : Editor
+    public class LoadingUIControllerEditor : UnityEditor.Editor
     {
         private SerializedProperty showDebugLogProp;
         private SerializedProperty displayModeProp;

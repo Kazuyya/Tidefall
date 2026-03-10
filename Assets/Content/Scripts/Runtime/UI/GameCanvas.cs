@@ -192,14 +192,12 @@ namespace LittleHeroJourney.UI
 
         public void ExitGame()
         {
-            var manager = GameManager.Instance;
-            if (manager == null)
-            {
-                if (showDebugLog) Debug.LogWarning($"[{GetType().Name}] GameManager not found for ExitGame");
-                return;
-            }
+            GameEventSystem.Publish(new UIActionEvent("ExitGame"));
+        }
 
-            manager.ExitGame();
+        public void SaveGame()
+        {
+            GameEventSystem.Publish(new UIActionEvent("Save"));
         }
 
         public void PrepareForOpen()

@@ -1370,6 +1370,7 @@ GameObject:
   - component: {fileID: 2666112819926926932}
   - component: {fileID: 1898311902114870788}
   - component: {fileID: 6749846384813803201}
+  - component: {fileID: 799203843813856113}
   m_Layer: 0
   m_Name: Canvas - Mainmenu
   m_TagString: Untagged
@@ -1510,6 +1511,18 @@ MonoBehaviour:
   openOnLoadingFinished: 1
   openOnlyInScene: MainMenu
   allowOpenWhenActive: 1
+--- !u!114 &799203843813856113
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2468387397149077411}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3375f7306973e914793cddec454e2c16, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2741028320051459250
 GameObject:
   m_ObjectHideFlags: 0
@@ -3580,6 +3593,22 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6885738587363170605, guid: 254ce7b529fb7dd4b9c50539a5a5d4aa, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 799203843813856113}
+    - target: {fileID: 6885738587363170605, guid: 254ce7b529fb7dd4b9c50539a5a5d4aa, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: InvokeAction
+      objectReference: {fileID: 0}
+    - target: {fileID: 6885738587363170605, guid: 254ce7b529fb7dd4b9c50539a5a5d4aa, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: LittleHeroJourney.UI.UIInputConnector, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 6885738587363170605, guid: 254ce7b529fb7dd4b9c50539a5a5d4aa, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_StringArgument
+      value: OpenInventory
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -3692,7 +3721,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6885738587363170605, guid: 254ce7b529fb7dd4b9c50539a5a5d4aa, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
-      value: 0
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6885738587363170605, guid: 254ce7b529fb7dd4b9c50539a5a5d4aa, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 799203843813856113}
+    - target: {fileID: 6885738587363170605, guid: 254ce7b529fb7dd4b9c50539a5a5d4aa, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: InvokeAction
+      objectReference: {fileID: 0}
+    - target: {fileID: 6885738587363170605, guid: 254ce7b529fb7dd4b9c50539a5a5d4aa, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: LittleHeroJourney.UI.UIInputConnector, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 6885738587363170605, guid: 254ce7b529fb7dd4b9c50539a5a5d4aa, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_StringArgument
+      value: ExitGame
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -3909,6 +3954,22 @@ PrefabInstance:
     - target: {fileID: 6553095999449452347, guid: 254ce7b529fb7dd4b9c50539a5a5d4aa, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6885738587363170605, guid: 254ce7b529fb7dd4b9c50539a5a5d4aa, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 799203843813856113}
+    - target: {fileID: 6885738587363170605, guid: 254ce7b529fb7dd4b9c50539a5a5d4aa, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: InvokeAction
+      objectReference: {fileID: 0}
+    - target: {fileID: 6885738587363170605, guid: 254ce7b529fb7dd4b9c50539a5a5d4aa, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: LittleHeroJourney.UI.UIInputConnector, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 6885738587363170605, guid: 254ce7b529fb7dd4b9c50539a5a5d4aa, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_StringArgument
+      value: OpenSettings
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -4239,6 +4300,22 @@ PrefabInstance:
     - target: {fileID: 6553095999449452347, guid: 254ce7b529fb7dd4b9c50539a5a5d4aa, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6885738587363170605, guid: 254ce7b529fb7dd4b9c50539a5a5d4aa, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 799203843813856113}
+    - target: {fileID: 6885738587363170605, guid: 254ce7b529fb7dd4b9c50539a5a5d4aa, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: InvokeAction
+      objectReference: {fileID: 0}
+    - target: {fileID: 6885738587363170605, guid: 254ce7b529fb7dd4b9c50539a5a5d4aa, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: LittleHeroJourney.UI.UIInputConnector, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 6885738587363170605, guid: 254ce7b529fb7dd4b9c50539a5a5d4aa, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_StringArgument
+      value: StartStory
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

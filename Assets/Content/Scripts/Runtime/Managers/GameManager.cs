@@ -36,6 +36,9 @@ namespace LittleHeroJourney
 
         #endregion
 
+        private Action _exitGameHandler;
+        private Action _saveGameHandler;
+
         #region Unity Lifecycle
 
         private void Awake()
@@ -54,6 +57,20 @@ namespace LittleHeroJourney
 
             if (showDebugLog)
                 Debug.Log($"[{GetType().Name}] Initialized as singleton. CanvasManager is on same GameObject.");
+        }
+
+        private void OnEnable()
+        {
+            _exitGameHandler = ExitGame;
+            _saveGameHandler = SaveGame;
+            GameEventSystem.SubscribeAction("ExitGame", _exitGameHandler);
+            GameEventSystem.SubscribeAction("Save", _saveGameHandler);
+        }
+
+        private void OnDisable()
+        {
+            GameEventSystem.UnsubscribeAction("ExitGame", _exitGameHandler);
+            GameEventSystem.UnsubscribeAction("Save", _saveGameHandler);
         }
 
         #endregion

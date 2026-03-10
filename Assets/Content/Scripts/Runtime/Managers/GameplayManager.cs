@@ -1,8 +1,10 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using LittleHeroJourney.UI;
+using LittleHeroJourney.InputSystem;
 using Cinemachine;
 
 namespace LittleHeroJourney
@@ -30,6 +32,9 @@ namespace LittleHeroJourney
         private bool isLevelEnded = false;
         private bool isInputActive = false;
         private bool isPaused = false;
+
+        private Action _pauseHandler, _resumeHandler, _attackHandler, _dashHandler, _lockHandler;
+        private Action _nextLevelHandler, _retryHandler, _gameOverHandler, _gameWinHandler;
 
         public static GameplayManager Instance { get; private set; }
         public bool IsInputActive => isInputActive;
@@ -89,10 +94,26 @@ namespace LittleHeroJourney
 
             LoadingManager.OnLoadingFinished += HandleLoadingFinished;
             UnityEngine.SceneManagement.SceneManager.sceneLoaded += HandleSceneLoaded;
-            EventBus.Subscribe<GamePausedEvent>(HandleGamePausedEvent);
-            EventBus.Subscribe<GameResumedEvent>(HandleGameResumedEvent);
-            EventBus.Subscribe<GameOverEvent>(HandleGameOverEvent);
-            EventBus.Subscribe<GameWinEvent>(HandleGameWinEvent);
+
+            _pauseHandler = PauseGame;
+            _resumeHandler = ResumeGame;
+            _attackHandler = () => GameInputEvents.TriggerAttack();
+            _dashHandler = () => GameInputEvents.TriggerDash();
+            _lockHandler = HandleLockAction;
+            _nextLevelHandler = LoadNextStage;
+            _retryHandler = RetryStage;
+            _gameOverHandler = () => { if (GameManager.Instance?.CanvasManager != null && !string.IsNullOrEmpty(loseCanvasId)) GameManager.Instance.CanvasManager.SwitchCanvas(loseCanvasId); };
+            _gameWinHandler = () => { if (GameManager.Instance?.CanvasManager != null && !string.IsNullOrEmpty(winCanvasId)) GameManager.Instance.CanvasManager.SwitchCanvas(winCanvasId); };
+
+            GameEventSystem.SubscribeAction("Pause", _pauseHandler);
+            GameEventSystem.SubscribeAction("Resume", _resumeHandler);
+            GameEventSystem.SubscribeAction("Attack", _attackHandler);
+            GameEventSystem.SubscribeAction("Dash", _dashHandler);
+            GameEventSystem.SubscribeAction("Lock", _lockHandler);
+            GameEventSystem.SubscribeAction("NextLevel", _nextLevelHandler);
+            GameEventSystem.SubscribeAction("Retry", _retryHandler);
+            GameEventSystem.SubscribeAction("GameOver", _gameOverHandler);
+            GameEventSystem.SubscribeAction("GameWin", _gameWinHandler);
         }
 
         private void OnDisable()
@@ -116,10 +137,22 @@ namespace LittleHeroJourney
 
             LoadingManager.OnLoadingFinished -= HandleLoadingFinished;
             UnityEngine.SceneManagement.SceneManager.sceneLoaded -= HandleSceneLoaded;
-            EventBus.Unsubscribe<GamePausedEvent>(HandleGamePausedEvent);
-            EventBus.Unsubscribe<GameResumedEvent>(HandleGameResumedEvent);
-            EventBus.Unsubscribe<GameOverEvent>(HandleGameOverEvent);
-            EventBus.Unsubscribe<GameWinEvent>(HandleGameWinEvent);
+
+            GameEventSystem.UnsubscribeAction("Pause", _pauseHandler);
+            GameEventSystem.UnsubscribeAction("Resume", _resumeHandler);
+            GameEventSystem.UnsubscribeAction("Attack", _attackHandler);
+            GameEventSystem.UnsubscribeAction("Dash", _dashHandler);
+            GameEventSystem.UnsubscribeAction("Lock", _lockHandler);
+            GameEventSystem.UnsubscribeAction("NextLevel", _nextLevelHandler);
+            GameEventSystem.UnsubscribeAction("Retry", _retryHandler);
+            GameEventSystem.UnsubscribeAction("GameOver", _gameOverHandler);
+            GameEventSystem.UnsubscribeAction("GameWin", _gameWinHandler);
+        }
+
+        private void HandleLockAction()
+        {
+            var lockCam = FindObjectOfType<TargetLockCameraController>();
+            if (lockCam != null) lockCam.ToggleLockTarget();
         }
 
         #endregion
@@ -138,30 +171,6 @@ namespace LittleHeroJourney
             {
                 StartCoroutine(StartLevelSequence());
             }
-        }
-
-        private void HandleGamePausedEvent(GamePausedEvent _)
-        {
-            if (GameManager.Instance != null && GameManager.Instance.CanvasManager != null && !string.IsNullOrEmpty(pauseCanvasId))
-                GameManager.Instance.CanvasManager.SwitchCanvas(pauseCanvasId);
-        }
-
-        private void HandleGameResumedEvent(GameResumedEvent _)
-        {
-            if (GameManager.Instance != null && GameManager.Instance.CanvasManager != null && !string.IsNullOrEmpty(gameplayCanvasId))
-                GameManager.Instance.CanvasManager.SwitchCanvas(gameplayCanvasId);
-        }
-
-        private void HandleGameOverEvent(GameOverEvent _)
-        {
-            if (GameManager.Instance != null && GameManager.Instance.CanvasManager != null && !string.IsNullOrEmpty(loseCanvasId))
-                GameManager.Instance.CanvasManager.SwitchCanvas(loseCanvasId);
-        }
-
-        private void HandleGameWinEvent(GameWinEvent _)
-        {
-            if (GameManager.Instance != null && GameManager.Instance.CanvasManager != null && !string.IsNullOrEmpty(winCanvasId))
-                GameManager.Instance.CanvasManager.SwitchCanvas(winCanvasId);
         }
 
         private void FindReferences()
@@ -322,7 +331,7 @@ namespace LittleHeroJourney
             if (showDebugLog) Debug.Log("[GameplayManager] Player Died -> Trigger Game Over");
             isLevelEnded = true;
             SetInputActive(false);
-            EventBus.Publish(new GameOverEvent());
+            GameEventSystem.Publish(new UIActionEvent("GameOver"));
         }
 
         public void TriggerLevelWin()
@@ -336,7 +345,7 @@ namespace LittleHeroJourney
                 int currentLevel = JourneyManager.Instance.GetCurrentLevelNumber();
                 JourneyManager.Instance.CompleteLevel(currentLevel);
             }
-            EventBus.Publish(new GameWinEvent());
+            GameEventSystem.Publish(new UIActionEvent("GameWin"));
         }
 
         #endregion
@@ -348,7 +357,8 @@ namespace LittleHeroJourney
             if (isPaused) return;
             isPaused = true;
             if (GameManager.Instance != null) GameManager.Instance.SetTimeScale(0f);
-            EventBus.Publish(new GamePausedEvent());
+            if (GameManager.Instance?.CanvasManager != null && !string.IsNullOrEmpty(pauseCanvasId))
+                GameManager.Instance.CanvasManager.SwitchCanvas(pauseCanvasId);
             if (showDebugLog) Debug.Log("[GameplayManager] Game paused");
         }
 
@@ -357,7 +367,8 @@ namespace LittleHeroJourney
             if (!isPaused) return;
             isPaused = false;
             if (GameManager.Instance != null) GameManager.Instance.SetTimeScale(1f);
-            EventBus.Publish(new GameResumedEvent());
+            if (GameManager.Instance?.CanvasManager != null && !string.IsNullOrEmpty(gameplayCanvasId))
+                GameManager.Instance.CanvasManager.SwitchCanvas(gameplayCanvasId);
             if (showDebugLog) Debug.Log("[GameplayManager] Game resumed");
         }
 

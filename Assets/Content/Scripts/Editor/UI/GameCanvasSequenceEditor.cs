@@ -7,7 +7,7 @@ using LittleHeroJourney.UI;
 namespace LittleHeroJourney
 {
     [CustomEditor(typeof(GameCanvas))]
-    public class GameCanvasSequenceEditor : Editor
+    public class GameCanvasSequenceEditor : UnityEditor.Editor
     {
         private SerializedProperty canvasIdProp;
         private SerializedProperty showDebugLogProp;

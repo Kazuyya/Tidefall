@@ -16,6 +16,7 @@ namespace LittleHeroJourney
 
         private string _currentId;
         private Dictionary<string, string> _idToPath = new Dictionary<string, string>();
+        private Dictionary<string, Action> _sceneActionHandlers = new Dictionary<string, Action>();
 
         public static SceneManager Instance { get; private set; }
         public string CurrentId => _currentId;
@@ -30,6 +31,24 @@ namespace LittleHeroJourney
             }
             Instance = this;
             BuildIdMap();
+        }
+
+        private void OnEnable()
+        {
+            foreach (var kv in _idToPath)
+            {
+                var sceneId = kv.Key;
+                var handler = new Action(() => GoToSceneById(sceneId));
+                _sceneActionHandlers[sceneId] = handler;
+                GameEventSystem.SubscribeAction(sceneId, handler);
+            }
+        }
+
+        private void OnDisable()
+        {
+            foreach (var kv in _sceneActionHandlers)
+                GameEventSystem.UnsubscribeAction(kv.Key, kv.Value);
+            _sceneActionHandlers.Clear();
         }
 
         private void BuildIdMap()

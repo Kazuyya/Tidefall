@@ -13,6 +13,7 @@ namespace LittleHeroJourney
         [Header("Journey Data")]
         [SerializeField] private string storyCanvasId = "";
         [SerializeField] private JourneysDataSO journeysData;
+        [SerializeField] private string journeySelectorCanvasId = "";
 
         [Header("Debug")]
         [SerializeField] private bool showDebugLog = false;
@@ -31,9 +32,42 @@ namespace LittleHeroJourney
         private List<LevelState> levelStates = new List<LevelState>();
         private int currentPlayerHealth = 100;
 
+        private Action _playHandler;
+
         private void Awake()
         {
             if (Instance == null) Instance = this;
+        }
+
+        private void OnEnable()
+        {
+            _playHandler = HandlePlay;
+            GameEventSystem.SubscribeAction("Play", _playHandler);
+        }
+
+        private void HandlePlay()
+        {
+            if (HasProgress())
+                OpenJourneySelector();
+            else
+                NewJourney();
+        }
+
+        private bool HasProgress()
+        {
+            if (!HasAnySave()) return false;
+            return GetFirstUncompletedStageNumber() > 1;
+        }
+
+        private void OpenJourneySelector()
+        {
+            if (GameManager.Instance?.CanvasManager != null && !string.IsNullOrEmpty(journeySelectorCanvasId))
+                GameManager.Instance.CanvasManager.SwitchCanvas(journeySelectorCanvasId);
+        }
+
+        private void OnDisable()
+        {
+            GameEventSystem.UnsubscribeAction("Play", _playHandler);
         }
 
         private void Start()

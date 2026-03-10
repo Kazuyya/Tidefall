@@ -4,7 +4,7 @@ using UnityEditor;
 namespace LittleHeroJourney
 {
     [CustomEditor(typeof(ComboSequenceSO))]
-    public class ComboSequenceSOEditor : Editor
+    public class ComboSequenceSOEditor : UnityEditor.Editor
     {
         private ComboSequenceSO comboSequence;
 

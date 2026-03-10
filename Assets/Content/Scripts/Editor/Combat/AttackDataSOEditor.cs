@@ -4,7 +4,7 @@ using UnityEditor;
 namespace LittleHeroJourney
 {
     [CustomEditor(typeof(AttackDataSO))]
-    public class AttackDataSOEditor : Editor
+    public class AttackDataSOEditor : UnityEditor.Editor
     {
         private AttackDataSO attackData;
 

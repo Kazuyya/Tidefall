@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -81,6 +82,7 @@ namespace LittleHeroJourney
         private Health _currentTargetHealth;
         private bool _targetHealthCached = false;
         private ILockOnTarget _currentTargetLockOnPoint;
+        private Action _unlockOnActionHandler;
         #endregion
 
         #region Unity Lifecycle
@@ -95,10 +97,10 @@ namespace LittleHeroJourney
             UnitySceneManager.sceneLoaded += OnSceneLoaded;
             GameplayManager.OnCameraInitialized += HandleCameraInitialized;
             GameplayManager.OnPlayerInitialized += HandlePlayerInitialized;
-            EventBus.Subscribe<GamePausedEvent>(HandleGamePaused);
-            EventBus.Subscribe<GameResumedEvent>(HandleGameResumed);
-            EventBus.Subscribe<GameOverEvent>(HandleGameOver);
-            EventBus.Subscribe<GameWinEvent>(HandleGameWin);
+            _unlockOnActionHandler = UnlockTarget;
+            GameEventSystem.SubscribeAction("Pause", _unlockOnActionHandler);
+            GameEventSystem.SubscribeAction("GameOver", _unlockOnActionHandler);
+            GameEventSystem.SubscribeAction("GameWin", _unlockOnActionHandler);
             _gameplayManager = GameplayManager.Instance;
             if (_gameplayManager != null)
             {
@@ -113,10 +115,9 @@ namespace LittleHeroJourney
             UnitySceneManager.sceneLoaded -= OnSceneLoaded;
             GameplayManager.OnCameraInitialized -= HandleCameraInitialized;
             GameplayManager.OnPlayerInitialized -= HandlePlayerInitialized;
-            EventBus.Unsubscribe<GamePausedEvent>(HandleGamePaused);
-            EventBus.Unsubscribe<GameResumedEvent>(HandleGameResumed);
-            EventBus.Unsubscribe<GameOverEvent>(HandleGameOver);
-            EventBus.Unsubscribe<GameWinEvent>(HandleGameWin);
+            GameEventSystem.UnsubscribeAction("Pause", _unlockOnActionHandler);
+            GameEventSystem.UnsubscribeAction("GameOver", _unlockOnActionHandler);
+            GameEventSystem.UnsubscribeAction("GameWin", _unlockOnActionHandler);
             if (_gameplayManager != null) _gameplayManager.OnReady -= HandleGameplayReady;
         }
 
@@ -658,25 +659,6 @@ namespace LittleHeroJourney
             OnLockedTargetChanged?.Invoke(null);
         }
         #endregion
-
-        private void HandleGamePaused(GamePausedEvent _)
-        {
-            UnlockTarget();
-        }
-
-        private void HandleGameResumed(GameResumedEvent _)
-        {
-        }
-
-        private void HandleGameOver(GameOverEvent _)
-        {
-            UnlockTarget();
-        }
-
-        private void HandleGameWin(GameWinEvent _)
-        {
-            UnlockTarget();
-        }
 
         #region Debug Gizmos
 

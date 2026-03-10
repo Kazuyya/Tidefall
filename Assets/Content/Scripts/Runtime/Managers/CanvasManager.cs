@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.EventSystems;
@@ -27,6 +28,12 @@ namespace LittleHeroJourney
         private bool isTransitioning = false;
         private List<string> _canvasHistory = new List<string>();
 
+        [Header("UIActionEvent: buka canvas by id")]
+        [Tooltip("Contoh: Settings. Kalau event ActionId = salah satu ini, buka canvas itu. Kosongkan = tidak handle event.")]
+        [SerializeField] private List<string> canvasActionIds = new List<string>();
+
+        private Dictionary<string, Action> _canvasActionHandlers = new Dictionary<string, Action>();
+
         #endregion
 
         #region Unity Lifecycle
@@ -34,6 +41,21 @@ namespace LittleHeroJourney
         private void OnEnable()
         {
             _eventSystem = EventSystem.current != null ? EventSystem.current : FindObjectOfType<EventSystem>();
+            foreach (var id in canvasActionIds)
+            {
+                if (string.IsNullOrEmpty(id)) continue;
+                var capturedId = id;
+                var handler = new Action(() => SwitchCanvas(capturedId));
+                _canvasActionHandlers[capturedId] = handler;
+                GameEventSystem.SubscribeAction(capturedId, handler);
+            }
+        }
+
+        private void OnDisable()
+        {
+            foreach (var kv in _canvasActionHandlers)
+                GameEventSystem.UnsubscribeAction(kv.Key, kv.Value);
+            _canvasActionHandlers.Clear();
         }
 
         #endregion

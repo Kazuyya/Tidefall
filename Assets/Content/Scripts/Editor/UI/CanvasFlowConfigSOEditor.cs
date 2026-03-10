@@ -6,7 +6,7 @@ using LittleHeroJourney;
 namespace LittleHeroJourneyEditors
 {
     [CustomEditor(typeof(CanvasFlowConfigSO))]
-    public class CanvasFlowConfigSOEditor : Editor
+    public class CanvasFlowConfigSOEditor : UnityEditor.Editor
     {
         private SerializedProperty _rulesProp;
 
