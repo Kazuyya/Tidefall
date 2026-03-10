@@ -25,6 +25,7 @@ namespace LittleHeroJourney
 
         private GameCanvas currentActiveCanvas;
         private bool isTransitioning = false;
+        private List<string> _canvasHistory = new List<string>();
 
         #endregion
 
@@ -95,7 +96,7 @@ namespace LittleHeroJourney
 
         #region Public Methods
 
-        public void SwitchCanvas(string nextCanvasID)
+       public void SwitchCanvas(string nextCanvasID, bool addCurrentToHistory = true)
         {
             if (string.IsNullOrEmpty(nextCanvasID)) return;
 
@@ -148,6 +149,9 @@ namespace LittleHeroJourney
                 return;
             }
 
+            if (addCurrentToHistory && currentActiveCanvas != null)
+                _canvasHistory.Add(currentActiveCanvas.ID);
+
             // Execute transition based on rule
             switch (rule.mode)
             {
@@ -188,6 +192,23 @@ namespace LittleHeroJourney
                     StartCoroutine(RunTransitionRoutine(rule.mode, currentActiveCanvas, targetCanvas, rule.closeAfterInComplete));
                     break;
             }
+        }
+
+        public void ReturnToPreviousCanvas()
+        {
+            if (_canvasHistory.Count == 0)
+            {
+                if (showDebugLog) Debug.LogWarning($"[{GetType().Name}] No previous canvas in history.");
+                return;
+            }
+            if (GameManager.Instance != null)
+            {
+                GameManager.Instance.SetTimeScale(1f);
+                GameManager.Instance.ResetGameState();
+            }
+            string targetId = _canvasHistory[_canvasHistory.Count - 1];
+            _canvasHistory.RemoveAt(_canvasHistory.Count - 1);
+            SwitchCanvas(targetId, addCurrentToHistory: false);
         }
 
         public void CloseCanvas(string canvasID)

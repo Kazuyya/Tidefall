@@ -44,24 +44,16 @@ namespace LittleHeroJourney.UI
         {
             if (_targetLockCameraController != null)
                 _targetLockCameraController.UnlockTarget();
-            if (GameManager.Instance != null)
-                GameManager.Instance.RetryLevel();
+            if (GameplayManager.Instance != null)
+                GameplayManager.Instance.RetryStage();
         }
 
         public void NextLevel()
         {
             if (_targetLockCameraController != null)
                 _targetLockCameraController.UnlockTarget();
-            if (GameManager.Instance != null)
-                GameManager.Instance.LoadNextLevel();
-        }
-
-        public void ExitToMainMenu()
-        {
-            if (_targetLockCameraController != null)
-                _targetLockCameraController.UnlockTarget();
-            if (GameManager.Instance != null)
-                GameManager.Instance.ReturnToMainMenu();
+            if (GameplayManager.Instance != null)
+                GameplayManager.Instance.LoadNextStage();
         }
     }
 }

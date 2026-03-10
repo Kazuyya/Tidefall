@@ -169,16 +169,25 @@ namespace LittleHeroJourney.UI
             manager.CloseCanvas(targetCanvasId);
         }
 
-        public void ReturnToMainMenu()
+        public void ReturnToPreviousCanvas()
         {
-            var manager = GameManager.Instance;
-            if (manager == null)
+            var canvasMgr = GameManager.Instance != null ? GameManager.Instance.CanvasManager : null;
+            if (canvasMgr == null)
             {
-                if (showDebugLog) Debug.LogWarning($"[{GetType().Name}] GameManager not found for ReturnToMainMenu");
+                if (showDebugLog) Debug.LogWarning($"[{GetType().Name}] CanvasManager not found for ReturnToPreviousCanvas");
                 return;
             }
+            canvasMgr.ReturnToPreviousCanvas();
+        }
 
-            manager.ReturnToMainMenu();
+        public void GoToSceneById(string sceneId)
+        {
+            if (SceneManager.Instance == null)
+            {
+                if (showDebugLog) Debug.LogWarning($"[{GetType().Name}] SceneManager not found for GoToSceneById");
+                return;
+            }
+            SceneManager.Instance.GoToSceneById(sceneId);
         }
 
         public void ExitGame()

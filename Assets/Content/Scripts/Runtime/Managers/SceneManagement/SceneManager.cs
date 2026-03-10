@@ -58,6 +58,17 @@ namespace LittleHeroJourney
                 GoToId(config != null ? config.mainMenuId : null);
             }
         }
+        public void GoToSceneById(string sceneId)
+        {
+            if (string.IsNullOrEmpty(sceneId)) return;
+            if (GameManager.Instance != null)
+            {
+                GameManager.Instance.SetTimeScale(1f);
+                GameManager.Instance.ResetGameState();
+            }
+            GoToId(sceneId);
+        }
+
         public void GoToId(string targetId)
         {
             if (string.IsNullOrEmpty(targetId)) return;

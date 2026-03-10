@@ -95,10 +95,10 @@ namespace LittleHeroJourney
             UnitySceneManager.sceneLoaded += OnSceneLoaded;
             GameplayManager.OnCameraInitialized += HandleCameraInitialized;
             GameplayManager.OnPlayerInitialized += HandlePlayerInitialized;
-            GameManager.OnGamePaused += HandleGamePaused;
-            GameManager.OnGameResumed += HandleGameResumed;
-            GameManager.OnGameOver += HandleGameOver;
-            GameManager.OnGameWin += HandleGameWin;
+            EventBus.Subscribe<GamePausedEvent>(HandleGamePaused);
+            EventBus.Subscribe<GameResumedEvent>(HandleGameResumed);
+            EventBus.Subscribe<GameOverEvent>(HandleGameOver);
+            EventBus.Subscribe<GameWinEvent>(HandleGameWin);
             _gameplayManager = GameplayManager.Instance;
             if (_gameplayManager != null)
             {
@@ -113,10 +113,10 @@ namespace LittleHeroJourney
             UnitySceneManager.sceneLoaded -= OnSceneLoaded;
             GameplayManager.OnCameraInitialized -= HandleCameraInitialized;
             GameplayManager.OnPlayerInitialized -= HandlePlayerInitialized;
-            GameManager.OnGamePaused -= HandleGamePaused;
-            GameManager.OnGameResumed -= HandleGameResumed;
-            GameManager.OnGameOver -= HandleGameOver;
-            GameManager.OnGameWin -= HandleGameWin;
+            EventBus.Unsubscribe<GamePausedEvent>(HandleGamePaused);
+            EventBus.Unsubscribe<GameResumedEvent>(HandleGameResumed);
+            EventBus.Unsubscribe<GameOverEvent>(HandleGameOver);
+            EventBus.Unsubscribe<GameWinEvent>(HandleGameWin);
             if (_gameplayManager != null) _gameplayManager.OnReady -= HandleGameplayReady;
         }
 
@@ -142,7 +142,7 @@ namespace LittleHeroJourney
 
         void Update()
         {
-            if (GameManager.Instance != null && GameManager.Instance.IsPaused)
+            if (GameplayManager.Instance != null && GameplayManager.Instance.IsPaused)
             {
                 if (isTargeting) UnlockTarget();
                 return;
@@ -624,7 +624,7 @@ namespace LittleHeroJourney
         public void ToggleLockTarget()
         {
             if (!enableLockOn) return;
-            if (GameManager.Instance != null && GameManager.Instance.IsPaused) return;
+            if (GameplayManager.Instance != null && GameplayManager.Instance.IsPaused) return;
             AssignTarget();
         }
 
@@ -659,21 +659,21 @@ namespace LittleHeroJourney
         }
         #endregion
 
-        private void HandleGamePaused()
+        private void HandleGamePaused(GamePausedEvent _)
         {
             UnlockTarget();
         }
 
-        private void HandleGameResumed()
+        private void HandleGameResumed(GameResumedEvent _)
         {
         }
 
-        private void HandleGameOver()
+        private void HandleGameOver(GameOverEvent _)
         {
             UnlockTarget();
         }
 
-        private void HandleGameWin()
+        private void HandleGameWin(GameWinEvent _)
         {
             UnlockTarget();
         }

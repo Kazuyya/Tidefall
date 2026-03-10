@@ -29,9 +29,11 @@ namespace LittleHeroJourney
 
         private bool isLevelEnded = false;
         private bool isInputActive = false;
+        private bool isPaused = false;
 
         public static GameplayManager Instance { get; private set; }
         public bool IsInputActive => isInputActive;
+        public bool IsPaused => isPaused;
         public Camera MainCamera => mainCamera;
         public CinemachineFreeLook CurrentCamera => currentCamera;
         public PlayerMovementController PlayerController => playerController;
@@ -87,10 +89,10 @@ namespace LittleHeroJourney
 
             LoadingManager.OnLoadingFinished += HandleLoadingFinished;
             UnityEngine.SceneManagement.SceneManager.sceneLoaded += HandleSceneLoaded;
-            GameManager.OnGamePaused += HandleGamePaused;
-            GameManager.OnGameResumed += HandleGameResumed;
-            GameManager.OnGameOver += HandleGameOver;
-            GameManager.OnGameWin += HandleGameWin;
+            EventBus.Subscribe<GamePausedEvent>(HandleGamePausedEvent);
+            EventBus.Subscribe<GameResumedEvent>(HandleGameResumedEvent);
+            EventBus.Subscribe<GameOverEvent>(HandleGameOverEvent);
+            EventBus.Subscribe<GameWinEvent>(HandleGameWinEvent);
         }
 
         private void OnDisable()
@@ -114,10 +116,10 @@ namespace LittleHeroJourney
 
             LoadingManager.OnLoadingFinished -= HandleLoadingFinished;
             UnityEngine.SceneManagement.SceneManager.sceneLoaded -= HandleSceneLoaded;
-            GameManager.OnGamePaused -= HandleGamePaused;
-            GameManager.OnGameResumed -= HandleGameResumed;
-            GameManager.OnGameOver -= HandleGameOver;
-            GameManager.OnGameWin -= HandleGameWin;
+            EventBus.Unsubscribe<GamePausedEvent>(HandleGamePausedEvent);
+            EventBus.Unsubscribe<GameResumedEvent>(HandleGameResumedEvent);
+            EventBus.Unsubscribe<GameOverEvent>(HandleGameOverEvent);
+            EventBus.Unsubscribe<GameWinEvent>(HandleGameWinEvent);
         }
 
         #endregion
@@ -138,40 +140,28 @@ namespace LittleHeroJourney
             }
         }
 
-        private void HandleGamePaused()
+        private void HandleGamePausedEvent(GamePausedEvent _)
         {
-            if (GameManager.Instance != null && GameManager.Instance.CanvasManager != null)
-            {
-                if (!string.IsNullOrEmpty(pauseCanvasId))
-                    GameManager.Instance.CanvasManager.SwitchCanvas(pauseCanvasId);
-            }
+            if (GameManager.Instance != null && GameManager.Instance.CanvasManager != null && !string.IsNullOrEmpty(pauseCanvasId))
+                GameManager.Instance.CanvasManager.SwitchCanvas(pauseCanvasId);
         }
 
-        private void HandleGameResumed()
+        private void HandleGameResumedEvent(GameResumedEvent _)
         {
-            if (GameManager.Instance != null && GameManager.Instance.CanvasManager != null)
-            {
-                if (!string.IsNullOrEmpty(gameplayCanvasId))
-                    GameManager.Instance.CanvasManager.SwitchCanvas(gameplayCanvasId);
-            }
+            if (GameManager.Instance != null && GameManager.Instance.CanvasManager != null && !string.IsNullOrEmpty(gameplayCanvasId))
+                GameManager.Instance.CanvasManager.SwitchCanvas(gameplayCanvasId);
         }
 
-        private void HandleGameOver()
+        private void HandleGameOverEvent(GameOverEvent _)
         {
-            if (GameManager.Instance != null && GameManager.Instance.CanvasManager != null)
-            {
-                if (!string.IsNullOrEmpty(loseCanvasId))
-                    GameManager.Instance.CanvasManager.SwitchCanvas(loseCanvasId);
-            }
+            if (GameManager.Instance != null && GameManager.Instance.CanvasManager != null && !string.IsNullOrEmpty(loseCanvasId))
+                GameManager.Instance.CanvasManager.SwitchCanvas(loseCanvasId);
         }
 
-        private void HandleGameWin()
+        private void HandleGameWinEvent(GameWinEvent _)
         {
-            if (GameManager.Instance != null && GameManager.Instance.CanvasManager != null)
-            {
-                if (!string.IsNullOrEmpty(winCanvasId))
-                    GameManager.Instance.CanvasManager.SwitchCanvas(winCanvasId);
-            }
+            if (GameManager.Instance != null && GameManager.Instance.CanvasManager != null && !string.IsNullOrEmpty(winCanvasId))
+                GameManager.Instance.CanvasManager.SwitchCanvas(winCanvasId);
         }
 
         private void FindReferences()
@@ -329,31 +319,81 @@ namespace LittleHeroJourney
         public void TriggerGameOver()
         {
             if (isLevelEnded) return;
-
             if (showDebugLog) Debug.Log("[GameplayManager] Player Died -> Trigger Game Over");
-            
             isLevelEnded = true;
             SetInputActive(false);
-            
-            GameManager.Instance.TriggerGameOver();
+            EventBus.Publish(new GameOverEvent());
         }
 
         public void TriggerLevelWin()
         {
             if (isLevelEnded) return;
-
             if (showDebugLog) Debug.Log("[GameplayManager] Objective Reached -> Trigger Win");
-
             isLevelEnded = true;
             SetInputActive(false);
-            
             if (JourneyManager.Instance != null)
             {
                 int currentLevel = JourneyManager.Instance.GetCurrentLevelNumber();
                 JourneyManager.Instance.CompleteLevel(currentLevel);
             }
-            
-            GameManager.Instance.TriggerGameWin();
+            EventBus.Publish(new GameWinEvent());
+        }
+
+        #endregion
+
+        #region Pause / Resume (gameplay; time scale via GameManager)
+
+        public void PauseGame()
+        {
+            if (isPaused) return;
+            isPaused = true;
+            if (GameManager.Instance != null) GameManager.Instance.SetTimeScale(0f);
+            EventBus.Publish(new GamePausedEvent());
+            if (showDebugLog) Debug.Log("[GameplayManager] Game paused");
+        }
+
+        public void ResumeGame()
+        {
+            if (!isPaused) return;
+            isPaused = false;
+            if (GameManager.Instance != null) GameManager.Instance.SetTimeScale(1f);
+            EventBus.Publish(new GameResumedEvent());
+            if (showDebugLog) Debug.Log("[GameplayManager] Game resumed");
+        }
+
+        public void TogglePause()
+        {
+            if (isPaused) ResumeGame();
+            else PauseGame();
+        }
+
+        #endregion
+
+        #region Stage loading (gameplay; JourneyManager + GameManager reset)
+
+        public void LoadNextStage()
+        {
+            if (JourneyManager.Instance == null) return;
+            int next = JourneyManager.Instance.GetCurrentLevelNumber() + 1;
+            LoadStage(next);
+        }
+
+        public void RetryStage()
+        {
+            if (JourneyManager.Instance == null) return;
+            LoadStage(JourneyManager.Instance.GetCurrentLevelNumber());
+        }
+
+        public void LoadStage(int stageNumber)
+        {
+            if (showDebugLog) Debug.Log("[GameplayManager] Loading stage " + stageNumber);
+            if (GameManager.Instance != null)
+            {
+                GameManager.Instance.SetTimeScale(1f);
+                GameManager.Instance.ResetGameState();
+            }
+            if (JourneyManager.Instance != null)
+                JourneyManager.Instance.LoadStage(stageNumber);
         }
 
         #endregion
