@@ -12,8 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c8104c77702571488e17df294524538, type: 3}
   m_Name: PamDamageEffects
   m_EditorClassIdentifier: 
-  vfxEffects:
-  - effectName: enemyhit
-    triggerTime: 0.1
+  vfxEffects: []
   audioEffects: []
-  particleEffects: []
+  particleEffects:
+  - effectName: BloodSplat
+    triggerTime: 0
+    positionOffset: {x: 0, y: 0, z: 0}
+    followCharacter: 0

@@ -13,15 +13,12 @@ MonoBehaviour:
   m_Name: ParticleSet
   m_EditorClassIdentifier: 
   particleEffects:
-  - effectName: SmokePop
-    particlePrefab: {fileID: 5109341668491610300, guid: 5e5e52cdeb8af5042825986259eeed26,
-      type: 3}
+  - effectName: SmokeSpawn
+    particlePrefab: {fileID: 4663010188807706951, guid: 29c7f871d57f622458e213f7db8f0a52, type: 3}
+    poolSize: 0
+  - effectName: BloodSplat
+    particlePrefab: {fileID: 3804015734652406634, guid: f82aa693c4284b84db16505c636d178c, type: 3}
     poolSize: 0
   - effectName: atk_ds_1
-    particlePrefab: {fileID: 3033280740954087754, guid: 9901092d327a2324c88e4bc7c8b7ee67,
-      type: 3}
-    poolSize: 0
-  - effectName: enemyhit
-    particlePrefab: {fileID: 645822680666442850, guid: 1b6888a2d74350d4c80edc7049f98258,
-      type: 3}
+    particlePrefab: {fileID: 3033280740954087754, guid: 9901092d327a2324c88e4bc7c8b7ee67, type: 3}
     poolSize: 0

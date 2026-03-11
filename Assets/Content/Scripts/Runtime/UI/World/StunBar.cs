@@ -1,24 +1,57 @@
 using UnityEngine;
+using DG.Tweening;
 
 namespace LittleHeroJourney.UI
 {
-    /// <summary>
-    /// Simple stun bar - update slider saat stun berubah
-    /// Attach ke enemy prefab
-    /// </summary>
-    public class StunBar : StatBar
+    public class StunBar : MonoBehaviour
     {
-        #region Fields
+        [Header("Main Bar")]
+        [SerializeField] private CustomSliderBar mainSliderBar;
 
-        private StunManager targetStunManager;
+        [Header("Animation")]
+        [SerializeField] private bool shakeOnDecrease = true;
+        [SerializeField] private float shakeDuration = 0.2f;
+        [SerializeField] private float shakeStrength = 8f;
+        [SerializeField] private RectTransform shakeTarget;
 
-        #endregion
+        [Header("Ghost")]
+        [SerializeField] private bool useGhost;
+        [SerializeField] private CustomSliderBar ghostBar;
+        [SerializeField] private float ghostDuration = 0.4f;
 
-        #region Setup
+        [Header("Debug")]
+        [SerializeField] private bool showDebugLog;
 
-        /// <summary>
-        /// Setup stun bar untuk target
-        /// </summary>
+        private StunManager _targetStunManager;
+        private float _lastNormalized = 1f;
+        private Tween _ghostTween;
+        private Tween _shakeTween;
+
+        private void Awake()
+        {
+            if (mainSliderBar == null)
+                mainSliderBar = GetComponent<CustomSliderBar>();
+            if (shakeTarget == null && TryGetComponent<RectTransform>(out var rt))
+                shakeTarget = rt;
+            SyncGhostToMain();
+        }
+
+        private void OnDestroy()
+        {
+            _ghostTween?.Kill();
+            _shakeTween?.Kill();
+            Cleanup();
+        }
+
+        private void SyncGhostToMain()
+        {
+            if (mainSliderBar == null || ghostBar == null) return;
+            float n = mainSliderBar.Slider != null
+                ? Mathf.InverseLerp(mainSliderBar.FillRangeMin, mainSliderBar.FillRangeMax, mainSliderBar.Slider.value)
+                : 1f;
+            ghostBar.SetNormalized(n);
+        }
+
         public void SetupForTarget(StunManager target)
         {
             if (target == null)
@@ -28,54 +61,47 @@ namespace LittleHeroJourney.UI
             }
 
             Cleanup();
-            targetStunManager = target;
-
-            // Subscribe
-            targetStunManager.OnStunHealthChanged += OnStunChanged;
-
-            // Set initial value
-            OnStunChanged(targetStunManager.StunHealthPercentage);
+            _targetStunManager = target;
+            _targetStunManager.OnStunHealthChanged += OnStunChanged;
+            OnStunChanged(_targetStunManager.StunHealthPercentage);
         }
 
-        /// <summary>
-        /// Cleanup - unsubscribe
-        /// </summary>
         public void Cleanup()
         {
-            if (targetStunManager != null)
-            {
-                targetStunManager.OnStunHealthChanged -= OnStunChanged;
-            }
-            targetStunManager = null;
+            if (_targetStunManager != null)
+                _targetStunManager.OnStunHealthChanged -= OnStunChanged;
+            _targetStunManager = null;
         }
-
-        #endregion
-
-        #region Callbacks
 
         private void OnStunChanged(float stunPercentage)
         {
-            if (targetStunManager == null) return;
-
-            // Update slider dengan current dan max stun
-            SetValue(targetStunManager.CurrentStunHealth, targetStunManager.MaxStunHealth);
+            if (_targetStunManager == null) return;
+            SetValue(_targetStunManager.CurrentStunHealth, _targetStunManager.MaxStunHealth);
         }
 
-        #endregion
-
-        #region Properties
-
-        public StunManager TargetStunManager => targetStunManager;
-
-        #endregion
-
-        #region Cleanup
-
-        private void OnDestroy()
+        public void SetValue(float currentValue, float max)
         {
-            Cleanup();
+            if (mainSliderBar == null) return;
+
+            float normalized = max > 0 ? Mathf.Clamp01(currentValue / max) : 0f;
+
+            mainSliderBar.SetNormalized(normalized);
+
+            if (useGhost && ghostBar != null)
+            {
+                _ghostTween?.Kill();
+                _ghostTween = ghostBar.TweenToNormalized(normalized, ghostDuration, Ease.OutQuad);
+            }
+
+            if (shakeOnDecrease && normalized < _lastNormalized && shakeTarget != null)
+            {
+                _shakeTween?.Kill();
+                _shakeTween = shakeTarget.DOShakeAnchorPos(shakeDuration, shakeStrength, 30);
+            }
+
+            _lastNormalized = normalized;
         }
 
-        #endregion
+        public StunManager TargetStunManager => _targetStunManager;
     }
 }

@@ -1,24 +1,75 @@
 using UnityEngine;
+using DG.Tweening;
 
 namespace LittleHeroJourney.UI
 {
-    /// <summary>
-    /// Simple health bar - update slider saat health berubah
-    /// Attach ke enemy prefab
-    /// </summary>
-    public class HealthBar : StatBar
+    public enum BarAnimationType
     {
-        #region Fields
+        None,
+        Shake,
+        PunchScale
+    }
 
-        private Health targetHealth;
+    public enum FillAnimationType
+    {
+        None,
+        Lerp
+    }
 
-        #endregion
+    public class HealthBar : MonoBehaviour
+    {
+        [SerializeField] private CustomSliderBar mainSliderBar;
 
-        #region Setup
+        [SerializeField] private FillAnimationType fillOnIncrease = FillAnimationType.None;
+        [SerializeField] private FillAnimationType fillOnDecrease = FillAnimationType.None;
+        [SerializeField] private float fillDurationIncrease = 0.25f;
+        [SerializeField] private float fillDurationDecrease = 0.4f;
 
-        /// <summary>
-        /// Setup health bar untuk target
-        /// </summary>
+        [SerializeField] private RectTransform parentAnimTarget;
+        [SerializeField] private BarAnimationType animOnIncrease = BarAnimationType.None;
+        [SerializeField] private float animIncreaseDuration = 0.2f;
+        [SerializeField] private float animIncreaseStrength = 8f;
+        [SerializeField] private BarAnimationType animOnDecrease = BarAnimationType.Shake;
+        [SerializeField] private float animDecreaseDuration = 0.2f;
+        [SerializeField] private float animDecreaseStrength = 8f;
+
+        [SerializeField] private bool useGhost;
+        [SerializeField] private bool useDifferentGhostForIncreaseDecrease;
+        [SerializeField] private CustomSliderBar ghostBar;
+        [SerializeField] private float ghostDuration = 0.4f;
+        [SerializeField] private CustomSliderBar ghostBarIncrease;
+        [SerializeField] private CustomSliderBar ghostBarDecrease;
+        [SerializeField] private float ghostDurationIncrease = 0.25f;
+        [SerializeField] private float ghostDurationDecrease = 0.4f;
+
+        [SerializeField] private bool showDebugLog;
+
+        private Health _targetHealth;
+        private float _lastNormalized = 1f;
+        private Tween _ghostTween;
+        private Tween _mainBarTween;
+        private Tween _animTween;
+
+        private void Awake()
+        {
+            if (mainSliderBar == null)
+                mainSliderBar = GetComponent<CustomSliderBar>();
+            if (parentAnimTarget == null && TryGetComponent<RectTransform>(out var rt))
+                parentAnimTarget = rt;
+            SyncGhostToMain();
+        }
+
+        private void SyncGhostToMain()
+        {
+            if (mainSliderBar == null) return;
+            float n = mainSliderBar.Slider != null
+                ? Mathf.InverseLerp(mainSliderBar.FillRangeMin, mainSliderBar.FillRangeMax, mainSliderBar.Slider.value)
+                : 1f;
+            if (ghostBar != null) ghostBar.SetNormalized(n);
+            if (ghostBarIncrease != null) ghostBarIncrease.SetNormalized(n);
+            if (ghostBarDecrease != null) ghostBarDecrease.SetNormalized(n);
+        }
+
         public void SetupForTarget(Health target)
         {
             if (target == null)
@@ -28,54 +79,95 @@ namespace LittleHeroJourney.UI
             }
 
             Cleanup();
-            targetHealth = target;
-
-            // Subscribe
-            targetHealth.OnHealthChanged += OnHealthChanged;
-
-            // Set initial value
-            OnHealthChanged(targetHealth.CurrentHealth);
+            _targetHealth = target;
+            _targetHealth.OnHealthChanged += OnHealthChanged;
+            OnHealthChanged(_targetHealth.CurrentHealth);
         }
 
-        /// <summary>
-        /// Cleanup - unsubscribe
-        /// </summary>
         public void Cleanup()
         {
-            if (targetHealth != null)
-            {
-                targetHealth.OnHealthChanged -= OnHealthChanged;
-            }
-            targetHealth = null;
+            if (_targetHealth != null)
+                _targetHealth.OnHealthChanged -= OnHealthChanged;
+            _targetHealth = null;
         }
-
-        #endregion
-
-        #region Callbacks
 
         private void OnHealthChanged(float currentHealth)
         {
-            if (targetHealth == null) return;
-
-            // Update slider dengan current dan max health
-            SetValue(currentHealth, targetHealth.MaxHealth);
+            if (_targetHealth == null) return;
+            SetValue(currentHealth, _targetHealth.MaxHealth);
         }
 
-        #endregion
+        public void SetValue(float currentValue, float max)
+        {
+            if (mainSliderBar == null) return;
 
-        #region Properties
+            float normalized = max > 0 ? Mathf.Clamp01(currentValue / max) : 0f;
+            bool isIncrease = normalized > _lastNormalized;
 
-        public Health TargetHealth => targetHealth;
+            _mainBarTween?.Kill();
+            if (isIncrease && fillOnIncrease == FillAnimationType.Lerp)
+                _mainBarTween = mainSliderBar.TweenToNormalized(normalized, fillDurationIncrease, Ease.OutQuad);
+            else if (!isIncrease && fillOnDecrease == FillAnimationType.Lerp)
+                _mainBarTween = mainSliderBar.TweenToNormalized(normalized, fillDurationDecrease, Ease.OutQuad);
+            else
+                mainSliderBar.SetNormalized(normalized);
 
-        #endregion
+            if (useGhost)
+            {
+                _ghostTween?.Kill();
+                CustomSliderBar ghost = null;
+                float dur = ghostDuration;
+                if (useDifferentGhostForIncreaseDecrease)
+                {
+                    if (isIncrease && ghostBarIncrease != null) { ghost = ghostBarIncrease; dur = ghostDurationIncrease; }
+                    else if (!isIncrease && ghostBarDecrease != null) { ghost = ghostBarDecrease; dur = ghostDurationDecrease; }
+                }
+                else if (ghostBar != null)
+                {
+                    ghost = ghostBar;
+                }
+                if (ghost != null)
+                    _ghostTween = ghost.TweenToNormalized(normalized, dur, Ease.OutQuad);
+            }
 
-        #region Cleanup
+            if (parentAnimTarget != null)
+            {
+                if (isIncrease && animOnIncrease != BarAnimationType.None)
+                    PlayBarAnim(parentAnimTarget, animOnIncrease, animIncreaseDuration, animIncreaseStrength);
+                else if (!isIncrease && animOnDecrease != BarAnimationType.None)
+                    PlayBarAnim(parentAnimTarget, animOnDecrease, animDecreaseDuration, animDecreaseStrength);
+            }
+
+            _lastNormalized = normalized;
+
+            if (showDebugLog)
+                Debug.Log($"[{GetType().Name}] Value: {currentValue:F1}/{max:F1} -> normalized: {normalized:F2}");
+        }
+
+        public Health TargetHealth => _targetHealth;
+        public CustomSliderBar MainSliderBar => mainSliderBar;
+        public CustomSliderBar GhostBar => ghostBar;
+
+        private void PlayBarAnim(RectTransform target, BarAnimationType type, float duration, float strength)
+        {
+            _animTween?.Kill();
+            switch (type)
+            {
+                case BarAnimationType.Shake:
+                    _animTween = target.DOShakeAnchorPos(duration, strength, 30);
+                    break;
+                case BarAnimationType.PunchScale:
+                    _animTween = target.DOPunchScale(Vector3.one * (strength * 0.1f), duration, 8);
+                    break;
+            }
+        }
 
         private void OnDestroy()
         {
+            _ghostTween?.Kill();
+            _mainBarTween?.Kill();
+            _animTween?.Kill();
             Cleanup();
         }
-
-        #endregion
     }
 }

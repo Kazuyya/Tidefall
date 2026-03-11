@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d945a0549ea0279478c724c6818b3fe8, type: 3}
-  m_Name: PamSpawnEffects
+  m_Name: OrcSpawnEffects
   m_EditorClassIdentifier: Assembly-CSharp:LittleHeroJourney:CharacterSpawnEffectsSO
   vfxEffects: []
   audioEffects: []

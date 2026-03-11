@@ -1692,12 +1692,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   movementSettings: {fileID: 11400000, guid: 18edb62cefc229a499761a835b8e2d77, type: 2}
   dashSettings: {fileID: 11400000, guid: 35381bd87c1db2c439e5ad494a5bd7ac, type: 2}
-  inputActionAsset: {fileID: -944628639613478452, guid: 50994758b0063b140830245e1b0b3365,
-    type: 3}
+  inputActionAsset: {fileID: -944628639613478452, guid: 50994758b0063b140830245e1b0b3365, type: 3}
   playerCamera: {fileID: 0}
   virtualJoystickId: 0
   boundaryClampOffset: 0.5
   showEncounterBoundaryLog: 0
+  showDebugLog: 0
   showKnockbackLog: 0
 --- !u!114 &8359995776734820861
 MonoBehaviour:
@@ -1717,7 +1717,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: ee8f908aebfc8614eb171a201152e8c0, type: 2}
   - {fileID: 11400000, guid: 797a59a3dfc7e274cbdcc8b0c118f154, type: 2}
   enableNumberKeys: 1
-  ShowDebugLog: 0
+  showDebugLog: 0
 --- !u!114 &7168534262845463853
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1730,8 +1730,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 936c28c3aa39f104cbabcfbeb65c5985, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentCombatProfile: {fileID: 11400000, guid: 0248d4220cc44d840bdd45afb80bd8b1,
-    type: 2}
+  currentCombatProfile: {fileID: 11400000, guid: 0248d4220cc44d840bdd45afb80bd8b1, type: 2}
   availableWeapons:
   - weaponComponent: {fileID: 8041298473828867095}
     weaponName: A1
@@ -1740,7 +1739,7 @@ MonoBehaviour:
   - weaponComponent: {fileID: 4398870758866687135}
     weaponName: A3
   currentWeapon: {fileID: 0}
-  ShowDebugLog: 0
+  showDebugLog: 0
 --- !u!114 &2924467353853791214
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1801,7 +1800,7 @@ MonoBehaviour:
   damageAnimationTrigger: damaged
   deathAnimationTrigger: death
   deathEffectsSO: {fileID: 0}
-  damageEffectsSO: {fileID: 0}
+  damageEffectsSO: {fileID: 11400000, guid: 5aae7d25efe11ef43bc163cc43e6a022, type: 2}
   enableRotateToDamager: 1
   damagerRotationSpeed: 720
   rotationStopThreshold: 5
@@ -1818,12 +1817,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enableAutoAim: 1
-  onlyDuringAttack: 1
-  prioritizeForwardEnemies: 1
   rotationSpeed: 720
   detectionDistance: 5
   minDetectionDistance: 2
-  detectionAngle: 360
   detectionLayers:
     serializedVersion: 2
     m_Bits: 64
@@ -2087,6 +2083,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06ee1d44c9163364e9f688ff8d771527, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  showDebugLog: 0
 --- !u!114 &609519540388385356
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7475,6 +7472,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06ee1d44c9163364e9f688ff8d771527, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  showDebugLog: 0
 --- !u!114 &360513778196788835
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8272,6 +8270,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06ee1d44c9163364e9f688ff8d771527, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  showDebugLog: 0
 --- !u!114 &5253702209466555213
 MonoBehaviour:
   m_ObjectHideFlags: 0

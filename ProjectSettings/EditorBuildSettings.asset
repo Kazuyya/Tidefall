@@ -14,4 +14,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Content/Scenes/Fix Scene/Scene Flow/Startup/SplashScreen.unity
     guid: 8b1fdcdbd755e2a4e96ff9d9e35bbef1
+  - enabled: 1
+    path: Assets/Content/Scenes/Fix Scene/Gameplay/Map.unity
+    guid: 29220dd824622c146a31903282d62add
   m_configObjects: {}

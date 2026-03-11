@@ -9,13 +9,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d945a0549ea0279478c724c6818b3fe8, type: 3}
-  m_Name: PamSpawnEffects
-  m_EditorClassIdentifier: Assembly-CSharp:LittleHeroJourney:CharacterSpawnEffectsSO
+  m_Script: {fileID: 11500000, guid: 2c8104c77702571488e17df294524538, type: 3}
+  m_Name: OrcDamageEffects
+  m_EditorClassIdentifier: 
   vfxEffects: []
   audioEffects: []
   particleEffects:
-  - effectName: SmokeSpawn
-    triggerTime: 1
+  - effectName: BloodSplat
+    triggerTime: 0
     positionOffset: {x: 0, y: 0, z: 0}
     followCharacter: 0
