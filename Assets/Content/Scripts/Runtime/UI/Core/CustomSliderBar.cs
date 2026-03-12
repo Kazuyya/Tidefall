@@ -29,6 +29,13 @@ namespace LittleHeroJourney.UI
             return Mathf.Lerp(fillRangeMin, fillRangeMax, Mathf.Clamp01(normalized));
         }
 
+        public float GetNormalized()
+        {
+            if (_slider == null) _slider = GetComponent<Slider>();
+            if (_slider == null) return 0f;
+            return Mathf.InverseLerp(fillRangeMin, fillRangeMax, _slider.value);
+        }
+
         public void SetNormalized(float normalized)
         {
             if (_slider == null) _slider = GetComponent<Slider>();

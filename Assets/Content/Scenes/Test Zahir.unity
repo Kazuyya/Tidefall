@@ -59326,13 +59326,13 @@ PrefabInstance:
       propertyPath: m_Name
       value: Canvas - Gameplay
       objectReference: {fileID: 0}
-    - target: {fileID: 5665445395143497596, guid: 7aeabe250985651479c41e1c844618c2, type: 3}
-      propertyPath: m_Value
+    - target: {fileID: 2495454596610156137, guid: 7aeabe250985651479c41e1c844618c2, type: 3}
+      propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5665445395143497596, guid: 7aeabe250985651479c41e1c844618c2, type: 3}
-      propertyPath: m_TargetGraphic
-      value: 
+    - target: {fileID: 6932486019461190998, guid: 7aeabe250985651479c41e1c844618c2, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7225048428805089171, guid: 7aeabe250985651479c41e1c844618c2, type: 3}
       propertyPath: m_Pivot.x
@@ -59421,10 +59421,6 @@ PrefabInstance:
     - target: {fileID: 8025427782808691474, guid: 7aeabe250985651479c41e1c844618c2, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8214378684065643602, guid: 7aeabe250985651479c41e1c844618c2, type: 3}
-      propertyPath: m_Enabled
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

@@ -20,10 +20,12 @@ namespace LittleHeroJourney.UI
     {
         [SerializeField] private CustomSliderBar mainSliderBar;
 
-        [SerializeField] private FillAnimationType fillOnIncrease = FillAnimationType.None;
+        [SerializeField] private FillAnimationType fillOnIncrease = FillAnimationType.Lerp;
         [SerializeField] private FillAnimationType fillOnDecrease = FillAnimationType.None;
-        [SerializeField] private float fillDurationIncrease = 0.25f;
+        [SerializeField] private float fillDurationIncrease = 0.4f;
+        [SerializeField] private float fillDelayIncrease = 0.5f;
         [SerializeField] private float fillDurationDecrease = 0.4f;
+        [SerializeField] private float fillDelayDecrease;
 
         [SerializeField] private RectTransform parentAnimTarget;
         [SerializeField] private BarAnimationType animOnIncrease = BarAnimationType.None;
@@ -35,12 +37,18 @@ namespace LittleHeroJourney.UI
 
         [SerializeField] private bool useGhost;
         [SerializeField] private bool useDifferentGhostForIncreaseDecrease;
+        [SerializeField] private FillAnimationType ghostAnimOnIncrease = FillAnimationType.None;
+        [SerializeField] private FillAnimationType ghostAnimOnDecrease = FillAnimationType.Lerp;
         [SerializeField] private CustomSliderBar ghostBar;
         [SerializeField] private float ghostDuration = 0.4f;
+        [SerializeField] private float ghostIncreaseDelay;
+        [SerializeField] private float ghostDecreaseDelay = 0.5f;
         [SerializeField] private CustomSliderBar ghostBarIncrease;
         [SerializeField] private CustomSliderBar ghostBarDecrease;
         [SerializeField] private float ghostDurationIncrease = 0.25f;
         [SerializeField] private float ghostDurationDecrease = 0.4f;
+        [SerializeField] private float ghostIncreaseDelayDual;
+        [SerializeField] private float ghostDecreaseDelayDual = 0.5f;
 
         [SerializeField] private bool showDebugLog;
 
@@ -105,29 +113,120 @@ namespace LittleHeroJourney.UI
             bool isIncrease = normalized > _lastNormalized;
 
             _mainBarTween?.Kill();
-            if (isIncrease && fillOnIncrease == FillAnimationType.Lerp)
-                _mainBarTween = mainSliderBar.TweenToNormalized(normalized, fillDurationIncrease, Ease.OutQuad);
-            else if (!isIncrease && fillOnDecrease == FillAnimationType.Lerp)
-                _mainBarTween = mainSliderBar.TweenToNormalized(normalized, fillDurationDecrease, Ease.OutQuad);
-            else
-                mainSliderBar.SetNormalized(normalized);
+            _ghostTween?.Kill();
 
-            if (useGhost)
+            if (isIncrease)
             {
-                _ghostTween?.Kill();
-                CustomSliderBar ghost = null;
-                float dur = ghostDuration;
-                if (useDifferentGhostForIncreaseDecrease)
+                Sequence mainSeq = null;
+                if (fillOnIncrease == FillAnimationType.Lerp)
+                    mainSeq = DOTween.Sequence();
+
+                if (useGhost)
                 {
-                    if (isIncrease && ghostBarIncrease != null) { ghost = ghostBarIncrease; dur = ghostDurationIncrease; }
-                    else if (!isIncrease && ghostBarDecrease != null) { ghost = ghostBarDecrease; dur = ghostDurationDecrease; }
+                    if (useDifferentGhostForIncreaseDecrease)
+                    {
+                        if (ghostBarDecrease != null) ghostBarDecrease.gameObject.SetActive(false);
+                        if (ghostBarIncrease != null)
+                        {
+                            ghostBarIncrease.gameObject.SetActive(true);
+                            ghostBarIncrease.SetNormalized(_lastNormalized);
+                            if (ghostAnimOnIncrease == FillAnimationType.Lerp)
+                            {
+                                float incDelay = ghostIncreaseDelayDual;
+                                var ghostSeq = DOTween.Sequence();
+                                ghostSeq.AppendInterval(incDelay);
+                                ghostSeq.Append(ghostBarIncrease.TweenToNormalized(normalized, ghostDurationIncrease, Ease.OutQuad));
+                                _ghostTween = ghostSeq;
+                                if (mainSeq != null)
+                                    mainSeq.Append(ghostSeq).AppendInterval(fillDelayIncrease).Append(mainSliderBar.TweenToNormalized(normalized, fillDurationIncrease, Ease.OutQuad));
+                            }
+                            else
+                            {
+                                ghostBarIncrease.SetNormalized(normalized);
+                                if (mainSeq != null)
+                                    mainSeq.AppendInterval(fillDelayIncrease).Append(mainSliderBar.TweenToNormalized(normalized, fillDurationIncrease, Ease.OutQuad));
+                            }
+                        }
+                        else if (mainSeq != null)
+                            mainSeq.AppendInterval(fillDelayIncrease).Append(mainSliderBar.TweenToNormalized(normalized, fillDurationIncrease, Ease.OutQuad));
+                    }
+                    else if (ghostBar != null)
+                    {
+                        ghostBar.SetNormalized(_lastNormalized);
+                        if (ghostAnimOnIncrease == FillAnimationType.Lerp)
+                        {
+                            float incDelay = ghostIncreaseDelay;
+                            var ghostSeq = DOTween.Sequence();
+                            ghostSeq.AppendInterval(incDelay);
+                            ghostSeq.Append(ghostBar.TweenToNormalized(normalized, ghostDuration, Ease.OutQuad));
+                            _ghostTween = ghostSeq;
+                            if (mainSeq != null)
+                                mainSeq.Append(ghostSeq).AppendInterval(fillDelayIncrease).Append(mainSliderBar.TweenToNormalized(normalized, fillDurationIncrease, Ease.OutQuad));
+                        }
+                        else
+                        {
+                            ghostBar.SetNormalized(normalized);
+                            if (mainSeq != null)
+                                mainSeq.AppendInterval(fillDelayIncrease).Append(mainSliderBar.TweenToNormalized(normalized, fillDurationIncrease, Ease.OutQuad));
+                        }
+                    }
+                    else if (mainSeq != null)
+                        mainSeq.AppendInterval(fillDelayIncrease).Append(mainSliderBar.TweenToNormalized(normalized, fillDurationIncrease, Ease.OutQuad));
                 }
-                else if (ghostBar != null)
+                else if (mainSeq != null)
                 {
-                    ghost = ghostBar;
+                    mainSeq.AppendInterval(fillDelayIncrease).Append(mainSliderBar.TweenToNormalized(normalized, fillDurationIncrease, Ease.OutQuad));
                 }
-                if (ghost != null)
-                    _ghostTween = ghost.TweenToNormalized(normalized, dur, Ease.OutQuad);
+
+                if (mainSeq != null)
+                    _mainBarTween = mainSeq;
+                else if (fillOnIncrease != FillAnimationType.Lerp)
+                    mainSliderBar.SetNormalized(normalized);
+            }
+            else
+            {
+                if (useGhost)
+                    mainSliderBar.SetNormalized(normalized);
+                else if (fillOnDecrease == FillAnimationType.None)
+                    mainSliderBar.SetNormalized(normalized);
+                else
+                {
+                    var decSeq = DOTween.Sequence();
+                    decSeq.AppendInterval(fillDelayDecrease).Append(mainSliderBar.TweenToNormalized(normalized, fillDurationDecrease, Ease.OutQuad));
+                    _mainBarTween = decSeq;
+                }
+
+                if (useGhost)
+                {
+                    float delay = useDifferentGhostForIncreaseDecrease ? ghostDecreaseDelayDual : ghostDecreaseDelay;
+                    float dur = useDifferentGhostForIncreaseDecrease ? ghostDurationDecrease : ghostDuration;
+                    CustomSliderBar ghostDec = useDifferentGhostForIncreaseDecrease ? ghostBarDecrease : ghostBar;
+
+                    if (useDifferentGhostForIncreaseDecrease)
+                    {
+                        if (ghostBarIncrease != null) ghostBarIncrease.gameObject.SetActive(false);
+                        if (ghostBarDecrease != null)
+                        {
+                            ghostBarDecrease.SetNormalized(_lastNormalized);
+                            ghostBarDecrease.gameObject.SetActive(true);
+                        }
+                    }
+
+                    if (ghostAnimOnDecrease == FillAnimationType.Lerp && ghostDec != null)
+                    {
+                        float ghostStart = ghostDec.GetNormalized();
+                        ghostStart = Mathf.Max(ghostStart, normalized);
+                        ghostDec.SetNormalized(ghostStart);
+                        var seq = DOTween.Sequence();
+                        seq.AppendInterval(delay);
+                        seq.Append(ghostDec.TweenToNormalized(normalized, dur, Ease.OutQuad));
+                        _ghostTween = seq;
+                    }
+                    else if (ghostDec != null)
+                    {
+                        ghostDec.SetNormalized(normalized);
+                    }
+                }
             }
 
             if (parentAnimTarget != null)
@@ -142,6 +241,27 @@ namespace LittleHeroJourney.UI
 
             if (showDebugLog)
                 Debug.Log($"[{GetType().Name}] Value: {currentValue:F1}/{max:F1} -> normalized: {normalized:F2}");
+        }
+
+        [ContextMenu("Debug: Set 100%")]
+        public void DebugSetFull()
+        {
+            _lastNormalized = 0f;
+            SetValue(100f, 100f);
+        }
+
+        [ContextMenu("Debug: Increase 10%")]
+        public void DebugIncrease10()
+        {
+            float next = Mathf.Min(1f, _lastNormalized + 0.1f);
+            SetValue(next * 100f, 100f);
+        }
+
+        [ContextMenu("Debug: Decrease 10%")]
+        public void DebugDecrease10()
+        {
+            float next = Mathf.Max(0f, _lastNormalized - 0.1f);
+            SetValue(next * 100f, 100f);
         }
 
         public Health TargetHealth => _targetHealth;
