@@ -13,10 +13,11 @@ MonoBehaviour:
   m_Name: AudioSet
   m_EditorClassIdentifier: 
   audioEffects:
-  - effectName: BGMMainmenu
+  - effectName: MainMenuBGM
     audioClips:
     - clip: {fileID: 8300000, guid: 5e8f571febbcd9948ac10528cd6e6c3f, type: 3}
       volume: 1
     playType: 0
     spatialBlend: 0
     poolSize: 0
+    loop: 1

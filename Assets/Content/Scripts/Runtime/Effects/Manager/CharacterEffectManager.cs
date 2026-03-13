@@ -74,8 +74,12 @@ namespace LittleHeroJourney
         }
         private Dictionary<Transform, FollowData> _followTransforms = new Dictionary<Transform, FollowData>();
 
-        // Trail registry (Trail by id; registered by Weapon when enabled)
         private Dictionary<string, Trail> _trailRegistry = new Dictionary<string, Trail>();
+
+        private AudioSource _bgmSource;
+        private string _bgmEffectName;
+        private Coroutine _bgmSequentialCoroutine;
+        private Coroutine _bgmFadeCoroutine;
 
         #endregion
 
@@ -422,13 +426,11 @@ namespace LittleHeroJourney
             }
 
             if (audioData.playType == AudioPlayType.Blend)
-            {
                 PlayAudioBlend(audioData, position);
-            }
-            else // Random
-            {
+            else if (audioData.playType == AudioPlayType.Random)
                 PlayAudioRandom(audioData, position);
-            }
+            else
+                PlayAudioSequential(audioData, position);
         }
 
         /// <summary>
@@ -449,6 +451,7 @@ namespace LittleHeroJourney
 
                 audioSource.clip = clipData.clip;
                 audioSource.volume = clipData.volume;
+                audioSource.loop = false;
                 audioSource.transform.position = position;
                 audioSource.gameObject.SetActive(true);
                 audioSource.Play();
@@ -486,6 +489,7 @@ namespace LittleHeroJourney
 
             audioSource.clip = clipData.clip;
             audioSource.volume = clipData.volume;
+            audioSource.loop = false;
             audioSource.transform.position = position;
             audioSource.gameObject.SetActive(true);
             audioSource.Play();
@@ -495,8 +499,147 @@ namespace LittleHeroJourney
             if (showDebugLog)
                 Debug.Log($"[{GetType().Name}] Playing Audio (Random) '{audioData.effectName}' at {position}");
 
-            // Return to pool after audio finishes
             StartCoroutine(ReturnAudioToPoolAfterDuration(audioSource, audioData.effectName, clipData.clip.length));
+        }
+
+        private void PlayAudioSequential(AudioEffectData audioData, Vector3 position)
+        {
+            if (audioData.ClipCount == 0) return;
+            AudioSource audioSource = GetAudioFromPool(audioData.effectName);
+            if (audioSource == null) return;
+
+            audioSource.transform.position = position;
+            audioSource.spatialBlend = audioData.spatialBlend;
+            audioSource.loop = false;
+            audioSource.gameObject.SetActive(true);
+            _activeAudio.Add(audioSource);
+
+            StartCoroutine(PlaySequentialClipsThenReturn(audioData, audioSource));
+        }
+
+        private IEnumerator PlaySequentialClipsThenReturn(AudioEffectData audioData, AudioSource audioSource)
+        {
+            int count = audioData.ClipCount;
+            float totalDuration = 0f;
+            for (int i = 0; i < count; i++)
+            {
+                AudioClipData clipData = audioData.GetClipSequential(i);
+                if (clipData?.clip == null) continue;
+                audioSource.clip = clipData.clip;
+                audioSource.volume = clipData.volume;
+                audioSource.Play();
+                totalDuration += clipData.clip.length;
+                yield return new WaitForSeconds(clipData.clip.length + 0.05f);
+            }
+            ReturnAudioToPool(audioData.effectName, audioSource);
+        }
+
+        public void PlayBGM(string effectName)
+        {
+            if (string.IsNullOrEmpty(effectName) || audioSet == null) return;
+            StopBGM();
+
+            AudioEffectData audioData = audioSet.GetAudioEffect(effectName);
+            if (audioData == null || !audioData.IsValid)
+            {
+                if (showDebugLog) Debug.LogWarning($"[{GetType().Name}] BGM effect '{effectName}' not found or invalid!");
+                return;
+            }
+
+            _bgmSource = GetAudioFromPool(effectName);
+            if (_bgmSource == null) return;
+
+            _bgmEffectName = effectName;
+            _bgmSource.transform.position = Vector3.zero;
+            _bgmSource.spatialBlend = audioData.spatialBlend;
+            _bgmSource.gameObject.SetActive(true);
+            _activeAudio.Add(_bgmSource);
+
+            if (audioData.ClipCount == 1)
+            {
+                AudioClipData clipData = audioData.GetClip(0);
+                _bgmSource.clip = clipData.clip;
+                _bgmSource.volume = clipData.volume;
+                _bgmSource.loop = audioData.loop;
+                _bgmSource.Play();
+                if (showDebugLog) Debug.Log($"[{GetType().Name}] BGM playing '{effectName}' (single clip, loop={audioData.loop})");
+            }
+            else if (audioData.playType == AudioPlayType.Sequential && audioData.loop)
+            {
+                _bgmSource.loop = false;
+                _bgmSequentialCoroutine = StartCoroutine(BGMSequentialLoop(audioData));
+                if (showDebugLog) Debug.Log($"[{GetType().Name}] BGM playing '{effectName}' (sequential loop)");
+            }
+            else
+            {
+                AudioClipData clipData = audioData.GetClip(0);
+                _bgmSource.clip = clipData.clip;
+                _bgmSource.volume = clipData.volume;
+                _bgmSource.loop = audioData.loop;
+                _bgmSource.Play();
+                if (showDebugLog) Debug.Log($"[{GetType().Name}] BGM playing '{effectName}'");
+            }
+        }
+
+        private IEnumerator BGMSequentialLoop(AudioEffectData audioData)
+        {
+            int count = audioData.ClipCount;
+            int index = 0;
+            while (_bgmSource != null && _bgmSource.gameObject.activeInHierarchy)
+            {
+                AudioClipData clipData = audioData.GetClipSequential(index);
+                if (clipData?.clip != null)
+                {
+                    _bgmSource.clip = clipData.clip;
+                    _bgmSource.volume = clipData.volume;
+                    _bgmSource.Play();
+                    yield return new WaitForSeconds(clipData.clip.length + 0.05f);
+                }
+                index = (index + 1) % count;
+            }
+            _bgmSequentialCoroutine = null;
+        }
+
+        public void StopBGM()
+        {
+            if (_bgmFadeCoroutine != null)
+            {
+                StopCoroutine(_bgmFadeCoroutine);
+                _bgmFadeCoroutine = null;
+            }
+            if (_bgmSequentialCoroutine != null)
+            {
+                StopCoroutine(_bgmSequentialCoroutine);
+                _bgmSequentialCoroutine = null;
+            }
+            if (_bgmSource != null && !string.IsNullOrEmpty(_bgmEffectName))
+            {
+                ReturnAudioToPool(_bgmEffectName, _bgmSource);
+                _bgmSource = null;
+                _bgmEffectName = null;
+                if (showDebugLog) Debug.Log($"[{GetType().Name}] BGM stopped");
+            }
+        }
+
+        public void FadeOutBGM(float duration)
+        {
+            if (_bgmSource == null) return;
+            if (_bgmFadeCoroutine != null) StopCoroutine(_bgmFadeCoroutine);
+            _bgmFadeCoroutine = StartCoroutine(FadeOutBGMCoroutine(duration));
+        }
+
+        private IEnumerator FadeOutBGMCoroutine(float duration)
+        {
+            float startVolume = _bgmSource.volume;
+            float elapsed = 0f;
+            while (elapsed < duration && _bgmSource != null)
+            {
+                elapsed += Time.deltaTime;
+                _bgmSource.volume = Mathf.Lerp(startVolume, 0f, elapsed / duration);
+                yield return null;
+            }
+            _bgmFadeCoroutine = null;
+            StopBGM();
         }
 
         private AudioSource GetAudioFromPool(string effectName)

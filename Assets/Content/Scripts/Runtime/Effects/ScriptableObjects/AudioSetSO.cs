@@ -24,8 +24,9 @@ namespace LittleHeroJourney
     /// </summary>
     public enum AudioPlayType
     {
-        Blend,  // Play all clips simultaneously
-        Random  // Play one random clip
+        Blend,
+        Random,
+        Sequential 
     }
 
     /// <summary>
@@ -41,16 +42,19 @@ namespace LittleHeroJourney
         [SerializeField]
         private List<AudioClipData> audioClips = new List<AudioClipData>();
 
-        [Tooltip("How to play the clips: Blend (all together) or Random (pick one)")]
+        [Tooltip("Blend = play all clips simultaneously, Random = play one random clip, Sequential = play clips in order from first to last")]
         public AudioPlayType playType = AudioPlayType.Random;
 
-        [Tooltip("Spatial blend (0=2D, 1=3D)")]
+        [Tooltip("Spatial blend: 0 = 2D (volume same anywhere, e.g. BGM/UI), 1 = 3D (volume depends on distance, e.g. SFX world)")]
         [Range(0f, 1f)]
-        public float spatialBlend = 0.5f;
+        public float spatialBlend = 0f;
 
-        [Tooltip("Pool size for AudioSource")]
+        [Tooltip("Number of AudioSources to precreate for this effect (so it can play overlap / multiple instances)")]
         [Min(1)]
         public int poolSize = 3;
+
+        [Tooltip("Loop: Random = loop 1 clip that is chosen, Sequential = after last clip, loop from first clip. For BGM, turn on.")]
+        public bool loop = false;
 
         public IReadOnlyList<AudioClipData> AudioClips => audioClips;
         public int ClipCount => audioClips.Count;
@@ -66,6 +70,12 @@ namespace LittleHeroJourney
         {
             if (audioClips.Count == 0) return null;
             return audioClips[Random.Range(0, audioClips.Count)];
+        }
+
+        public AudioClipData GetClipSequential(int index)
+        {
+            if (audioClips.Count == 0) return null;
+            return audioClips[index % audioClips.Count];
         }
 
         public bool IsValid => !string.IsNullOrEmpty(effectName) && audioClips.Count > 0 && audioClips.TrueForAll(c => c.IsValid);

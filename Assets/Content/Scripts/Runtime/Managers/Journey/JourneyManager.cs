@@ -33,6 +33,8 @@ namespace LittleHeroJourney
         private int currentPlayerHealth = 100;
 
         private Action _playHandler;
+        private Action _pendingAfterFade;
+        private Action _fadeCompleteHandler;
 
         private void Awake()
         {
@@ -43,6 +45,8 @@ namespace LittleHeroJourney
         {
             _playHandler = HandlePlay;
             GameEventSystem.SubscribeAction("Play", _playHandler);
+            _fadeCompleteHandler = OnStartJourneyFadeComplete;
+            GameEventSystem.SubscribeAction("StartJourneyFadeComplete", _fadeCompleteHandler);
         }
 
         private void HandlePlay()
@@ -50,7 +54,26 @@ namespace LittleHeroJourney
             if (HasProgress())
                 OpenJourneySelector();
             else
-                NewJourney();
+                RequestNewJourney();
+        }
+
+        public void RequestNewJourney()
+        {
+            _pendingAfterFade = NewJourney;
+            GameEventSystem.Publish(new UIActionEvent("StartJourney"));
+        }
+
+        public void RequestLoadStage(int stageNumber)
+        {
+            int n = stageNumber;
+            _pendingAfterFade = () => LoadStage(n);
+            GameEventSystem.Publish(new UIActionEvent("StartJourney"));
+        }
+
+        private void OnStartJourneyFadeComplete()
+        {
+            _pendingAfterFade?.Invoke();
+            _pendingAfterFade = null;
         }
 
         private bool HasProgress()
@@ -68,6 +91,8 @@ namespace LittleHeroJourney
         private void OnDisable()
         {
             GameEventSystem.UnsubscribeAction("Play", _playHandler);
+            if (_fadeCompleteHandler != null)
+                GameEventSystem.UnsubscribeAction("StartJourneyFadeComplete", _fadeCompleteHandler);
         }
 
         private void Start()
@@ -192,6 +217,13 @@ namespace LittleHeroJourney
         {
             if (!HasAnySave()) return;
             LoadCurrentStage();
+        }
+
+        public void RequestContinueJourney()
+        {
+            if (!HasAnySave()) return;
+            _pendingAfterFade = LoadCurrentStage;
+            GameEventSystem.Publish(new UIActionEvent("StartJourney"));
         }
 
         public void NewJourney()
