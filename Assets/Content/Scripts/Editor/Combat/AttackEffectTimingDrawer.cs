@@ -8,7 +8,7 @@ namespace LittleHeroJourney
     {
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
         {
-            return EditorGUIUtility.singleLineHeight * 4 + EditorGUIUtility.standardVerticalSpacing * 3;
+            return EditorGUIUtility.singleLineHeight * 6 + EditorGUIUtility.standardVerticalSpacing * 5;
         }
 
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
@@ -20,23 +20,28 @@ namespace LittleHeroJourney
 
             // Row 1: Effect name
             Rect row1 = new Rect(position.x, position.y, position.width, lineHeight);
-            SerializedProperty effectNameProp = property.FindPropertyRelative("effectName");
-            EditorGUI.PropertyField(row1, effectNameProp, new GUIContent("VFX Name"));
+            EditorGUI.PropertyField(row1, property.FindPropertyRelative("effectName"), new GUIContent("VFX Name"));
 
             // Row 2: Trigger At
-            Rect row2 = new Rect(position.x, position.y + lineHeight + spacing, position.width, lineHeight);
+            Rect row2 = new Rect(position.x, position.y + (lineHeight + spacing), position.width, lineHeight);
             SerializedProperty timingProp = property.FindPropertyRelative("triggerTime");
             timingProp.floatValue = EditorGUI.Slider(row2, "Trigger At:", timingProp.floatValue, 0f, 1f);
 
             // Row 3: Position Offset
             Rect row3 = new Rect(position.x, position.y + (lineHeight + spacing) * 2, position.width, lineHeight);
-            SerializedProperty offsetProp = property.FindPropertyRelative("positionOffset");
-            EditorGUI.PropertyField(row3, offsetProp, new GUIContent("Position Offset"));
+            EditorGUI.PropertyField(row3, property.FindPropertyRelative("positionOffset"), new GUIContent("Position Offset"));
 
-            // Row 4: Follow Character
+            // Row 4: Rotation (euler)
             Rect row4 = new Rect(position.x, position.y + (lineHeight + spacing) * 3, position.width, lineHeight);
-            SerializedProperty followProp = property.FindPropertyRelative("followCharacter");
-            EditorGUI.PropertyField(row4, followProp, new GUIContent("Follow Character"));
+            EditorGUI.PropertyField(row4, property.FindPropertyRelative("rotationEuler"), new GUIContent("Rotation (Euler)"));
+
+            // Row 5: Scale
+            Rect row5 = new Rect(position.x, position.y + (lineHeight + spacing) * 4, position.width, lineHeight);
+            EditorGUI.PropertyField(row5, property.FindPropertyRelative("scale"), new GUIContent("Scale"));
+
+            // Row 6: Follow Character
+            Rect row6 = new Rect(position.x, position.y + (lineHeight + spacing) * 5, position.width, lineHeight);
+            EditorGUI.PropertyField(row6, property.FindPropertyRelative("followCharacter"), new GUIContent("Follow Character"));
 
             EditorGUI.EndProperty();
         }
@@ -47,7 +52,7 @@ namespace LittleHeroJourney
     {
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
         {
-            return EditorGUIUtility.singleLineHeight * 4 + EditorGUIUtility.standardVerticalSpacing * 3;
+            return EditorGUIUtility.singleLineHeight * 6 + EditorGUIUtility.standardVerticalSpacing * 5;
         }
 
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
@@ -59,23 +64,28 @@ namespace LittleHeroJourney
 
             // Row 1: Effect name
             Rect row1 = new Rect(position.x, position.y, position.width, lineHeight);
-            SerializedProperty effectNameProp = property.FindPropertyRelative("effectName");
-            EditorGUI.PropertyField(row1, effectNameProp, new GUIContent("Audio Name"));
+            EditorGUI.PropertyField(row1, property.FindPropertyRelative("effectName"), new GUIContent("Audio Name"));
 
             // Row 2: Trigger At
-            Rect row2 = new Rect(position.x, position.y + lineHeight + spacing, position.width, lineHeight);
+            Rect row2 = new Rect(position.x, position.y + (lineHeight + spacing), position.width, lineHeight);
             SerializedProperty timingProp = property.FindPropertyRelative("triggerTime");
             timingProp.floatValue = EditorGUI.Slider(row2, "Trigger At:", timingProp.floatValue, 0f, 1f);
 
             // Row 3: Position Offset
             Rect row3 = new Rect(position.x, position.y + (lineHeight + spacing) * 2, position.width, lineHeight);
-            SerializedProperty offsetProp = property.FindPropertyRelative("positionOffset");
-            EditorGUI.PropertyField(row3, offsetProp, new GUIContent("Position Offset"));
+            EditorGUI.PropertyField(row3, property.FindPropertyRelative("positionOffset"), new GUIContent("Position Offset"));
 
-            // Row 4: Follow Character
+            // Row 4: Rotation (euler)
             Rect row4 = new Rect(position.x, position.y + (lineHeight + spacing) * 3, position.width, lineHeight);
-            SerializedProperty followProp = property.FindPropertyRelative("followCharacter");
-            EditorGUI.PropertyField(row4, followProp, new GUIContent("Follow Character"));
+            EditorGUI.PropertyField(row4, property.FindPropertyRelative("rotationEuler"), new GUIContent("Rotation (Euler)"));
+
+            // Row 5: Scale
+            Rect row5 = new Rect(position.x, position.y + (lineHeight + spacing) * 4, position.width, lineHeight);
+            EditorGUI.PropertyField(row5, property.FindPropertyRelative("scale"), new GUIContent("Scale"));
+
+            // Row 6: Follow Character
+            Rect row6 = new Rect(position.x, position.y + (lineHeight + spacing) * 5, position.width, lineHeight);
+            EditorGUI.PropertyField(row6, property.FindPropertyRelative("followCharacter"), new GUIContent("Follow Character"));
 
             EditorGUI.EndProperty();
         }
@@ -86,7 +96,7 @@ namespace LittleHeroJourney
     {
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
         {
-            return EditorGUIUtility.singleLineHeight * 4 + EditorGUIUtility.standardVerticalSpacing * 3;
+            return EditorGUIUtility.singleLineHeight * 6 + EditorGUIUtility.standardVerticalSpacing * 5;
         }
 
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
@@ -98,23 +108,28 @@ namespace LittleHeroJourney
 
             // Row 1: Effect name
             Rect row1 = new Rect(position.x, position.y, position.width, lineHeight);
-            SerializedProperty effectNameProp = property.FindPropertyRelative("effectName");
-            EditorGUI.PropertyField(row1, effectNameProp, new GUIContent("Particle Name"));
+            EditorGUI.PropertyField(row1, property.FindPropertyRelative("effectName"), new GUIContent("Particle Name"));
 
             // Row 2: Trigger At
-            Rect row2 = new Rect(position.x, position.y + lineHeight + spacing, position.width, lineHeight);
+            Rect row2 = new Rect(position.x, position.y + (lineHeight + spacing), position.width, lineHeight);
             SerializedProperty timingProp = property.FindPropertyRelative("triggerTime");
             timingProp.floatValue = EditorGUI.Slider(row2, "Trigger At:", timingProp.floatValue, 0f, 1f);
 
             // Row 3: Position Offset
             Rect row3 = new Rect(position.x, position.y + (lineHeight + spacing) * 2, position.width, lineHeight);
-            SerializedProperty offsetProp = property.FindPropertyRelative("positionOffset");
-            EditorGUI.PropertyField(row3, offsetProp, new GUIContent("Position Offset"));
+            EditorGUI.PropertyField(row3, property.FindPropertyRelative("positionOffset"), new GUIContent("Position Offset"));
 
-            // Row 4: Follow Character
+            // Row 4: Rotation (euler)
             Rect row4 = new Rect(position.x, position.y + (lineHeight + spacing) * 3, position.width, lineHeight);
-            SerializedProperty followProp = property.FindPropertyRelative("followCharacter");
-            EditorGUI.PropertyField(row4, followProp, new GUIContent("Follow Character"));
+            EditorGUI.PropertyField(row4, property.FindPropertyRelative("rotationEuler"), new GUIContent("Rotation (Euler)"));
+
+            // Row 5: Scale
+            Rect row5 = new Rect(position.x, position.y + (lineHeight + spacing) * 4, position.width, lineHeight);
+            EditorGUI.PropertyField(row5, property.FindPropertyRelative("scale"), new GUIContent("Scale"));
+
+            // Row 6: Follow Character
+            Rect row6 = new Rect(position.x, position.y + (lineHeight + spacing) * 5, position.width, lineHeight);
+            EditorGUI.PropertyField(row6, property.FindPropertyRelative("followCharacter"), new GUIContent("Follow Character"));
 
             EditorGUI.EndProperty();
         }

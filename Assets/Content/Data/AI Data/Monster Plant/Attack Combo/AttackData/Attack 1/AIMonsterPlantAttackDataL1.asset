@@ -27,4 +27,5 @@ MonoBehaviour:
   particleEffects: []
   vfxEffects: []
   audioEffects: []
+  trailEffects: []
   aiComboContinueChance: 1

@@ -19,6 +19,6 @@ MonoBehaviour:
   - effectName: BloodSplat
     particlePrefab: {fileID: 3804015734652406634, guid: f82aa693c4284b84db16505c636d178c, type: 3}
     poolSize: 0
-  - effectName: atk_ds_1
-    particlePrefab: {fileID: 3033280740954087754, guid: 9901092d327a2324c88e4bc7c8b7ee67, type: 3}
+  - effectName: FX_SwordStab_01
+    particlePrefab: {fileID: 7976660186629903092, guid: b471ad1663b11434ea3b48ad1122c020, type: 3}
     poolSize: 0

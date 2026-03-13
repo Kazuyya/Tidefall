@@ -64,6 +64,16 @@ namespace LittleHeroJourney
         private List<AudioSource> _activeAudio = new List<AudioSource>();
         private List<ParticleSystem> _activeParticles = new List<ParticleSystem>();
 
+        // When followCharacter: sync position/rotation/scale from parent every frame (guarantees all three follow)
+        private struct FollowData
+        {
+            public Transform Parent;
+            public Vector3 PosOffset;
+            public Vector3 RotEuler;
+            public Vector3 Scale;
+        }
+        private Dictionary<Transform, FollowData> _followTransforms = new Dictionary<Transform, FollowData>();
+
         // Trail registry (Trail by id; registered by Weapon when enabled)
         private Dictionary<string, Trail> _trailRegistry = new Dictionary<string, Trail>();
 
@@ -96,6 +106,36 @@ namespace LittleHeroJourney
             {
                 _instance = null;
             }
+        }
+
+        private void LateUpdate()
+        {
+            if (_followTransforms.Count == 0) return;
+            Vector3 poolScale = _poolContainer != null ? _poolContainer.lossyScale : Vector3.one;
+            var toRemove = new List<Transform>();
+            foreach (var kv in _followTransforms)
+            {
+                Transform t = kv.Key;
+                if (t == null || !t.gameObject.activeInHierarchy)
+                {
+                    toRemove.Add(t);
+                    continue;
+                }
+                FollowData d = kv.Value;
+                if (d.Parent == null)
+                {
+                    toRemove.Add(t);
+                    continue;
+                }
+                t.position = d.Parent.position + d.Parent.rotation * d.PosOffset;
+                t.rotation = d.Parent.rotation * Quaternion.Euler(d.RotEuler);
+                float sx = (poolScale.x > 0.0001f) ? (d.Scale.x * d.Parent.lossyScale.x / poolScale.x) : d.Scale.x;
+                float sy = (poolScale.y > 0.0001f) ? (d.Scale.y * d.Parent.lossyScale.y / poolScale.y) : d.Scale.y;
+                float sz = (poolScale.z > 0.0001f) ? (d.Scale.z * d.Parent.lossyScale.z / poolScale.z) : d.Scale.z;
+                t.localScale = new Vector3(sx, sy, sz);
+            }
+            for (int i = 0; i < toRemove.Count; i++)
+                _followTransforms.Remove(toRemove[i]);
         }
 
         #endregion
@@ -232,20 +272,35 @@ namespace LittleHeroJourney
 
         #endregion
 
-        private void ApplyEffectTransform(Transform t, Vector3 position, Quaternion rotation, Vector3 positionOffset, Transform parentTransform, bool followCharacter)
+        /// <summary>
+        /// Set initial transform. When followCharacter and parentTransform set, effect stays under pool and is synced in LateUpdate (pos/rot/scale all follow).
+        /// </summary>
+        private void ApplyEffectTransform(Transform t, Vector3 position, Quaternion rotation, Vector3 positionOffset, Vector3 scale, Transform parentTransform, bool followCharacter)
         {
-            if (followCharacter && parentTransform != null)
+            t.SetParent(_poolContainer);
+            Vector3 worldOffset = parentTransform != null ? parentTransform.rotation * positionOffset : positionOffset;
+            t.position = position + worldOffset;
+            t.rotation = rotation;
+            t.localScale = followCharacter && parentTransform != null
+                ? new Vector3(scale.x * parentTransform.lossyScale.x, scale.y * parentTransform.lossyScale.y, scale.z * parentTransform.lossyScale.z)
+                : scale;
+        }
+
+        private void RegisterFollow(Transform effectTransform, Transform parent, Vector3 posOffset, Vector3 rotEuler, Vector3 scale)
+        {
+            if (effectTransform == null || parent == null) return;
+            _followTransforms[effectTransform] = new FollowData
             {
-                t.SetParent(parentTransform);
-                t.localPosition = positionOffset;
-                t.localRotation = rotation;
-            }
-            else
-            {
-                t.SetParent(_poolContainer);
-                t.position = position + positionOffset;
-                t.rotation = rotation;
-            }
+                Parent = parent,
+                PosOffset = posOffset,
+                RotEuler = rotEuler,
+                Scale = scale
+            };
+        }
+
+        private void UnregisterFollow(Transform effectTransform)
+        {
+            if (effectTransform != null) _followTransforms.Remove(effectTransform);
         }
 
         #region VFX Methods
@@ -253,9 +308,10 @@ namespace LittleHeroJourney
         /// <summary>
         /// Play a VFX effect at target position
         /// </summary>
-        public void PlayVFX(string effectName, Vector3 position, Quaternion rotation = default, Vector3 positionOffset = default, Transform parentTransform = null, bool followCharacter = false)
+        public void PlayVFX(string effectName, Vector3 position, Quaternion rotation = default, Vector3 positionOffset = default, Vector3 scale = default, Transform parentTransform = null, bool followCharacter = false, Vector3 rotationEulerForFollow = default)
         {
             if (string.IsNullOrEmpty(effectName) || vfxSet == null) return;
+            if (scale == default) scale = Vector3.one;
 
             VFXEffectData vfxData = vfxSet.GetVFXEffect(effectName);
             if (vfxData == null)
@@ -268,7 +324,9 @@ namespace LittleHeroJourney
             VisualEffect vfx = GetVFXFromPool(effectName, vfxData.vfxPrefab);
             if (vfx == null) return;
 
-            ApplyEffectTransform(vfx.transform, position, rotation, positionOffset, parentTransform, followCharacter);
+            ApplyEffectTransform(vfx.transform, position, rotation, positionOffset, scale, parentTransform, followCharacter);
+            if (followCharacter && parentTransform != null)
+                RegisterFollow(vfx.transform, parentTransform, positionOffset, rotationEulerForFollow, scale);
             vfx.gameObject.SetActive(true);
             vfx.Reinit();
             vfx.Play();
@@ -278,7 +336,6 @@ namespace LittleHeroJourney
             if (showDebugLog)
                 Debug.Log($"[{GetType().Name}] Playing VFX '{effectName}' at {position + positionOffset} (Follow: {followCharacter})");
 
-            // Return to pool after duration
             StartCoroutine(ReturnVFXToPoolAfterDuration(vfx, effectName));
         }
 
@@ -325,6 +382,7 @@ namespace LittleHeroJourney
         {
             if (vfx == null) return;
 
+            UnregisterFollow(vfx.transform);
             vfx.gameObject.SetActive(false);
             vfx.transform.SetParent(_poolContainer);
             _activeVFX.Remove(vfx);
@@ -526,9 +584,10 @@ namespace LittleHeroJourney
         /// <summary>
         /// Play particle effect at target position
         /// </summary>
-        public void PlayParticle(string effectName, Vector3 position, Quaternion rotation = default, Vector3 positionOffset = default, Transform parentTransform = null, bool followCharacter = false)
+        public void PlayParticle(string effectName, Vector3 position, Quaternion rotation = default, Vector3 positionOffset = default, Vector3 scale = default, Transform parentTransform = null, bool followCharacter = false, Vector3 rotationEulerForFollow = default)
         {
             if (string.IsNullOrEmpty(effectName) || particleSet == null) return;
+            if (scale == default) scale = Vector3.one;
 
             ParticleEffectData particleData = particleSet.GetParticleEffect(effectName);
             if (particleData == null)
@@ -542,7 +601,11 @@ namespace LittleHeroJourney
             if (particle == null) return;
 
             particle.Clear(true);
-            ApplyEffectTransform(particle.transform, position, rotation, positionOffset, parentTransform, followCharacter);
+            ApplyEffectTransform(particle.transform, position, rotation, positionOffset, scale, parentTransform, followCharacter);
+            if (followCharacter && parentTransform != null)
+                RegisterFollow(particle.transform, parentTransform, positionOffset, rotationEulerForFollow, scale);
+            var main = particle.main;
+            main.simulationSpace = followCharacter ? ParticleSystemSimulationSpace.Local : ParticleSystemSimulationSpace.World;
             particle.gameObject.SetActive(true);
             particle.Play();
 
@@ -603,6 +666,7 @@ namespace LittleHeroJourney
         {
             if (particle == null) return;
 
+            UnregisterFollow(particle.transform);
             particle.Stop();
             particle.gameObject.SetActive(false);
             particle.transform.SetParent(_poolContainer);

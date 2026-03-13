@@ -256,9 +256,26 @@ namespace LittleHeroJourney
         private void UpdateWeaponTimingAndEffects(AnimatorStateInfo stateInfo)
         {
             if (currentSequence == null) return;
-            float normalizedTime = stateInfo.normalizedTime % 1.0f;
-            bool animatorInAttack = Helper.IsInAttackState(Animator);
-            if (!(animatorInAttack && _aiWasInAttackStateLastFrame)) return;
+
+            float normalizedTime;
+            bool animatorInAttack;
+
+            bool transitioning = Animator.IsInTransition(0);
+            bool nextIsAttack = transitioning && Helper.IsNextStateAttack(Animator);
+
+            if (nextIsAttack)
+            {
+                AnimatorStateInfo nextInfo = Animator.GetNextAnimatorStateInfo(0);
+                normalizedTime = nextInfo.normalizedTime % 1.0f;
+                animatorInAttack = true;
+            }
+            else
+            {
+                normalizedTime = stateInfo.normalizedTime % 1.0f;
+                animatorInAttack = Helper.IsInAttackState(Animator);
+            }
+
+            if (!animatorInAttack) return;
             AttackDataSO currentAttack = currentSequence.GetAttackAtIndex(currentAttackIndex);
             if (currentAttack == null || _currentAttackWeapons == null || _currentAttackWeapons.Count == 0) return;
             UpdateWeaponColliderTiming(normalizedTime);

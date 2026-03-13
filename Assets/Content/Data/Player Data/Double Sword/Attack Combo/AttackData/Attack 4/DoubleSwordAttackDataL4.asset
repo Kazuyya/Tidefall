@@ -27,4 +27,13 @@ MonoBehaviour:
   particleEffects: []
   vfxEffects: []
   audioEffects: []
+  trailEffects:
+  - effectName: Sword1_R
+    triggerWindow: {x: 0.45, y: 0.6}
+    stopMode: 0
+    frozenTrailLifetime: 0
+  - effectName: Sword1_L
+    triggerWindow: {x: 0.45, y: 0.6}
+    stopMode: 0
+    frozenTrailLifetime: 0
   aiComboContinueChance: 1

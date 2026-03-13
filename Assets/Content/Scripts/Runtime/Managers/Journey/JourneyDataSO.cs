@@ -7,6 +7,7 @@ namespace LittleHeroJourney
     {
         [SerializeField] private string journeyId = "";
         [SceneAttribute] [SerializeField] private string sceneName;
+        [SerializeField] private string sceneId = "";
         [SerializeField] private string journeyTitle = "";
         [TextArea(2, 4)] [SerializeField] private string description = "";
         [SerializeField] private StorySequenceSO startStorySequence;
@@ -14,6 +15,7 @@ namespace LittleHeroJourney
 
         public string JourneyId => journeyId;
         public string SceneName => sceneName ?? "";
+        public string SceneId => sceneId ?? "";
         public string JourneyTitle => string.IsNullOrEmpty(journeyTitle) ? $"Journey {journeyId}" : journeyTitle;
         public string Description => description ?? "";
         public StorySequenceSO StartStorySequence => startStorySequence;

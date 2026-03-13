@@ -334,6 +334,17 @@ namespace LittleHeroJourney
 
             _isAttackFinishing = false;
 
+            // Stop any trails still running from the previous attack, then clear per-attack state
+            var manager = CharacterEffectManager.Instance;
+            foreach (string id in _triggeredTrailStarts)
+            {
+                if (!_triggeredTrailStops.Contains(id))
+                    manager?.PlayTrailStop(id);
+            }
+            _triggeredEffects.Clear();
+            _triggeredTrailStarts.Clear();
+            _triggeredTrailStops.Clear();
+
             List<Weapon> attackWeapons = new List<Weapon>();
             _weaponTimingMap.Clear();
 
@@ -407,11 +418,25 @@ namespace LittleHeroJourney
 
         private void UpdateAttackProgress()
         {
-            AnimatorStateInfo stateInfo = _animator.GetCurrentAnimatorStateInfo(0);
-            float normalizedTime = stateInfo.normalizedTime % 1.0f;  // Clamp to 0-1 to prevent double trigger on loop
+            float normalizedTime;
+            bool animatorInAttack;
 
+            bool transitioning = _animator.IsInTransition(0);
+            bool nextIsAttack = transitioning && Helper.IsNextStateAttack(_animator);
 
-            bool animatorInAttack = Helper.IsInAttackState(_animator);
+            if (nextIsAttack)
+            {
+                AnimatorStateInfo nextInfo = _animator.GetNextAnimatorStateInfo(0);
+                normalizedTime = nextInfo.normalizedTime % 1.0f;
+                animatorInAttack = true;
+            }
+            else
+            {
+                AnimatorStateInfo stateInfo = _animator.GetCurrentAnimatorStateInfo(0);
+                normalizedTime = stateInfo.normalizedTime % 1.0f;
+                animatorInAttack = Helper.IsInAttackState(_animator);
+            }
+
             if (!animatorInAttack && Time.time - _lastAttackStartTime > 2.0f)
             {
                 if (ShowDebugLog) Debug.LogWarning($"[{GetType().Name}] STATE DESYNC: _isAttacking=true but animator not in attack state for 2+ seconds. Forcing reset.");
@@ -422,7 +447,7 @@ namespace LittleHeroJourney
 
             AttackDataSO currentAttack = currentSequence?.GetAttackAtIndex(currentAttackIndex);
 
-            if (currentAttack != null && _currentAttackWeapons != null && _currentAttackWeapons.Count > 0 && animatorInAttack && _wasInAttackStateLastFrame)
+            if (currentAttack != null && _currentAttackWeapons != null && _currentAttackWeapons.Count > 0 && animatorInAttack)
             {
                 UpdateWeaponColliderTiming(normalizedTime);
                 UpdateMovementDisableFromAttack(currentAttack, normalizedTime);
@@ -549,19 +574,29 @@ namespace LittleHeroJourney
         {
             if (currentAttack == null) return;
             Vector3 pos = transform.position;
+            Transform effectParent = transform;
             var manager = CharacterEffectManager.Instance;
             if (currentAttack.particleEffects != null)
                 foreach (var e in currentAttack.particleEffects)
                     if (e.IsValid && normalizedTime >= e.triggerTime && !_triggeredEffects.Contains(e.effectName))
-                    { manager?.PlayParticle(e.effectName, pos); _triggeredEffects.Add(e.effectName); }
+                    {
+                        manager?.PlayParticle(e.effectName, pos, (effectParent != null ? effectParent.rotation : Quaternion.identity) * Quaternion.Euler(e.rotationEuler), e.positionOffset, e.scale, effectParent, e.followCharacter, e.rotationEuler);
+                        _triggeredEffects.Add(e.effectName);
+                    }
             if (currentAttack.vfxEffects != null)
                 foreach (var e in currentAttack.vfxEffects)
                     if (e.IsValid && normalizedTime >= e.triggerTime && !_triggeredEffects.Contains(e.effectName))
-                    { manager?.PlayVFX(e.effectName, pos); _triggeredEffects.Add(e.effectName); }
+                    {
+                        manager?.PlayVFX(e.effectName, pos, (effectParent != null ? effectParent.rotation : Quaternion.identity) * Quaternion.Euler(e.rotationEuler), e.positionOffset, e.scale, effectParent, e.followCharacter, e.rotationEuler);
+                        _triggeredEffects.Add(e.effectName);
+                    }
             if (currentAttack.audioEffects != null)
                 foreach (var e in currentAttack.audioEffects)
                     if (e.IsValid && normalizedTime >= e.triggerTime && !_triggeredEffects.Contains(e.effectName))
-                    { manager?.PlayAudio(e.effectName, pos); _triggeredEffects.Add(e.effectName); }
+                    {
+                        manager?.PlayAudio(e.effectName, pos + (effectParent != null ? effectParent.rotation * e.positionOffset : e.positionOffset));
+                        _triggeredEffects.Add(e.effectName);
+                    }
             if (currentAttack.trailEffects != null && manager != null)
             {
                 // Snapshot trails that were already started before this frame. We must never trigger

@@ -237,7 +237,7 @@ namespace LittleHeroJourney
                 {
                     var e = vfxList[i];
                     if (!e.IsValid || vfxTriggered[i] || normalizedTime < e.triggerTime) continue;
-                    manager?.PlayVFX(e.effectName, pos, Quaternion.identity, e.positionOffset, e.followCharacter ? transform : null, e.followCharacter);
+                    manager?.PlayVFX(e.effectName, pos, transform.rotation * Quaternion.Euler(e.rotationEuler), e.positionOffset, e.scale, transform, e.followCharacter, e.rotationEuler);
                     vfxTriggered[i] = true;
                 }
 
@@ -246,7 +246,7 @@ namespace LittleHeroJourney
                 {
                     var e = audioList[i];
                     if (!e.IsValid || audioTriggered[i] || normalizedTime < e.triggerTime) continue;
-                    manager?.PlayAudio(e.effectName, pos + e.positionOffset);
+                    manager?.PlayAudio(e.effectName, pos + transform.rotation * e.positionOffset);
                     audioTriggered[i] = true;
                 }
 
@@ -255,7 +255,7 @@ namespace LittleHeroJourney
                 {
                     var e = particleList[i];
                     if (!e.IsValid || particleTriggered[i] || normalizedTime < e.triggerTime) continue;
-                    manager?.PlayParticle(e.effectName, pos, Quaternion.identity, e.positionOffset, e.followCharacter ? transform : null, e.followCharacter);
+                    manager?.PlayParticle(e.effectName, pos, transform.rotation * Quaternion.Euler(e.rotationEuler), e.positionOffset, e.scale, transform, e.followCharacter, e.rotationEuler);
                     particleTriggered[i] = true;
                 }
         }

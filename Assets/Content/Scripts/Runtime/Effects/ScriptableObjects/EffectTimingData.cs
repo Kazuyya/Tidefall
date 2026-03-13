@@ -18,6 +18,12 @@ namespace LittleHeroJourney
         [Tooltip("Position offset from character (x, y, z)")]
         public Vector3 positionOffset = Vector3.zero;
 
+        [Tooltip("Rotation in euler angles (degrees)")]
+        public Vector3 rotationEuler = Vector3.zero;
+
+        [Tooltip("Scale (1,1,1) = default size")]
+        public Vector3 scale = Vector3.one;
+
         [Tooltip("If true, effect follows character. If false, stays at spawn position")]
         public bool followCharacter = false;
 
@@ -40,6 +46,12 @@ namespace LittleHeroJourney
         [Tooltip("Position offset from character (x, y, z)")]
         public Vector3 positionOffset = Vector3.zero;
 
+        [Tooltip("Rotation in euler angles (degrees). Used for 3D audio orientation if supported.")]
+        public Vector3 rotationEuler = Vector3.zero;
+
+        [Tooltip("Scale (1,1,1). Audio typically ignores scale.")]
+        public Vector3 scale = Vector3.one;
+
         [Tooltip("If true, effect follows character. If false, stays at spawn position")]
         public bool followCharacter = false;
 
@@ -61,6 +73,12 @@ namespace LittleHeroJourney
 
         [Tooltip("Position offset from character (x, y, z)")]
         public Vector3 positionOffset = Vector3.zero;
+
+        [Tooltip("Rotation in euler angles (degrees)")]
+        public Vector3 rotationEuler = Vector3.zero;
+
+        [Tooltip("Scale (1,1,1) = default size")]
+        public Vector3 scale = Vector3.one;
 
         [Tooltip("If true, effect follows character. If false, stays at spawn position")]
         public bool followCharacter = false;

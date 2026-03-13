@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   journeyId: Prolougue
   sceneName: Assets/Content/Scenes/Fix Scene/Gameplay/Map.unity
+  sceneId: Level
   journeyTitle: 
   description: 
   startStorySequence: {fileID: 11400000, guid: e90b2278a929602489fda8290fbb54a9, type: 2}

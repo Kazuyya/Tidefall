@@ -31,7 +31,7 @@ MonoBehaviour:
     - fromId: '*'
       useLoading: 1
       closeBeforeLoading: 0
-  - toId: level
+  - toId: Level
     fromRules:
     - fromId: '*'
       useLoading: 1

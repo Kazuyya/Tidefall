@@ -94,7 +94,10 @@ namespace LittleHeroJourney
             if (journey == null || string.IsNullOrEmpty(journey.SceneName)) return;
             currentLevelNumber = stageNumber;
             if (GameManager.Instance?.SceneManager != null)
-                GameManager.Instance.SceneManager.StartStageScene(journey.SceneName);
+            {
+                string targetId = string.IsNullOrEmpty(journey.SceneId) ? "gameplay" : journey.SceneId;
+                GameManager.Instance.SceneManager.StartStageScene(journey.SceneName, targetId);
+            }
         }
 
         #endregion

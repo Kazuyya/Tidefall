@@ -365,6 +365,28 @@ namespace LittleHeroJourney
             }
         }
 
+        public static bool IsNextStateAttack(Animator animator, int layerIndex = 0)
+        {
+            if (animator == null || !animator.IsInTransition(layerIndex)) return false;
+            try
+            {
+                var clipInfo = animator.GetNextAnimatorClipInfo(layerIndex);
+                if (clipInfo != null && clipInfo.Length > 0)
+                {
+                    string clipName = clipInfo[0].clip.name;
+                    return clipName.Contains("attack", System.StringComparison.OrdinalIgnoreCase) ||
+                           clipName.Contains("swing", System.StringComparison.OrdinalIgnoreCase) ||
+                           clipName.Contains("slash", System.StringComparison.OrdinalIgnoreCase);
+                }
+                var stateInfo = animator.GetNextAnimatorStateInfo(layerIndex);
+                return stateInfo.IsName("Attack") || stateInfo.IsName("Attack1") || stateInfo.IsName("Attack2");
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
         /// <summary>
         /// Get current animation state length
         /// </summary>
