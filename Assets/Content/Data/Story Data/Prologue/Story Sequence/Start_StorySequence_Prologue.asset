@@ -14,13 +14,95 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sequenceId: Prologue
   steps:
-  - stepId: Prologue
+  - stepId: "At that moment\u2026 I woke up beneath a tree."
     backgroundType: 0
     backgroundImage: {fileID: 0}
-    backgroundColor: {r: 0, g: 0, b: 0, a: 0}
+    backgroundColor: {r: 0, g: 0, b: 0, a: 1}
     contentType: 0
-    narrativeText: 
+    narrativeText: "At that moment\u2026 I woke up beneath a tree.\n\nRain was falling
+      softly in the silent forest."
     speakerName: 
     dialogueLine: 
-    textInEffect: 0
+    textInEffect: 1
+    textOutEffect: 0
+  - stepId: I don't know how I ended up here.
+    backgroundType: 0
+    backgroundImage: {fileID: 0}
+    backgroundColor: {r: 0, g: 0, b: 0, a: 1}
+    contentType: 0
+    narrativeText: "I don't know how I ended up here.\n\nBut that morning felt\u2026
+      strange."
+    speakerName: 
+    dialogueLine: 
+    textInEffect: 1
+    textOutEffect: 0
+  - stepId: ...ugh...
+    backgroundType: 0
+    backgroundImage: {fileID: 0}
+    backgroundColor: {r: 0, g: 0, b: 0, a: 1}
+    contentType: 0
+    narrativeText: ...ugh...
+    speakerName: 
+    dialogueLine: 
+    textInEffect: 1
+    textOutEffect: 0
+  - stepId: "My head\u2026 hurts."
+    backgroundType: 0
+    backgroundImage: {fileID: 0}
+    backgroundColor: {r: 0, g: 0, b: 0, a: 1}
+    contentType: 0
+    narrativeText: "My head\u2026 hurts."
+    speakerName: 
+    dialogueLine: 
+    textInEffect: 1
+    textOutEffect: 0
+  - stepId: "Where am I\u2026?"
+    backgroundType: 0
+    backgroundImage: {fileID: 0}
+    backgroundColor: {r: 0, g: 0, b: 0, a: 1}
+    contentType: 0
+    narrativeText: "Where am I\u2026?"
+    speakerName: 
+    dialogueLine: 
+    textInEffect: 1
+    textOutEffect: 0
+  - stepId: "A sword\u2026?"
+    backgroundType: 0
+    backgroundImage: {fileID: 0}
+    backgroundColor: {r: 0, g: 0, b: 0, a: 1}
+    contentType: 0
+    narrativeText: "A sword\u2026?"
+    speakerName: 
+    dialogueLine: 
+    textInEffect: 1
+    textOutEffect: 0
+  - stepId: "Why is there a sword here\u2026?"
+    backgroundType: 0
+    backgroundImage: {fileID: 0}
+    backgroundColor: {r: 0, g: 0, b: 0, a: 1}
+    contentType: 0
+    narrativeText: "Why is there a sword here\u2026?"
+    speakerName: 
+    dialogueLine: 
+    textInEffect: 1
+    textOutEffect: 0
+  - stepId: "What is that\u2026?!"
+    backgroundType: 0
+    backgroundImage: {fileID: 0}
+    backgroundColor: {r: 0, g: 0, b: 0, a: 1}
+    contentType: 0
+    narrativeText: "What is that\u2026?!"
+    speakerName: 
+    dialogueLine: 
+    textInEffect: 1
+    textOutEffect: 0
+  - stepId: "Damn\u2026!"
+    backgroundType: 0
+    backgroundImage: {fileID: 0}
+    backgroundColor: {r: 0, g: 0, b: 0, a: 1}
+    contentType: 0
+    narrativeText: "Damn\u2026!"
+    speakerName: 
+    dialogueLine: 
+    textInEffect: 1
     textOutEffect: 0

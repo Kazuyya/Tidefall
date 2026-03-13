@@ -14,12 +14,87 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sequenceId: Prologue
   steps:
-  - stepId: Prologue
+  - stepId: "\u2026"
     backgroundType: 0
     backgroundImage: {fileID: 0}
     backgroundColor: {r: 0, g: 0, b: 0, a: 0}
     contentType: 0
-    narrativeText: 
+    narrativeText: "\u2026"
+    speakerName: 
+    dialogueLine: 
+    textInEffect: 0
+    textOutEffect: 0
+  - stepId: "This sword\u2026"
+    backgroundType: 0
+    backgroundImage: {fileID: 0}
+    backgroundColor: {r: 0, g: 0, b: 0, a: 0}
+    contentType: 0
+    narrativeText: "This sword\u2026"
+    speakerName: 
+    dialogueLine: 
+    textInEffect: 0
+    textOutEffect: 0
+  - stepId: "It seems\u2026 this sword absorbs something."
+    backgroundType: 0
+    backgroundImage: {fileID: 0}
+    backgroundColor: {r: 0, g: 0, b: 0, a: 0}
+    contentType: 0
+    narrativeText: "It seems\u2026 this sword absorbs something."
+    speakerName: 
+    dialogueLine: 
+    textInEffect: 0
+    textOutEffect: 0
+  - stepId: "I don't know what's happening\u2026"
+    backgroundType: 0
+    backgroundImage: {fileID: 0}
+    backgroundColor: {r: 0, g: 0, b: 0, a: 0}
+    contentType: 0
+    narrativeText: "I don't know what's happening\u2026"
+    speakerName: 
+    dialogueLine: 
+    textInEffect: 0
+    textOutEffect: 0
+  - stepId: The forest feels too quiet. No birds. No sign of life.
+    backgroundType: 0
+    backgroundImage: {fileID: 0}
+    backgroundColor: {r: 0, g: 0, b: 0, a: 0}
+    contentType: 0
+    narrativeText: 'The forest feels too quiet.
+
+      No birds.
+
+      No sign of
+      life.'
+    speakerName: 
+    dialogueLine: 
+    textInEffect: 0
+    textOutEffect: 0
+  - stepId: "Maybe\u2026 there's someone out there."
+    backgroundType: 0
+    backgroundImage: {fileID: 0}
+    backgroundColor: {r: 0, g: 0, b: 0, a: 0}
+    contentType: 0
+    narrativeText: "Maybe\u2026 there's someone out there."
+    speakerName: 
+    dialogueLine: 
+    textInEffect: 0
+    textOutEffect: 0
+  - stepId: I need to find answers.
+    backgroundType: 0
+    backgroundImage: {fileID: 0}
+    backgroundColor: {r: 0, g: 0, b: 0, a: 0}
+    contentType: 0
+    narrativeText: I need to find answers.
+    speakerName: 
+    dialogueLine: 
+    textInEffect: 0
+    textOutEffect: 0
+  - stepId: I need to find answers.
+    backgroundType: 0
+    backgroundImage: {fileID: 0}
+    backgroundColor: {r: 0, g: 0, b: 0, a: 0}
+    contentType: 0
+    narrativeText: "With the strange sword in his hand\u2026\nthe journey begins."
     speakerName: 
     dialogueLine: 
     textInEffect: 0

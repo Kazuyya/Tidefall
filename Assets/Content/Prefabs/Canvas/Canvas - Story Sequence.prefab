@@ -1288,8 +1288,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d0ba32cb8f65f384a9165ee73953fc12, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  textNarrative: {fileID: 0}
-  textDialogue: {fileID: 0}
+  textNarrative: {fileID: 152606681614561184}
+  textDialogue: {fileID: 4047059659884088727}
   solidColorImage: {fileID: 6859032048961276262}
   customImage: {fileID: 8266902815508339711}
 --- !u!1 &3971365351901606974

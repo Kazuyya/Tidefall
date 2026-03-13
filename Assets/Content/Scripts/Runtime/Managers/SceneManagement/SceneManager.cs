@@ -112,18 +112,18 @@ namespace LittleHeroJourney
             _currentId = targetId;
         }
 
-        public void StartStageScene(string sceneName, string targetId = "gameplay")
+        public void StartStageScene(string sceneName, string targetId = "gameplay", Action onComplete = null)
         {
             if (string.IsNullOrEmpty(sceneName)) return;
             if (string.IsNullOrEmpty(targetId)) targetId = "gameplay";
             bool useLoading = ShouldUseLoading(_currentId, targetId, out bool closeBeforeLoading);
             if (useLoading && GameManager.Instance != null && GameManager.Instance.LoadingManager != null)
             {
-                GameManager.Instance.LoadingManager.LoadSceneWithLoading(sceneName, LoadSceneMode.Single, -1f, null, closeBeforeLoading);
+                GameManager.Instance.LoadingManager.LoadSceneWithLoading(sceneName, LoadSceneMode.Single, -1f, onComplete, closeBeforeLoading);
             }
             else
             {
-                StartCoroutine(LoadSceneWithoutLoadingRoutine(sceneName, null));
+                StartCoroutine(LoadSceneWithoutLoadingRoutine(sceneName, onComplete));
             }
             _currentId = targetId;
         }

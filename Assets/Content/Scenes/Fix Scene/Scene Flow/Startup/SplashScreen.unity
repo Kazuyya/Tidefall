@@ -458,6 +458,7 @@ MonoBehaviour:
   showDebugLog: 1
   disableEventSystemDuringTransition: 1
   config: {fileID: 11400000, guid: 0a87c3b735ec8ed4c835a07973519a6d, type: 2}
+  canvasActionIds: []
 --- !u!114 &209297263
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -549,6 +550,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   storyCanvasId: StorySequence
   journeysData: {fileID: 11400000, guid: fab6114fdf79c3d42aae71ae0fd0278b, type: 2}
+  journeySelectorCanvasId: 
+  storySequenceDisplay: {fileID: 0}
+  afterStoryCanvasId: 
   showDebugLog: 0
 --- !u!1 &333094475
 GameObject:

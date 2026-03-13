@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -14,6 +15,10 @@ namespace LittleHeroJourney
         [SerializeField] private string storyCanvasId = "";
         [SerializeField] private JourneysDataSO journeysData;
         [SerializeField] private string journeySelectorCanvasId = "";
+
+        [Header("Story (start sequence setelah scene load)")]
+        [SerializeField] private StorySequenceDisplay storySequenceDisplay;
+        [SerializeField] private string afterStoryCanvasId = "";
 
         [Header("Debug")]
         [SerializeField] private bool showDebugLog = false;
@@ -35,6 +40,7 @@ namespace LittleHeroJourney
         private Action _playHandler;
         private Action _pendingAfterFade;
         private Action _fadeCompleteHandler;
+        private bool _storyAdvanceRequested;
 
         private void Awake()
         {
@@ -121,8 +127,53 @@ namespace LittleHeroJourney
             if (GameManager.Instance?.SceneManager != null)
             {
                 string targetId = string.IsNullOrEmpty(journey.SceneId) ? "gameplay" : journey.SceneId;
-                GameManager.Instance.SceneManager.StartStageScene(journey.SceneName, targetId);
+                GameManager.Instance.SceneManager.StartStageScene(journey.SceneName, targetId, PlayStartStoryForCurrentStage);
             }
+        }
+
+        public void PlayStartStoryForCurrentStage()
+        {
+            var sequence = GetStartStoryForJourney(currentLevelNumber);
+            if (sequence == null || sequence.StepCount == 0)
+            {
+                if (!string.IsNullOrEmpty(afterStoryCanvasId) && GameManager.Instance?.CanvasManager != null)
+                    GameManager.Instance.CanvasManager.SwitchCanvas(afterStoryCanvasId);
+                return;
+            }
+            if (string.IsNullOrEmpty(storyCanvasId) || GameManager.Instance?.CanvasManager == null)
+            {
+                if (showDebugLog) Debug.LogWarning($"[{GetType().Name}] Story canvas id kosong atau CanvasManager null, skip start story.");
+                return;
+            }
+            GameManager.Instance.CanvasManager.SwitchCanvas(storyCanvasId);
+            var display = storySequenceDisplay != null ? storySequenceDisplay : FindObjectOfType<StorySequenceDisplay>();
+            if (display == null)
+            {
+                if (showDebugLog) Debug.LogWarning($"[{GetType().Name}] StorySequenceDisplay tidak ditemukan, skip start story.");
+                return;
+            }
+            StartCoroutine(PlayStorySequenceRoutine(sequence, display));
+        }
+
+        private IEnumerator PlayStorySequenceRoutine(StorySequenceSO sequence, StorySequenceDisplay display)
+        {
+            if (sequence == null || display == null) yield break;
+            display.Clear();
+            for (int i = 0; i < sequence.StepCount; i++)
+            {
+                var step = sequence.GetStep(i);
+                if (step == null) continue;
+                display.ApplyStep(step);
+                _storyAdvanceRequested = false;
+                yield return new WaitUntil(() => _storyAdvanceRequested);
+            }
+            if (!string.IsNullOrEmpty(afterStoryCanvasId) && GameManager.Instance?.CanvasManager != null)
+                GameManager.Instance.CanvasManager.SwitchCanvas(afterStoryCanvasId);
+        }
+
+        public void RequestAdvanceStory()
+        {
+            _storyAdvanceRequested = true;
         }
 
         #endregion
