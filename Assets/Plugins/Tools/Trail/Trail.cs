@@ -30,6 +30,14 @@ using UnityEngine;
 
 namespace Tiny
 {
+	public enum TrailStopMode
+	{
+		/// <summary>Freeze position only; trail keeps updating (shrinks) for the duration, then disappears.</summary>
+		ShrinkThenHide,
+		/// <summary>Freeze position and trail; fade out over the duration, then disappear.</summary>
+		FreezeAndFadeOut
+	}
+
 	public class Trail : MonoBehaviour
 	{
 		[SerializeField, Tooltip("The material to apply to the trail.")]
@@ -47,6 +55,22 @@ namespace Tiny
 		[SerializeField, Tooltip("The array of Vector3 points to connect.")]
 		private Vector3[] points = new Vector3[] { new Vector3(0f, 0f, -1f), new Vector3(0f, 0f, 1f) };
 
+		[SerializeField, Tooltip("Id for AttackDataSO Trail Effects (enable/disable at normalized time). Must match entry in attack.")]
+		private string trailId = "";
+
+		[SerializeField, Tooltip("If true, trail does not run until StartTrail() is called (e.g. on attack).")]
+		private bool startInactive = true;
+
+		[SerializeField, Tooltip("How long the frozen trail stays visible after StopTrail(). 0 = never destroy.")]
+		private float frozenTrailLifetime = 2f;
+
+		[SerializeField, Tooltip("Set true to start trail, false to stop (see Stop Mode).")]
+		private bool enableTrail = false;
+
+		[SerializeField, Tooltip("Mode 1: Freeze position only, trail keeps updating (shrinking) for Frozen Trail Lifetime then hide. Mode 2: Freeze position and trail, fade out over Frozen Trail Lifetime then hide.")]
+		private TrailStopMode stopMode = TrailStopMode.ShrinkThenHide;
+
+		[NonSerialized] bool _trailActive = false;
 		[NonSerialized] GameObject trailGo = null;
 		[NonSerialized] Mesh mesh = null;
 
@@ -89,6 +113,142 @@ namespace Tiny
 			update = StartCoroutine(PhysicsUpdate());
 		}
 
+		/// <summary>Trail id for AttackDataSO Trail Effects (must match entry in attack).</summary>
+		public string TrailId { get => trailId; set => trailId = value ?? ""; }
+
+		/// <summary>Stop mode when StopTrail is called (ShrinkThenHide or FreezeAndFadeOut). Can be set from code before StartTrail.</summary>
+		public TrailStopMode StopMode { get => stopMode; set => stopMode = value; }
+		/// <summary>How long the frozen trail stays visible after StopTrail. Can be set from code before StartTrail.</summary>
+		public float FrozenTrailLifetime { get => frozenTrailLifetime; set => frozenTrailLifetime = value; }
+
+		/// <summary>
+		/// When true, trail is drawing and following this transform. When false, trail is stopped (frozen in place, then after Frozen Trail Lifetime the frozen copy is removed and position can update again).
+		/// </summary>
+		public bool EnableTrail
+		{
+			get => enableTrail;
+			set => enableTrail = value;
+		}
+
+		/// <summary>
+		/// Start drawing the trail (e.g. when attack starts). Trail will follow this transform until StopTrail().
+		/// </summary>
+		public void StartTrail()
+		{
+			if (!trailGo)
+				return;
+			enableTrail = true;
+			_trailActive = true;
+			trailGo.SetActive(true);
+			if (vertices == null || pointCount <= 1)
+				Initialize((int)(duration / Time.fixedDeltaTime));
+			else
+				Clear();
+		}
+
+		/// <summary>
+		/// Stop drawing the trail. The current trail freezes in place (does not follow the weapon anymore).
+		/// A copy of the trail mesh is left in the scene and destroyed after frozenTrailLifetime (e.g. 2s), then position can update again.
+		/// </summary>
+		public void StopTrail()
+		{
+			enableTrail = false;
+			_trailActive = false;
+			if (update != null)
+			{
+				StopCoroutine(update);
+				update = null;
+			}
+			if (trailGo != null && vertices != null && pointCount > 1)
+			{
+				CreateFrozenTrailCopy();
+				trailGo.SetActive(false);
+			}
+		}
+
+		private void CreateFrozenTrailCopy()
+		{
+			Mesh sourceMesh = trailGo.GetComponent<MeshFilter>().sharedMesh;
+			Mesh frozenMesh = new Mesh { name = "Frozen Trail" };
+			frozenMesh.vertices = sourceMesh.vertices;
+			frozenMesh.uv = sourceMesh.uv;
+			frozenMesh.SetIndices(sourceMesh.GetIndices(0), MeshTopology.Triangles, 0);
+			frozenMesh.RecalculateBounds();
+
+			GameObject frozenGo = new GameObject(name + "FrozenTrail", typeof(MeshFilter), typeof(MeshRenderer));
+			frozenGo.GetComponent<MeshFilter>().sharedMesh = frozenMesh;
+			frozenGo.layer = gameObject.layer;
+			MeshRenderer r = frozenGo.GetComponent<MeshRenderer>();
+			r.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+
+			if (stopMode == TrailStopMode.ShrinkThenHide)
+			{
+				r.material = material;
+				if (frozenTrailLifetime > 0f)
+					StartCoroutine(ShrinkFrozenTrail(frozenGo, frozenMesh, frozenTrailLifetime));
+				else
+					Destroy(frozenGo);
+			}
+			else
+			{
+				Material fadeMat = new Material(material);
+				r.material = fadeMat;
+				if (frozenTrailLifetime > 0f)
+					StartCoroutine(FadeOutFrozenTrail(frozenGo, fadeMat, frozenTrailLifetime));
+				else
+					Destroy(frozenGo);
+			}
+		}
+
+		private IEnumerator ShrinkFrozenTrail(GameObject frozenGo, Mesh frozenMesh, float dur)
+		{
+			Vector3[] verts = frozenMesh.vertices;
+			int ptCount = pointCount;
+			if (ptCount <= 0) { Destroy(frozenGo); yield break; }
+			int step = ptCount;
+			int numRows = verts.Length / step;
+			if (numRows <= 1)
+			{
+				Destroy(frozenMesh);
+				Destroy(frozenGo);
+				yield break;
+			}
+			int shiftsNeeded = numRows - 1;
+			YieldInstruction wait = new WaitForFixedUpdate();
+			float endTime = Time.time + dur;
+			int shiftsDone = 0;
+			while (shiftsDone < shiftsNeeded && Time.time < endTime)
+			{
+				yield return wait;
+				Array.Copy(verts, 0, verts, step, verts.Length - step);
+				frozenMesh.vertices = verts;
+				frozenMesh.RecalculateBounds();
+				shiftsDone++;
+			}
+			float remaining = endTime - Time.time;
+			if (remaining > 0f)
+				yield return new WaitForSeconds(remaining);
+			Destroy(frozenMesh);
+			Destroy(frozenGo);
+		}
+
+		private IEnumerator FadeOutFrozenTrail(GameObject frozenGo, Material fadeMat, float dur)
+		{
+			float elapsed = 0f;
+			string colorProp = fadeMat.HasProperty("_BaseColor") ? "_BaseColor" : "_Color";
+			Color c = fadeMat.GetColor(colorProp);
+			float startA = c.a;
+			while (elapsed < dur)
+			{
+				elapsed += Time.deltaTime;
+				c.a = Mathf.Lerp(startA, 0f, elapsed / dur);
+				fadeMat.SetColor(colorProp, c);
+				yield return null;
+			}
+			Destroy(fadeMat);
+			Destroy(frozenGo);
+		}
+
 		private void Start()
 		{
 			cacheTM = transform;
@@ -105,7 +265,14 @@ namespace Tiny
 			meshRenderer.material = material;
 			meshRenderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
 
-			Initialize((int)(duration / Time.fixedDeltaTime));
+			if (!startInactive)
+			{
+				enableTrail = true;
+				_trailActive = true;
+				Initialize((int)(duration / Time.fixedDeltaTime));
+			}
+			else
+				trailGo.SetActive(false);
 		}
 
 		private void OnDestroy()
@@ -123,7 +290,11 @@ namespace Tiny
 		{
 			if (trailGo == null)
 				return;
-
+			if (startInactive)
+			{
+				trailGo.SetActive(false);
+				return;
+			}
 			trailGo.SetActive(true);
 			Initialize((int)(duration / Time.fixedDeltaTime));
 		}
@@ -185,9 +356,22 @@ namespace Tiny
 			}
 		}
 
+		private void Update()
+		{
+			if (enableTrail == _trailActive)
+				return;
+			_trailActive = enableTrail;
+			if (_trailActive)
+				StartTrail();
+			else
+				StopTrail();
+		}
+
 		private void LateUpdate()
 		{
-            if (cacheTM.hasChanged)
+			if (vertices == null || !trailGo.activeSelf)
+				return;
+			if (cacheTM.hasChanged)
 				TransformVertices();
 
 			mesh.vertices = vertices;

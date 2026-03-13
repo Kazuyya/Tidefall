@@ -29,6 +29,8 @@ namespace LittleHeroJourney
         protected List<Weapon> _currentAttackWeapons = new List<Weapon>();
         protected Dictionary<Weapon, Vector2> _weaponTimingMap = new Dictionary<Weapon, Vector2>();
         protected List<object> _triggeredEffects = new List<object>();
+        protected HashSet<string> _triggeredTrailStarts = new HashSet<string>();
+        protected HashSet<string> _triggeredTrailStops = new HashSet<string>();
         protected bool _isAttackFinishing;
 
         [Header("Attack State")]
@@ -560,6 +562,37 @@ namespace LittleHeroJourney
                 foreach (var e in currentAttack.audioEffects)
                     if (e.IsValid && normalizedTime >= e.triggerTime && !_triggeredEffects.Contains(e.effectName))
                     { manager?.PlayAudio(e.effectName, pos); _triggeredEffects.Add(e.effectName); }
+            if (currentAttack.trailEffects != null && manager != null)
+            {
+                // Snapshot trails that were already started before this frame. We must never trigger
+                // stop in the same frame we trigger start (causes "snap" when window is early).
+                var alreadyStartedThisAttack = new System.Collections.Generic.HashSet<string>(_triggeredTrailStarts);
+
+                foreach (var e in currentAttack.trailEffects)
+                {
+                    if (!e.IsValid) continue;
+
+                    float windowStart = e.triggerWindow.x;
+                    float windowEnd = e.triggerWindow.y;
+
+                    // Only start when we're inside the window (not past it). Avoids starting then
+                    // stopping same frame when we first run late (e.g. window 0.1-0.2, first run at 0.25).
+                    // Use <= windowEnd so we can start on the last frame of the window and stop next frame.
+                    bool inWindow = normalizedTime >= windowStart && normalizedTime <= windowEnd;
+                    if (inWindow && !_triggeredTrailStarts.Contains(e.effectName))
+                    {
+                        manager.PlayTrailStart(e.effectName, e.stopMode, e.frozenTrailLifetime);
+                        _triggeredTrailStarts.Add(e.effectName);
+                    }
+
+                    // Only stop if we had already started in a previous frame (not this frame).
+                    if (normalizedTime >= windowEnd && !_triggeredTrailStops.Contains(e.effectName) && alreadyStartedThisAttack.Contains(e.effectName))
+                    {
+                        manager.PlayTrailStop(e.effectName);
+                        _triggeredTrailStops.Add(e.effectName);
+                    }
+                }
+            }
         }
 
         protected virtual void ResetCombo()
@@ -574,6 +607,15 @@ namespace LittleHeroJourney
 
             _weaponTimingMap.Clear();
             _triggeredEffects.Clear();
+            var manager = CharacterEffectManager.Instance;
+            // Only stop trails that were started but never reached their stop window (e.g. attack interrupted)
+            foreach (string id in _triggeredTrailStarts)
+            {
+                if (!_triggeredTrailStops.Contains(id))
+                    manager?.PlayTrailStop(id);
+            }
+            _triggeredTrailStarts.Clear();
+            _triggeredTrailStops.Clear();
             _inputBuffer.Clear();
 
             // Stop auto aim when combo resets
@@ -725,8 +767,13 @@ namespace LittleHeroJourney
             // Clear state
             _weaponTimingMap.Clear();
             _triggeredEffects.Clear();
+            var effectManager = CharacterEffectManager.Instance;
+            foreach (string id in _triggeredTrailStarts)
+                effectManager?.PlayTrailStop(id);
+            _triggeredTrailStarts.Clear();
+            _triggeredTrailStops.Clear();
             _inputBuffer.Clear();
-            
+
             // Stop auto aim
             if (_autoAimController != null)
             {

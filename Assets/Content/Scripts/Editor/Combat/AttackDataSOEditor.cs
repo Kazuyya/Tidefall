@@ -188,6 +188,9 @@ namespace LittleHeroJourney
             // Audio Effects
             DrawEffectList("Audio Effects", "audioEffects");
 
+            // Trail Effects (id = Trail.trailId on weapon; window = enable/disable normalized time)
+            DrawEffectList("Trail Effects", "trailEffects");
+
             EditorGUILayout.Space();
         }
 

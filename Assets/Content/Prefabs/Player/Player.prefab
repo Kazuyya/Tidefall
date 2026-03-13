@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 5168277012602706111}
   - component: {fileID: 1611395484256956724}
   - component: {fileID: 5457241599305476154}
+  - component: {fileID: 7652276408567395608}
   m_Layer: 0
   m_Name: Sword1_L
   m_TagString: Untagged
@@ -83,6 +84,30 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &7652276408567395608
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 31359282205270072}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bff4f5a8991d7fa47baed5c5ff25979f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  material: {fileID: 2100000, guid: ae721c767fcd6664ca1cf46b36bb56b7, type: 2}
+  duration: 0.5
+  corner: 1
+  loop: 0
+  points:
+  - {x: 0.0000011711079, y: -1.1272184, z: 0.000000027584937}
+  - {x: 0.0000012891496, y: -0.19055127, z: 0.00000040443533}
+  trailId: Sword1_L
+  startInactive: 1
+  frozenTrailLifetime: 1
+  enableTrail: 0
+  stopMode: 0
 --- !u!1 &45883536821492380
 GameObject:
   m_ObjectHideFlags: 0
@@ -1600,6 +1625,7 @@ GameObject:
   - component: {fileID: 713254796064379348}
   - component: {fileID: 8661433931268985360}
   - component: {fileID: 2072496521308434732}
+  - component: {fileID: 159983932275203265}
   m_Layer: 3
   m_Name: Player
   m_TagString: Player
@@ -1857,6 +1883,33 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   showDebugLog: 0
+--- !u!114 &159983932275203265
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1032941358914461017}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 675547257e31ac64a8a050d9f3026f41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  config: {fileID: 11400000, guid: 6992abf33a0c3024e8f82b74e35ea722, type: 2}
+  level: 1
+  overrides:
+    overrideBaseDamage: 0
+    baseDamage: 0
+    overrideDEF: 0
+    def: 0
+    overrideMoveSpeed: 0
+    moveSpeed: 0
+    overrideAttackSpeed: 0
+    attackSpeed: 0
+    overrideAttackCooldown: 0
+    attackCooldown: 0
+  showDebugLog: 0
+  debugPreviewLevel: 1
 --- !u!1 &1106735231500242117
 GameObject:
   m_ObjectHideFlags: 0
@@ -8528,6 +8581,7 @@ GameObject:
   - component: {fileID: 6414265532593928767}
   - component: {fileID: 3874831227424032487}
   - component: {fileID: 4803684016905751617}
+  - component: {fileID: 6791413128236663763}
   m_Layer: 0
   m_Name: Sword1_R
   m_TagString: Untagged
@@ -8600,6 +8654,30 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &6791413128236663763
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6006794828031107382}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bff4f5a8991d7fa47baed5c5ff25979f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  material: {fileID: 2100000, guid: ae721c767fcd6664ca1cf46b36bb56b7, type: 2}
+  duration: 0.5
+  corner: 1
+  loop: 0
+  points:
+  - {x: 0.0000011711079, y: -1.1272184, z: 0.000000027584937}
+  - {x: 0.0000012891496, y: -0.19055127, z: 0.00000040443533}
+  trailId: Sword1_R
+  startInactive: 1
+  frozenTrailLifetime: 1
+  enableTrail: 0
+  stopMode: 0
 --- !u!1 &6026809397625367699
 GameObject:
   m_ObjectHideFlags: 0

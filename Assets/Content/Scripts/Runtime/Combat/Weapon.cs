@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using Tiny;
 
 namespace LittleHeroJourney
 {
@@ -10,6 +11,7 @@ namespace LittleHeroJourney
 
         [Header("Components")]
         private BoxCollider weaponCollider;
+        private List<string> _registeredTrailIds = new List<string>();
         private PlayerCombat playerCombat;
         private DamageDealer damageDealer;
         private Animator _animator;
@@ -48,6 +50,28 @@ namespace LittleHeroJourney
                 if (ShowDebugLog) Debug.LogWarning($"[{GetType().Name}] No DamageDealer found on weapon! Adding default one.");
                 damageDealer = gameObject.AddComponent<DamageDealer>();
             }
+        }
+
+        private void OnEnable()
+        {
+            var manager = CharacterEffectManager.Instance;
+            if (manager == null) return;
+            var trails = GetComponentsInChildren<Trail>(true);
+            foreach (var trail in trails)
+            {
+                if (trail == null || string.IsNullOrEmpty(trail.TrailId)) continue;
+                manager.RegisterTrail(trail.TrailId, trail);
+                _registeredTrailIds.Add(trail.TrailId);
+            }
+        }
+
+        private void OnDisable()
+        {
+            var manager = CharacterEffectManager.Instance;
+            if (manager == null) return;
+            foreach (var id in _registeredTrailIds)
+                manager.UnregisterTrail(id);
+            _registeredTrailIds.Clear();
         }
 
         #endregion

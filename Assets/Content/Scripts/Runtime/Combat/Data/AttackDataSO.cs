@@ -63,6 +63,9 @@ namespace LittleHeroJourney
     [Tooltip("Audio effects triggered during animation")]
     public List<AudioEffectTiming> audioEffects = new List<AudioEffectTiming>();
 
+    [Tooltip("Trail effects (enable/disable window; id = Trail.trailId on weapon)")]
+    public List<TrailEffectTiming> trailEffects = new List<TrailEffectTiming>();
+
     [Header("AI Combo Settings")]
     [Tooltip("Probability for AI to continue combo after this attack (0-1). Only used by AI, player uses inputWindow instead")]
     [Range(0f, 1f)]

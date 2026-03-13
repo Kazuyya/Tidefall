@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.VFX;
+using Tiny;
 
 namespace LittleHeroJourney
 {
@@ -62,6 +63,9 @@ namespace LittleHeroJourney
         private List<VisualEffect> _activeVFX = new List<VisualEffect>();
         private List<AudioSource> _activeAudio = new List<AudioSource>();
         private List<ParticleSystem> _activeParticles = new List<ParticleSystem>();
+
+        // Trail registry (Trail by id; registered by Weapon when enabled)
+        private Dictionary<string, Trail> _trailRegistry = new Dictionary<string, Trail>();
 
         #endregion
 
@@ -628,6 +632,65 @@ namespace LittleHeroJourney
 
         #endregion
 
+        #region Trail Methods
+
+        public void RegisterTrail(string effectName, Trail trail)
+        {
+            if (string.IsNullOrEmpty(effectName) || trail == null) return;
+            _trailRegistry[effectName] = trail;
+            if (showDebugLog)
+                Debug.Log($"[{GetType().Name}] Registered trail '{effectName}'");
+        }
+
+        public void UnregisterTrail(string effectName)
+        {
+            if (string.IsNullOrEmpty(effectName)) return;
+            _trailRegistry.Remove(effectName);
+        }
+
+        public void PlayTrailStart(string effectName, WeaponTrailStopMode stopMode, float frozenTrailLifetime)
+        {
+            if (string.IsNullOrEmpty(effectName)) return;
+            var trail = GetOrFindTrail(effectName);
+            if (trail == null)
+            {
+                if (showDebugLog)
+                    Debug.LogWarning($"[{GetType().Name}] Trail '{effectName}' not found in scene!");
+                return;
+            }
+            trail.StopMode = stopMode == WeaponTrailStopMode.FreezeAndFadeOut ? TrailStopMode.FreezeAndFadeOut : TrailStopMode.ShrinkThenHide;
+            trail.FrozenTrailLifetime = frozenTrailLifetime;
+            trail.StartTrail();
+            if (showDebugLog)
+                Debug.Log($"[{GetType().Name}] Trail start '{effectName}'");
+        }
+
+        public void PlayTrailStop(string effectName)
+        {
+            if (string.IsNullOrEmpty(effectName)) return;
+            var trail = GetOrFindTrail(effectName);
+            if (trail == null) return;
+            trail.StopTrail();
+            if (showDebugLog)
+                Debug.Log($"[{GetType().Name}] Trail stop '{effectName}'");
+        }
+
+        private Trail GetOrFindTrail(string effectName)
+        {
+            if (_trailRegistry.TryGetValue(effectName, out var cached) && cached != null)
+                return cached;
+            var all = FindObjectsOfType<Trail>(true);
+            foreach (var t in all)
+            {
+                if (t == null || t.TrailId != effectName) continue;
+                RegisterTrail(effectName, t);
+                return t;
+            }
+            return null;
+        }
+
+        #endregion
+
         #region Cleanup
 
         /// <summary>
@@ -657,10 +720,11 @@ namespace LittleHeroJourney
             }
             _activeParticles.Clear();
 
-            // Clear pools
+            // Clear pools and trail registry
             _vfxPool.Clear();
             _audioPool.Clear();
             _particlePool.Clear();
+            _trailRegistry.Clear();
 
             // Destroy all pool objects
             if (_poolContainer != null)

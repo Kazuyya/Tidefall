@@ -67,4 +67,31 @@ namespace LittleHeroJourney
 
         public bool IsValid => !string.IsNullOrEmpty(effectName) && triggerTime >= 0f && triggerTime <= 1f;
     }
+
+    /// <summary>
+    /// When trail stops: shrink tail toward freeze position then hide, or freeze and fade out.
+    /// </summary>
+    public enum WeaponTrailStopMode
+    {
+        ShrinkThenHide,
+        FreezeAndFadeOut
+    }
+
+    [System.Serializable]
+    public class TrailEffectTiming
+    {
+        [Tooltip("Trail effect id (must match Trail.trailId on the weapon)")]
+        public string effectName;
+
+        [Tooltip("Normalized time window: x = when to start trail, y = when to stop trail (0-1)")]
+        public Vector2 triggerWindow = new Vector2(0f, 0.8f);
+
+        [Tooltip("When trail stops: shrink then hide, or freeze and fade out")]
+        public WeaponTrailStopMode stopMode = WeaponTrailStopMode.ShrinkThenHide;
+
+        [Tooltip("How long the frozen trail stays visible after stop (seconds). 0 = never auto-destroy.")]
+        public float frozenTrailLifetime = 2f;
+
+        public bool IsValid => !string.IsNullOrEmpty(effectName) && triggerWindow.x >= 0f && triggerWindow.x <= 1f && triggerWindow.y >= 0f && triggerWindow.y <= 1f && triggerWindow.y >= triggerWindow.x;
+    }
 }
