@@ -20,6 +20,10 @@ namespace LittleHeroJourney
         [SerializeField] public float maxHealth = 100f;
         [SerializeField] private bool showDebugLog = false;
 
+        [Header("Health Bar (Event)")]
+        [Tooltip("ID for health bar events. HealthBar with same ID updates. Empty = auto unique per clone (untuk AI). Isi tetap (e.g. Player) untuk single entity.")]
+        [SerializeField] private string healthBarId = "";
+
         [Header("Faction")]
         [Tooltip("Faction of this health object")]
         [SerializeField] private Faction faction = Faction.AI;
@@ -73,6 +77,7 @@ namespace LittleHeroJourney
 
         public float CurrentHealth => currentHealth;
         public float MaxHealth => maxHealth;
+        public string HealthBarId => healthBarId ?? "";
         public bool IsAlive => currentHealth > 0 && !_isDead;
         public float HealthPercentage => maxHealth > 0f ? currentHealth / maxHealth : 0f;
         public Faction ObjectFaction => faction;
@@ -86,6 +91,8 @@ namespace LittleHeroJourney
         private void Awake()
         {
             currentHealth = maxHealth;
+            if (string.IsNullOrEmpty(healthBarId))
+                healthBarId = "Health_" + GetInstanceID();
             _animator = Helper.GetAndCacheAnimator(this, searchInChildren: true, 
                 showDebugLog: false, ignoreLayerName: "UI");
             Helper.CacheCompanionComponentsSilent<PlayerMovementController, PlayerCombat, AIAgent>(this,
@@ -96,6 +103,12 @@ namespace LittleHeroJourney
             _cachedCombatant = GetComponent<ICombatant>();
             
             if (_animator == null && showDebugLog) Debug.LogWarning($"[{GetType().Name}] No Animator for damage feedback.");
+        }
+
+        private void Start()
+        {
+            if (!string.IsNullOrEmpty(healthBarId))
+                GameEventSystem.PublishHealth(healthBarId, currentHealth, maxHealth);
         }
 
         #endregion
@@ -117,6 +130,8 @@ namespace LittleHeroJourney
             float oldHealth = currentHealth;
             currentHealth = Helper.ClampSub(currentHealth, finalDamage, 0f);
             OnHealthChanged?.Invoke(currentHealth);
+            if (!string.IsNullOrEmpty(healthBarId))
+                GameEventSystem.PublishHealth(healthBarId, currentHealth, maxHealth);
 
             // Set damager for rotation
             if (enableRotateToDamager && damager != null)
@@ -341,6 +356,8 @@ namespace LittleHeroJourney
             if (showDebugLog) Debug.Log($"[{GetType().Name}] Heal +{amount}. Health {oldHealth} -> {currentHealth}");
 
             OnHealthChanged?.Invoke(currentHealth);
+            if (!string.IsNullOrEmpty(healthBarId))
+                GameEventSystem.PublishHealth(healthBarId, currentHealth, maxHealth);
         }
 
         public void SetHealth(float newHealth)
@@ -351,6 +368,8 @@ namespace LittleHeroJourney
             if (showDebugLog) Debug.Log($"[{GetType().Name}] Health set {oldHealth} -> {currentHealth}");
 
             OnHealthChanged?.Invoke(currentHealth);
+            if (!string.IsNullOrEmpty(healthBarId))
+                GameEventSystem.PublishHealth(healthBarId, currentHealth, maxHealth);
 
             if (currentHealth > 0 && oldHealth <= 0 && !_isDead)
             {
@@ -393,6 +412,8 @@ namespace LittleHeroJourney
             SetDeathControlsDisabled(true);
 
             OnDeath?.Invoke();
+            if (!string.IsNullOrEmpty(healthBarId))
+                GameEventSystem.PublishHealthDeath(healthBarId);
 
             StartCoroutine(MonitorDeathAnimation());
         }
@@ -440,6 +461,8 @@ namespace LittleHeroJourney
             SetDeathControlsDisabled(false);
             if (_cachedAIAgent != null) _cachedAIAgent.Revive();
             OnHealthChanged?.Invoke(currentHealth);
+            if (!string.IsNullOrEmpty(healthBarId))
+                GameEventSystem.PublishHealth(healthBarId, currentHealth, maxHealth);
         }
 
         public void Initialize(float maxHealthValue, float? currentHealthValue = null)

@@ -301,9 +301,8 @@ GameObject:
   - component: {fileID: 1380203646148757433}
   - component: {fileID: 5734739788071563102}
   - component: {fileID: 2557263521821883078}
-  - component: {fileID: 2823527276937479101}
   m_Layer: 0
-  m_Name: Health Player
+  m_Name: Health Enemy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -341,6 +340,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e523e3182403bb43b941416699057c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  healthBarId: 
+  barAnimator: {fileID: 0}
+  spawnTrigger: In
+  deathTrigger: Out
   mainSliderBar: {fileID: 727472494056332298}
   fillOnIncrease: 1
   fillOnDecrease: 0
@@ -354,7 +357,7 @@ MonoBehaviour:
   animIncreaseStrength: 8
   animOnDecrease: 2
   animDecreaseDuration: 0.2
-  animDecreaseStrength: 8
+  animDecreaseStrength: 5
   useGhost: 1
   useDifferentGhostForIncreaseDecrease: 1
   ghostAnimOnIncrease: 0
@@ -382,24 +385,6 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
---- !u!114 &2823527276937479101
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2041173371681935681}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7758538737f1f9040aa2b70f4a287a8c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  healthBar: {fileID: 5734739788071563102}
-  stunBar: {fileID: 0}
-  animator: {fileID: 0}
-  spawnTrigger: Spawn
-  deathTrigger: Death
-  showDebugLog: 0
 --- !u!1 &2344013761840004869
 GameObject:
   m_ObjectHideFlags: 0
@@ -651,7 +636,7 @@ GameObject:
   - component: {fileID: 6888221737331993830}
   - component: {fileID: 4699022411825684026}
   m_Layer: 5
-  m_Name: Enemy Player
+  m_Name: Enemy Enemy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

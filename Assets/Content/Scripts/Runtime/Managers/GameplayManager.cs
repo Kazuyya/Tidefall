@@ -218,7 +218,6 @@ namespace LittleHeroJourney
                 {
                     health.OnDeath -= HandlePlayerDeath;
                     health.OnDeath += HandlePlayerDeath;
-                    InitializePlayerHealthBar(health);
                 }
             }
             else if (showDebugLog) Debug.LogWarning("[GameplayManager] Player Controller NOT found in this scene.");
@@ -243,41 +242,6 @@ namespace LittleHeroJourney
                         zone.OnEncounterCompleted += CheckAllEncountersCompleted;
                     }
                 }
-            }
-        }
-
-        private void InitializePlayerHealthBar(Health playerHealth)
-        {
-            if (playerHealth == null) return;
-            
-            var gameplayCanvases = FindObjectsOfType<GameCanvas>(true);
-            GameCanvas gameplayCanvas = null;
-            
-            foreach (var canvas in gameplayCanvases)
-            {
-                if (canvas.ID == "Gameplay")
-                {
-                    gameplayCanvas = canvas;
-                    break;
-                }
-            }
-            
-            if (gameplayCanvas == null)
-            {
-                if (showDebugLog) Debug.LogWarning("[GameplayManager] Gameplay Canvas NOT found for player health bar setup");
-                return;
-            }
-            
-            var characterBarsConnector = gameplayCanvas.GetComponentInChildren<UI.CharacterBarsConnector>(true);
-            
-            if (characterBarsConnector != null)
-            {
-                characterBarsConnector.InitializeForTargets(playerHealth, playerHealth.GetComponent<StunManager>());
-                if (showDebugLog) Debug.Log("[GameplayManager] Player health bar initialized successfully");
-            }
-            else
-            {
-                if (showDebugLog) Debug.LogWarning("[GameplayManager] CharacterBarsConnector NOT found in Gameplay Canvas");
             }
         }
 

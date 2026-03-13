@@ -2449,7 +2449,6 @@ GameObject:
   - component: {fileID: 3686441311443833774}
   - component: {fileID: 2028063317803518325}
   - component: {fileID: 5946551621228642028}
-  - component: {fileID: 5209972179644584965}
   - component: {fileID: 4708479724074147682}
   m_Layer: 6
   m_Name: AI - Orc
@@ -2571,6 +2570,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 100
   showDebugLog: 0
+  healthBarId: 
   faction: 2
   damageAnimationTrigger: damaged
   deathAnimationTrigger: death
@@ -2630,24 +2630,6 @@ MonoBehaviour:
   boundaryClampOffset: 0.5
   showDebugLog: 0
   showEncounterBoundaryLog: 0
---- !u!114 &5209972179644584965
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8877929090625868283}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7758538737f1f9040aa2b70f4a287a8c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  healthBar: {fileID: 8532564052443272527}
-  stunBar: {fileID: 6652902154173273133}
-  animator: {fileID: 796856570385748670}
-  spawnTrigger: In
-  deathTrigger: Out
-  showDebugLog: 0
 --- !u!114 &4708479724074147682
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2811,6 +2793,14 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5734739788071563102, guid: 9085b3ea7b69db84eb298849c5654ab9, type: 3}
+      propertyPath: healthBarId
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 5734739788071563102, guid: 9085b3ea7b69db84eb298849c5654ab9, type: 3}
+      propertyPath: showHideType
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7037234848094759576, guid: 9085b3ea7b69db84eb298849c5654ab9, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -2928,35 +2918,8 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9085b3ea7b69db84eb298849c5654ab9, type: 3}
---- !u!95 &796856570385748670 stripped
-Animator:
-  m_CorrespondingSourceObject: {fileID: 162966043886778700, guid: 9085b3ea7b69db84eb298849c5654ab9, type: 3}
-  m_PrefabInstance: {fileID: 670464687729880050}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &6652902154173273133 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6133378596719886303, guid: 9085b3ea7b69db84eb298849c5654ab9, type: 3}
-  m_PrefabInstance: {fileID: 670464687729880050}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1f7d39e3e6e6b2e40938ccec7a6afbb3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!224 &7558377026032566634 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 7037234848094759576, guid: 9085b3ea7b69db84eb298849c5654ab9, type: 3}
   m_PrefabInstance: {fileID: 670464687729880050}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &8532564052443272527 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 9161511144332148413, guid: 9085b3ea7b69db84eb298849c5654ab9, type: 3}
-  m_PrefabInstance: {fileID: 670464687729880050}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7e523e3182403bb43b941416699057c5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 

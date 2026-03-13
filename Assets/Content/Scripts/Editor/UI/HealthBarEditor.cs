@@ -7,6 +7,9 @@ namespace LittleHeroJourney.Editor.UI
     [CustomEditor(typeof(HealthBar))]
     public class HealthBarEditor : UnityEditor.Editor
     {
+        private SerializedProperty _healthBarId;
+        private SerializedProperty _showHideType;
+        private SerializedProperty _fadeDuration;
         private SerializedProperty _mainSliderBar;
         private SerializedProperty _fillOnIncrease;
         private SerializedProperty _fillOnDecrease;
@@ -39,6 +42,9 @@ namespace LittleHeroJourney.Editor.UI
 
         private void OnEnable()
         {
+            _healthBarId = serializedObject.FindProperty("healthBarId");
+            _showHideType = serializedObject.FindProperty("showHideType");
+            _fadeDuration = serializedObject.FindProperty("fadeDuration");
             _mainSliderBar = serializedObject.FindProperty("mainSliderBar");
             _fillOnIncrease = serializedObject.FindProperty("fillOnIncrease");
             _fillOnDecrease = serializedObject.FindProperty("fillOnDecrease");
@@ -74,6 +80,18 @@ namespace LittleHeroJourney.Editor.UI
         {
             serializedObject.Update();
 
+            EditorGUILayout.LabelField("Subscribe by ID", EditorStyles.boldLabel);
+            EditorGUILayout.PropertyField(_healthBarId, new GUIContent("Health Bar Id", "ID to subscribe to health events. Must match Health.healthBarId. Empty = use Health on parent."));
+            EditorGUILayout.Space(2);
+            EditorGUILayout.LabelField("Show/Hide", EditorStyles.boldLabel);
+            EditorGUILayout.PropertyField(_showHideType, new GUIContent("Animation", "None = no animation. Fade = animate CanvasGroup alpha on this GameObject."));
+            if (_showHideType.enumValueIndex == (int)BarShowHideType.Fade)
+            {
+                EditorGUILayout.PropertyField(_fadeDuration, new GUIContent("Fade Duration"));
+                EditorGUILayout.HelpBox("Add a CanvasGroup on this GameObject for fade in/out.", MessageType.None);
+            }
+
+            EditorGUILayout.Space(4);
             EditorGUILayout.LabelField("Main Bar", EditorStyles.boldLabel);
             EditorGUILayout.PropertyField(_mainSliderBar, new GUIContent("Main Slider Bar"));
 

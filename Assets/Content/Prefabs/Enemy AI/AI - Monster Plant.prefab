@@ -1558,7 +1558,6 @@ GameObject:
   - component: {fileID: 66852969015182801}
   - component: {fileID: 606880386429066184}
   - component: {fileID: 1320575799837054247}
-  - component: {fileID: 1176784975911555498}
   - component: {fileID: 6239621522678473292}
   m_Layer: 6
   m_Name: AI - Monster Plant
@@ -1680,6 +1679,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 100
   showDebugLog: 0
+  healthBarId: 
   faction: 2
   damageAnimationTrigger: damaged
   deathAnimationTrigger: death
@@ -1739,24 +1739,6 @@ MonoBehaviour:
   boundaryClampOffset: 0.5
   showDebugLog: 0
   showEncounterBoundaryLog: 0
---- !u!114 &1176784975911555498
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7918665551721333667}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7758538737f1f9040aa2b70f4a287a8c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  healthBar: {fileID: 7031284313077320667}
-  stunBar: {fileID: 5453359260489206457}
-  animator: {fileID: 2085978943833328682}
-  spawnTrigger: In
-  deathTrigger: Out
-  showDebugLog: 0
 --- !u!114 &6239621522678473292
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2364,6 +2346,14 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5734739788071563102, guid: 9085b3ea7b69db84eb298849c5654ab9, type: 3}
+      propertyPath: healthBarId
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 5734739788071563102, guid: 9085b3ea7b69db84eb298849c5654ab9, type: 3}
+      propertyPath: showHideType
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7037234848094759576, guid: 9085b3ea7b69db84eb298849c5654ab9, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -2449,33 +2439,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9085b3ea7b69db84eb298849c5654ab9, type: 3}
---- !u!95 &2085978943833328682 stripped
-Animator:
-  m_CorrespondingSourceObject: {fileID: 162966043886778700, guid: 9085b3ea7b69db84eb298849c5654ab9, type: 3}
-  m_PrefabInstance: {fileID: 2211296059109619046}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &5453359260489206457 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6133378596719886303, guid: 9085b3ea7b69db84eb298849c5654ab9, type: 3}
-  m_PrefabInstance: {fileID: 2211296059109619046}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1f7d39e3e6e6b2e40938ccec7a6afbb3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &7031284313077320667 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 9161511144332148413, guid: 9085b3ea7b69db84eb298849c5654ab9, type: 3}
-  m_PrefabInstance: {fileID: 2211296059109619046}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7e523e3182403bb43b941416699057c5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!224 &9158454413524934654 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 7037234848094759576, guid: 9085b3ea7b69db84eb298849c5654ab9, type: 3}

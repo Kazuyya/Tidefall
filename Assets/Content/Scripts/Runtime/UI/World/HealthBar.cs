@@ -1,5 +1,6 @@
 using UnityEngine;
 using DG.Tweening;
+using LittleHeroJourney;
 
 namespace LittleHeroJourney.UI
 {
@@ -16,8 +17,23 @@ namespace LittleHeroJourney.UI
         Lerp
     }
 
+    public enum BarShowHideType
+    {
+        None,
+        Fade
+    }
+
     public class HealthBar : MonoBehaviour
     {
+        [Header("Subscribe by ID")]
+        [Tooltip("ID to subscribe to health events. Must match Health.healthBarId. If empty and Health on parent, uses that.")]
+        [SerializeField] private string healthBarId = "";
+
+        [Header("Show/Hide")]
+        [Tooltip("None = no animation. Fade = animate CanvasGroup alpha on show/death.")]
+        [SerializeField] private BarShowHideType showHideType = BarShowHideType.None;
+        [SerializeField] private float fadeDuration = 0.25f;
+
         [SerializeField] private CustomSliderBar mainSliderBar;
 
         [SerializeField] private FillAnimationType fillOnIncrease = FillAnimationType.Lerp;
@@ -52,11 +68,13 @@ namespace LittleHeroJourney.UI
 
         [SerializeField] private bool showDebugLog;
 
-        private Health _targetHealth;
+        private string _subscribedId;
         private float _lastNormalized = 1f;
         private Tween _ghostTween;
         private Tween _mainBarTween;
         private Tween _animTween;
+        private Tween _showHideTween;
+        private CanvasGroup _canvasGroup;
 
         private void Awake()
         {
@@ -64,7 +82,66 @@ namespace LittleHeroJourney.UI
                 mainSliderBar = GetComponent<CustomSliderBar>();
             if (parentAnimTarget == null && TryGetComponent<RectTransform>(out var rt))
                 parentAnimTarget = rt;
+            if (showHideType == BarShowHideType.Fade)
+                _canvasGroup = GetComponent<CanvasGroup>();
             SyncGhostToMain();
+        }
+
+        private void OnEnable()
+        {
+            ResolveAndSubscribe();
+            if (showHideType == BarShowHideType.Fade && _canvasGroup != null)
+            {
+                _canvasGroup.alpha = 0f;
+                _showHideTween?.Kill();
+                _showHideTween = _canvasGroup.DOFade(1f, fadeDuration).SetUpdate(true);
+            }
+        }
+
+        private void OnDisable()
+        {
+            Unsubscribe();
+        }
+
+        private void ResolveAndSubscribe()
+        {
+            string id = healthBarId;
+            if (string.IsNullOrEmpty(id))
+            {
+                var health = GetComponentInParent<Health>();
+                if (health != null)
+                {
+                    id = health.HealthBarId;
+                    if (!string.IsNullOrEmpty(id))
+                        SetValue(health.CurrentHealth, health.MaxHealth);
+                }
+            }
+            if (string.IsNullOrEmpty(id)) return;
+            _subscribedId = id;
+            GameEventSystem.SubscribeHealth(id, OnHealthEvent);
+            GameEventSystem.SubscribeHealthDeath(id, OnHealthDeathEvent);
+        }
+
+        private void Unsubscribe()
+        {
+            if (string.IsNullOrEmpty(_subscribedId)) return;
+            GameEventSystem.UnsubscribeHealth(_subscribedId, OnHealthEvent);
+            GameEventSystem.UnsubscribeHealthDeath(_subscribedId, OnHealthDeathEvent);
+            _subscribedId = null;
+        }
+
+        private void OnHealthEvent(float current, float max)
+        {
+            SetValue(current, max);
+        }
+
+        private void OnHealthDeathEvent()
+        {
+            if (showHideType == BarShowHideType.Fade && _canvasGroup != null)
+            {
+                _showHideTween?.Kill();
+                _showHideTween = _canvasGroup.DOFade(0f, fadeDuration).SetUpdate(true);
+            }
         }
 
         private void SyncGhostToMain()
@@ -76,33 +153,6 @@ namespace LittleHeroJourney.UI
             if (ghostBar != null) ghostBar.SetNormalized(n);
             if (ghostBarIncrease != null) ghostBarIncrease.SetNormalized(n);
             if (ghostBarDecrease != null) ghostBarDecrease.SetNormalized(n);
-        }
-
-        public void SetupForTarget(Health target)
-        {
-            if (target == null)
-            {
-                if (showDebugLog) Debug.LogWarning($"[{GetType().Name}] Target health is null!");
-                return;
-            }
-
-            Cleanup();
-            _targetHealth = target;
-            _targetHealth.OnHealthChanged += OnHealthChanged;
-            OnHealthChanged(_targetHealth.CurrentHealth);
-        }
-
-        public void Cleanup()
-        {
-            if (_targetHealth != null)
-                _targetHealth.OnHealthChanged -= OnHealthChanged;
-            _targetHealth = null;
-        }
-
-        private void OnHealthChanged(float currentHealth)
-        {
-            if (_targetHealth == null) return;
-            SetValue(currentHealth, _targetHealth.MaxHealth);
         }
 
         public void SetValue(float currentValue, float max)
@@ -264,7 +314,6 @@ namespace LittleHeroJourney.UI
             SetValue(next * 100f, 100f);
         }
 
-        public Health TargetHealth => _targetHealth;
         public CustomSliderBar MainSliderBar => mainSliderBar;
         public CustomSliderBar GhostBar => ghostBar;
 
@@ -287,7 +336,8 @@ namespace LittleHeroJourney.UI
             _ghostTween?.Kill();
             _mainBarTween?.Kill();
             _animTween?.Kill();
-            Cleanup();
+            _showHideTween?.Kill();
+            Unsubscribe();
         }
     }
 }

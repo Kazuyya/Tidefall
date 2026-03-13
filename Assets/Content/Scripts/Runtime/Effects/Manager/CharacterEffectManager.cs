@@ -272,9 +272,6 @@ namespace LittleHeroJourney
 
         #endregion
 
-        /// <summary>
-        /// Set initial transform. When followCharacter and parentTransform set, effect stays under pool and is synced in LateUpdate (pos/rot/scale all follow).
-        /// </summary>
         private void ApplyEffectTransform(Transform t, Vector3 position, Quaternion rotation, Vector3 positionOffset, Vector3 scale, Transform parentTransform, bool followCharacter)
         {
             t.SetParent(_poolContainer);

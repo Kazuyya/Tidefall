@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
-using LittleHeroJourney.UI;
 
 namespace LittleHeroJourney
 {
@@ -120,12 +119,7 @@ namespace LittleHeroJourney
                 scaleAnimator.PlaySpawnAnimation();
             }
 
-            // Trigger spawn UI animation (health bar fade in)
-            CharacterBarsConnector barsConnector = GetComponent<CharacterBarsConnector>();
-            if (barsConnector != null)
-            {
-                barsConnector.PlaySpawnAnimation();
-            }
+            // Health bar spawn animation: HealthBar subscribes by ID and has optional barAnimator + spawnTrigger "In"
         }
 
         protected virtual void OnDestroy()
