@@ -16,9 +16,11 @@ MonoBehaviour:
   DashSpeed: 9
   DashCooldown: 1
   DashAccelerationSharpness: 50
+  EnableGroundFollowing: 1
   MinGroundSmoothFactor: 50
   MaxGroundSmoothFactor: 150
   GroundSmoothScaleThreshold: 0.01
   dashParameterName: Dash
+  dashOverridesAttack: 1
   ShowDebugGizmos: 1
   ShowDebugLog: 0

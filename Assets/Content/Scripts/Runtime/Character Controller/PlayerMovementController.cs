@@ -60,12 +60,10 @@ namespace LittleHeroJourney
         private PlayerCombat _playerCombat;
         private Health _health;
         private AutoAimController _autoAimController;
-        private EyeframeManager _eyeframeManager;
+        private IframeManager _iframeManager;
         private LevelableStats _levelable;
 
-        /// <summary>Move speed from LevelableStats if present and &gt; 0, else from MovementSettings.</summary>
         public float EffectiveMaxStableMoveSpeed => _levelable != null && _levelable.MoveSpeed > 0f ? _levelable.MoveSpeed : (movementSettings != null ? movementSettings.MaxStableMoveSpeed : 0f);
-        /// <summary>Air move speed from LevelableStats if present and &gt; 0, else from MovementSettings.</summary>
         public float EffectiveMaxAirMoveSpeed => _levelable != null && _levelable.MoveSpeed > 0f ? _levelable.MoveSpeed : (movementSettings != null ? movementSettings.MaxAirMoveSpeed : 0f);
 
         // Cached values for performance
@@ -146,7 +144,7 @@ namespace LittleHeroJourney
 
         public bool IsDashing => CurrentPlayerState == PlayerState.Dashing;
         public AutoAimController AutoAimController => _autoAimController;
-        public EyeframeManager EyeframeManager => _eyeframeManager;
+        public IframeManager IframeManager => _iframeManager;
         public Vector3 DashDirection { get => _dashDirection; set => _dashDirection = value; }
         public Vector3 DashVelocity { get => _dashVelocity; set => _dashVelocity = value; }
         public float DashTimeRemaining { get => _dashTimeRemaining; set => _dashTimeRemaining = value; }
@@ -196,7 +194,7 @@ namespace LittleHeroJourney
             _playerCombat = GetComponent<PlayerCombat>();
             _health = GetComponent<Health>();
             _autoAimController = GetComponent<AutoAimController>();
-            _eyeframeManager = GetComponent<EyeframeManager>();
+            _iframeManager = GetComponent<IframeManager>();
             _levelable = GetComponent<LevelableStats>();
 
             _playerAnimator = GetComponentInChildren<Animator>();

@@ -107,6 +107,16 @@ namespace LittleHeroJourney
 
         private void Start()
         {
+            PublishCurrentHealth();
+        }
+
+        private void OnEnable()
+        {
+            PublishCurrentHealth();
+        }
+
+        private void PublishCurrentHealth()
+        {
             if (!string.IsNullOrEmpty(healthBarId))
                 GameEventSystem.PublishHealth(healthBarId, currentHealth, maxHealth);
         }
@@ -119,10 +129,9 @@ namespace LittleHeroJourney
         {
             if (!IsAlive || _isDead || damage <= 0) return;
 
-            // CHECK EYEFRAME - If in eyeframe, cannot take damage
-            if (TryGetComponent<EyeframeManager>(out var eyeframeManager) && eyeframeManager.IsInEyeframe)
+            if (TryGetComponent<IframeManager>(out var iframeManager) && iframeManager.IsInIframe)
             {
-                if (showDebugLog) Debug.Log($"[{GetType().Name}] Blocked damage - Player in eyeframe!");
+                if (showDebugLog) Debug.Log($"[{GetType().Name}] Blocked damage - Player in iframe!");
                 return;
             }
 

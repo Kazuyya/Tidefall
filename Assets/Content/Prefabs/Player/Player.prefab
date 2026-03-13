@@ -1624,8 +1624,8 @@ GameObject:
   - component: {fileID: 7206764797765892992}
   - component: {fileID: 713254796064379348}
   - component: {fileID: 8661433931268985360}
-  - component: {fileID: 2072496521308434732}
   - component: {fileID: 159983932275203265}
+  - component: {fileID: 5755461589732236501}
   m_Layer: 3
   m_Name: Player
   m_TagString: Player
@@ -1822,6 +1822,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 100
   showDebugLog: 0
+  healthBarId: Player
   faction: 1
   damageAnimationTrigger: damaged
   deathAnimationTrigger: death
@@ -1870,19 +1871,6 @@ MonoBehaviour:
   Impact: 50
   knockbackResistance: 20
   knockbackDistance: 1
---- !u!114 &2072496521308434732
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1032941358914461017}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6da965940e972954ea5d77922b3cd180, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  showDebugLog: 0
 --- !u!114 &159983932275203265
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1910,6 +1898,19 @@ MonoBehaviour:
     attackCooldown: 0
   showDebugLog: 0
   debugPreviewLevel: 1
+--- !u!114 &5755461589732236501
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1032941358914461017}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc3eb81b54015b442a36dc3fd573028d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  showDebugLog: 0
 --- !u!1 &1106735231500242117
 GameObject:
   m_ObjectHideFlags: 0

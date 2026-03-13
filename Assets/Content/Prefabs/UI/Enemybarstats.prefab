@@ -341,9 +341,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   healthBarId: 
-  barAnimator: {fileID: 0}
-  spawnTrigger: In
-  deathTrigger: Out
+  showHideType: 0
+  fadeDuration: 0.25
   mainSliderBar: {fileID: 727472494056332298}
   fillOnIncrease: 1
   fillOnDecrease: 0

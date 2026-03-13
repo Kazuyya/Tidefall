@@ -14,6 +14,7 @@ namespace LittleHeroJourney
         private static readonly Dictionary<string, List<Action>> _actionHandlers = new Dictionary<string, List<Action>>();
         private static readonly Dictionary<string, List<Action<float, float>>> _healthHandlers = new Dictionary<string, List<Action<float, float>>>();
         private static readonly Dictionary<string, List<Action>> _healthDeathHandlers = new Dictionary<string, List<Action>>();
+        private static readonly Dictionary<string, (float current, float max)> _lastHealthPerId = new Dictionary<string, (float, float)>();
         private static readonly object _lock = new object();
 
         public static void SubscribeAction(string actionId, Action handler)
@@ -69,6 +70,11 @@ namespace LittleHeroJourney
                     _healthHandlers[healthId] = list;
                 }
                 list.Add(handler);
+                if (_lastHealthPerId.TryGetValue(healthId, out var last))
+                {
+                    try { handler.Invoke(last.current, last.max); }
+                    catch (Exception ex) { UnityEngine.Debug.LogException(ex); }
+                }
             }
         }
 
@@ -88,6 +94,7 @@ namespace LittleHeroJourney
             List<Action<float, float>> copy;
             lock (_lock)
             {
+                _lastHealthPerId[healthId] = (current, max);
                 if (!_healthHandlers.TryGetValue(healthId, out var list) || list.Count == 0) return;
                 copy = new List<Action<float, float>>(list);
             }
@@ -147,6 +154,7 @@ namespace LittleHeroJourney
                 _actionHandlers.Clear();
                 _healthHandlers.Clear();
                 _healthDeathHandlers.Clear();
+                _lastHealthPerId.Clear();
             }
         }
     }

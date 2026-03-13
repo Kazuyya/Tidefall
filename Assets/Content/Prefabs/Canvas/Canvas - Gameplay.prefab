@@ -650,7 +650,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 986824307431462875}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ff3cbc12af3841e4581c12c51637cb70, type: 3}
   m_Name: 
@@ -1205,7 +1205,7 @@ MonoBehaviour:
   m_MinValue: 0
   m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 0.352
+  m_Value: 1
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -3007,7 +3007,6 @@ GameObject:
   - component: {fileID: 5895169629716249554}
   - component: {fileID: 3325129557883659351}
   - component: {fileID: 2189347985010388625}
-  - component: {fileID: 1134208563138618641}
   m_Layer: 0
   m_Name: Health Player
   m_TagString: Untagged
@@ -3047,6 +3046,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e523e3182403bb43b941416699057c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  healthBarId: Player
+  showHideType: 0
+  fadeDuration: 0.25
   mainSliderBar: {fileID: 7221948812407266371}
   fillOnIncrease: 1
   fillOnDecrease: 0
@@ -3060,7 +3062,7 @@ MonoBehaviour:
   animIncreaseStrength: 8
   animOnDecrease: 2
   animDecreaseDuration: 0.2
-  animDecreaseStrength: 8
+  animDecreaseStrength: 1
   useGhost: 1
   useDifferentGhostForIncreaseDecrease: 1
   ghostAnimOnIncrease: 0
@@ -3088,24 +3090,6 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
---- !u!114 &1134208563138618641
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4996704359539949130}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7758538737f1f9040aa2b70f4a287a8c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  healthBar: {fileID: 3325129557883659351}
-  stunBar: {fileID: 0}
-  animator: {fileID: 0}
-  spawnTrigger: Spawn
-  deathTrigger: Death
-  showDebugLog: 0
 --- !u!1 &5851782195381595999
 GameObject:
   m_ObjectHideFlags: 0

@@ -17,7 +17,6 @@ namespace LittleHeroJourney
     public override void OnStateEnter(PlayerState fromState)
     {
         _groundFollowingYVelocity = 0f;
-        
         Controller.DashTargetPosition = Vector3.zero;
 
         Controller.DashDirection = Motor.CharacterForward;
@@ -33,15 +32,11 @@ namespace LittleHeroJourney
         Controller.DashVelocity = Controller.DashDirection * Controller.dashSettings.DashSpeed;
         Controller.CurrentDashSpeed = Controller.dashSettings.DashSpeed;
 
-        if (Controller.EyeframeManager != null)
-        {
-            Controller.EyeframeManager.SetEyeframe(true);
-        }
+        if (Controller.IframeManager != null)
+            Controller.IframeManager.SetIframe(true);
 
         if (Controller.dashSettings.ShowDebugLog)
-        {
             Debug.Log($"[{Controller.GetType().Name}] Dash started - Distance: {dashDistance:F1}m");
-        }
     }
 
     public override void OnStateExit(PlayerState toState)
@@ -51,9 +46,9 @@ namespace LittleHeroJourney
         Controller.CurrentDashSpeed = 0f;
         _groundFollowingYVelocity = 0f;
         
-        if (Controller.EyeframeManager != null)
+        if (Controller.IframeManager != null)
         {
-            Controller.EyeframeManager.SetEyeframe(false);
+            Controller.IframeManager.SetIframe(false);
         }
         
         if (Controller.dashSettings.ShowDebugLog)
