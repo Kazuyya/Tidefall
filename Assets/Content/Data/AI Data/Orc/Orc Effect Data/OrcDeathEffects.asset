@@ -15,5 +15,9 @@ MonoBehaviour:
   vfxEffects: []
   audioEffects: []
   particleEffects:
-  - effectName: SmokePop
+  - effectName: SmokeDeath
     triggerTime: 1
+    positionOffset: {x: 0, y: 0, z: 0}
+    rotationEuler: {x: 0, y: 0, z: 0}
+    scale: {x: 1, y: 1, z: 1}
+    followCharacter: 0

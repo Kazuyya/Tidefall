@@ -122,15 +122,16 @@ namespace LittleHeroJourney
             string loadedSceneName = targetScene.IsValid() ? targetScene.name : string.Empty;
             if (targetScene.IsValid())
             {
-                if (showDebugLog) Debug.Log($"[LoadingManager] LoadSceneSequence: Setting active scene to '{loadedSceneName}'");
+                if (showDebugLog) Debug.Log($"[LoadingManager] LoadSceneSequence: Setting active scene to '" + loadedSceneName + "'");
                 UnityEngine.SceneManagement.SceneManager.SetActiveScene(targetScene);
             }
+
+            onComplete?.Invoke();
 
             yield return ClosePhaseRoutine(mode, targetScene, loadedSceneName);
             if (showDebugLog) Debug.Log("[LoadingManager] LoadSceneSequence: Completed! Firing OnLoadingFinished for '" + loadedSceneName + "'");
             IsLoading = false;
             OnLoadingFinished?.Invoke(loadedSceneName);
-            onComplete?.Invoke();
         }
 
         private IEnumerator OpenPhaseRoutine(bool closeBeforeLoading)

@@ -21,3 +21,11 @@ MonoBehaviour:
     spatialBlend: 0
     poolSize: 0
     loop: 1
+  - effectName: MonsterBite
+    audioClips:
+    - clip: {fileID: 8300000, guid: cdf01d3bbb3fd1f48a886e830898bc58, type: 3}
+      volume: 0.5
+    playType: 0
+    spatialBlend: 0
+    poolSize: 0
+    loop: 0

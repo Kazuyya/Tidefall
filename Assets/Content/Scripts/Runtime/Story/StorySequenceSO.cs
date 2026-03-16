@@ -50,6 +50,7 @@ namespace LittleHeroJourney
 
             public StoryTextEffect textInEffect = StoryTextEffect.None;
             public StoryTextOutEffect textOutEffect = StoryTextOutEffect.None;
+            public float delayAfterTextComplete;
 
             public Color GetDisplayColor()
             {

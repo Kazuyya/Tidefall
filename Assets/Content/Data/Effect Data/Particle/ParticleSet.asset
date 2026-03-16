@@ -16,6 +16,9 @@ MonoBehaviour:
   - effectName: SmokeSpawn
     particlePrefab: {fileID: 4663010188807706951, guid: 29c7f871d57f622458e213f7db8f0a52, type: 3}
     poolSize: 0
+  - effectName: SmokeDeath
+    particlePrefab: {fileID: 2520298331272099380, guid: e1d5d451f46e6ea44b3c934549ee1753, type: 3}
+    poolSize: 0
   - effectName: BloodSplat
     particlePrefab: {fileID: 3804015734652406634, guid: f82aa693c4284b84db16505c636d178c, type: 3}
     poolSize: 0

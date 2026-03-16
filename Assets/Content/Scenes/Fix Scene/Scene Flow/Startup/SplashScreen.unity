@@ -551,9 +551,8 @@ MonoBehaviour:
   storyCanvasId: StorySequence
   journeysData: {fileID: 11400000, guid: fab6114fdf79c3d42aae71ae0fd0278b, type: 2}
   journeySelectorCanvasId: 
-  storySequenceDisplay: {fileID: 0}
-  afterStoryCanvasId: 
-  showDebugLog: 0
+  delayAfterTextCompleteSeconds: 1
+  showDebugLog: 1
 --- !u!1 &333094475
 GameObject:
   m_ObjectHideFlags: 0
@@ -750,7 +749,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &455425404
 Transform:
   m_ObjectHideFlags: 0
@@ -2330,7 +2329,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4614310517312320432, guid: 963daa379ebbd7e4494236aee62600f9, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 125.4
+      value: 62.7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

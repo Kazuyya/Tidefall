@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace LittleHeroJourney
 {
@@ -16,9 +17,8 @@ namespace LittleHeroJourney
         [SerializeField] private JourneysDataSO journeysData;
         [SerializeField] private string journeySelectorCanvasId = "";
 
-        [Header("Story (start sequence setelah scene load)")]
-        [SerializeField] private StorySequenceDisplay storySequenceDisplay;
-        [SerializeField] private string afterStoryCanvasId = "";
+        [Header("Story")]
+        [SerializeField] private float delayAfterTextCompleteSeconds = 1f;
 
         [Header("Debug")]
         [SerializeField] private bool showDebugLog = false;
@@ -41,6 +41,8 @@ namespace LittleHeroJourney
         private Action _pendingAfterFade;
         private Action _fadeCompleteHandler;
         private bool _storyAdvanceRequested;
+        private StorySequenceDisplay _currentStoryDisplay;
+        private static int _pendingStoryStageNumber;
 
         private void Awake()
         {
@@ -124,29 +126,42 @@ namespace LittleHeroJourney
             var journey = GetJourneyByNumber(stageNumber);
             if (journey == null || string.IsNullOrEmpty(journey.SceneName)) return;
             currentLevelNumber = stageNumber;
+            _pendingStoryStageNumber = stageNumber;
             if (GameManager.Instance?.SceneManager != null)
             {
                 string targetId = string.IsNullOrEmpty(journey.SceneId) ? "gameplay" : journey.SceneId;
-                GameManager.Instance.SceneManager.StartStageScene(journey.SceneName, targetId, PlayStartStoryForCurrentStage);
+                GameManager.Instance.SceneManager.StartStageScene(journey.SceneName, targetId, RunStartStoryInActiveScene);
             }
         }
 
-        public void PlayStartStoryForCurrentStage()
+        private static void RunStartStoryInActiveScene()
         {
-            var sequence = GetStartStoryForJourney(currentLevelNumber);
-            if (sequence == null || sequence.StepCount == 0)
+            var activeScene = UnityEngine.SceneManagement.SceneManager.GetActiveScene();
+            foreach (var jm in FindObjectsOfType<JourneyManager>())
             {
-                if (!string.IsNullOrEmpty(afterStoryCanvasId) && GameManager.Instance?.CanvasManager != null)
-                    GameManager.Instance.CanvasManager.SwitchCanvas(afterStoryCanvasId);
-                return;
+                if (jm.gameObject.scene == activeScene)
+                {
+                    jm.PlayStartStoryForStage(_pendingStoryStageNumber);
+                    return;
+                }
             }
+            if (Instance != null)
+                Instance.PlayStartStoryForStage(_pendingStoryStageNumber);
+        }
+
+        public void PlayStartStoryForStage(int stageNumber)
+        {
+            Instance = this;
+            currentLevelNumber = stageNumber;
+            var sequence = GetStartStoryForJourney(stageNumber);
+            if (sequence == null || sequence.StepCount == 0) return;
             if (string.IsNullOrEmpty(storyCanvasId) || GameManager.Instance?.CanvasManager == null)
             {
                 if (showDebugLog) Debug.LogWarning($"[{GetType().Name}] Story canvas id kosong atau CanvasManager null, skip start story.");
                 return;
             }
             GameManager.Instance.CanvasManager.SwitchCanvas(storyCanvasId);
-            var display = storySequenceDisplay != null ? storySequenceDisplay : FindObjectOfType<StorySequenceDisplay>();
+            var display = FindObjectOfType<StorySequenceDisplay>();
             if (display == null)
             {
                 if (showDebugLog) Debug.LogWarning($"[{GetType().Name}] StorySequenceDisplay tidak ditemukan, skip start story.");
@@ -155,24 +170,59 @@ namespace LittleHeroJourney
             StartCoroutine(PlayStorySequenceRoutine(sequence, display));
         }
 
+        public void PlayStartStoryForCurrentStage()
+        {
+            PlayStartStoryForStage(currentLevelNumber);
+        }
+
+        private float GetDelayAfterTextForStep(StorySequenceSO.StoryStep step)
+        {
+            if (step != null && step.delayAfterTextComplete > 0f) return step.delayAfterTextComplete;
+            return delayAfterTextCompleteSeconds;
+        }
+
         private IEnumerator PlayStorySequenceRoutine(StorySequenceSO sequence, StorySequenceDisplay display)
         {
             if (sequence == null || display == null) yield break;
+            _currentStoryDisplay = display;
             display.Clear();
+
             for (int i = 0; i < sequence.StepCount; i++)
             {
                 var step = sequence.GetStep(i);
                 if (step == null) continue;
+
+                display.Clear();
                 display.ApplyStep(step);
                 _storyAdvanceRequested = false;
-                yield return new WaitUntil(() => _storyAdvanceRequested);
+
+                yield return new WaitUntil(() => !display.IsAnimationPlaying);
+
+                float delay = GetDelayAfterTextForStep(step);
+                float elapsed = 0f;
+                while (elapsed < delay && !_storyAdvanceRequested)
+                {
+                    elapsed += Time.deltaTime;
+                    yield return null;
+                }
+
+                if (!_storyAdvanceRequested)
+                    yield return new WaitUntil(() => _storyAdvanceRequested);
+
+                _storyAdvanceRequested = false;
             }
-            if (!string.IsNullOrEmpty(afterStoryCanvasId) && GameManager.Instance?.CanvasManager != null)
-                GameManager.Instance.CanvasManager.SwitchCanvas(afterStoryCanvasId);
+
+            _currentStoryDisplay = null;
         }
 
         public void RequestAdvanceStory()
         {
+            if (_currentStoryDisplay != null && _currentStoryDisplay.IsAnimationPlaying)
+            {
+                _currentStoryDisplay.CompleteAnimationNow();
+                return;
+            }
+
             _storyAdvanceRequested = true;
         }
 

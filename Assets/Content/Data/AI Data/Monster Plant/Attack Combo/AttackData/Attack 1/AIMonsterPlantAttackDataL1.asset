@@ -26,6 +26,12 @@ MonoBehaviour:
   resetComboOnAnimationEnd: 1
   particleEffects: []
   vfxEffects: []
-  audioEffects: []
+  audioEffects:
+  - effectName: MonsterBite
+    triggerTime: 0
+    positionOffset: {x: 0, y: 0, z: 0}
+    rotationEuler: {x: 0, y: 0, z: 0}
+    scale: {x: 0, y: 0, z: 0}
+    followCharacter: 1
   trailEffects: []
   aiComboContinueChance: 1

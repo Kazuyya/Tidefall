@@ -1,0 +1,108 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5519bc30cdf3bbd4ca0e9f53ea1b1da7, type: 3}
+  m_Name: Start_StorySequence_Prologue
+  m_EditorClassIdentifier: 
+  sequenceId: Prologue
+  steps:
+  - stepId: "At that time\u2026 I was resting in the forest. My body felt weak, as
+      always."
+    backgroundType: 0
+    backgroundImage: {fileID: 0}
+    backgroundColor: {r: 0, g: 0, b: 0, a: 1}
+    contentType: 0
+    narrativeText: "At that time\u2026 I was resting in the forest.\nMy body felt
+      weak, as always."
+    speakerName: 
+    dialogueLine: 
+    textInEffect: 1
+    textOutEffect: 0
+  - stepId: "Then suddenly\u2026 a thick fog fell from the sky."
+    backgroundType: 0
+    backgroundImage: {fileID: 0}
+    backgroundColor: {r: 0, g: 0, b: 0, a: 1}
+    contentType: 0
+    narrativeText: "Then suddenly\u2026\na thick fog fell from the sky."
+    speakerName: 
+    dialogueLine: 
+    textInEffect: 1
+    textOutEffect: 0
+  - stepId: "After that\u2026 I don't remember anything."
+    backgroundType: 0
+    backgroundImage: {fileID: 0}
+    backgroundColor: {r: 0, g: 0, b: 0, a: 1}
+    contentType: 0
+    narrativeText: "After that\u2026 I don't remember anything."
+    speakerName: 
+    dialogueLine: 
+    textInEffect: 1
+    textOutEffect: 0
+  - stepId: ...ugh...
+    backgroundType: 0
+    backgroundImage: {fileID: 0}
+    backgroundColor: {r: 0, g: 0, b: 0, a: 1}
+    contentType: 0
+    narrativeText: ...ugh...
+    speakerName: 
+    dialogueLine: 
+    textInEffect: 1
+    textOutEffect: 0
+  - stepId: "My head\u2026"
+    backgroundType: 1
+    backgroundImage: {fileID: 21300000, guid: 2fd0d123d0e68c641ba8d3119ba7283f, type: 3}
+    backgroundColor: {r: 1, g: 1, b: 1, a: 1}
+    contentType: 1
+    narrativeText: 
+    speakerName: 
+    dialogueLine: "My head\u2026"
+    textInEffect: 1
+    textOutEffect: 0
+  - stepId: "This fog\u2026 what happened?"
+    backgroundType: 1
+    backgroundImage: {fileID: 21300000, guid: 2fd0d123d0e68c641ba8d3119ba7283f, type: 3}
+    backgroundColor: {r: 1, g: 1, b: 1, a: 1}
+    contentType: 1
+    narrativeText: 
+    speakerName: 
+    dialogueLine: "This fog\u2026 what happened?"
+    textInEffect: 1
+    textOutEffect: 0
+  - stepId: ...what is that?
+    backgroundType: 1
+    backgroundImage: {fileID: 21300000, guid: 0aaedd7373956f442900b74c97a7790d, type: 3}
+    backgroundColor: {r: 1, g: 1, b: 1, a: 1}
+    contentType: 1
+    narrativeText: 
+    speakerName: 
+    dialogueLine: ...what is that?
+    textInEffect: 1
+    textOutEffect: 0
+  - stepId: "Wait\u2026"
+    backgroundType: 0
+    backgroundImage: {fileID: 0}
+    backgroundColor: {r: 0, g: 0, b: 0, a: 1}
+    contentType: 0
+    narrativeText: "Wait\u2026"
+    speakerName: 
+    dialogueLine: 
+    textInEffect: 1
+    textOutEffect: 0
+  - stepId: DAMN!!! HE'S GETTING CLOSER!!!
+    backgroundType: 0
+    backgroundImage: {fileID: 0}
+    backgroundColor: {r: 0, g: 0, b: 0, a: 1}
+    contentType: 0
+    narrativeText: DAMN!!! HE'S GETTING CLOSER!!!
+    speakerName: 
+    dialogueLine: 
+    textInEffect: 1
+    textOutEffect: 0
