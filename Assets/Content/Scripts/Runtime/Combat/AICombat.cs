@@ -352,13 +352,13 @@ namespace LittleHeroJourney
             if (ShowDebugLog) Debug.Log($"[{GetType().Name}] Combo reset - loop count reset to 0");
         }
         
-        // Override OnInterrupted untuk reset AI-specific state
+        // Override OnInterrupted to reset AI-specific state
         public override void OnInterrupted()
         {
             _currentLoopCount = 0;
             _aiWasInAttackStateLastFrame = false;
             
-            // Call base implementation untuk reset attack state
+            // Call base implementation to reset attack state
             base.OnInterrupted();
             
             if (ShowDebugLog) Debug.Log($"[{GetType().Name}] AI INTERRUPTED - Attack cancelled, loop count reset");

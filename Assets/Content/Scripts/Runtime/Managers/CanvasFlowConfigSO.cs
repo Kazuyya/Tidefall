@@ -9,7 +9,7 @@ namespace LittleHeroJourney
     {
         public enum TransitionMode
         {
-            [Tooltip("Show canvas baru tanpa close yang lama (overlay). Contoh: Gameplay -> Pause")]
+            [Tooltip("Show new canvas without closing previous (overlay). E.g. Gameplay -> Pause")]
             Direct,
             
             [Tooltip("Close previous instant, show new instant (no animation). Fast switch.")]
@@ -24,34 +24,34 @@ namespace LittleHeroJourney
             [Tooltip("Wait previous OUT animation, then instant show new. Hybrid.")]
             WaitOutThenSnapIn,
             
-            [Tooltip("Play IN baru dan OUT lama secara bersamaan, keduanya pakai animasi.")]
+            [Tooltip("Play new IN and old OUT at the same time, both with animation.")]
             ParallelInOut,
             
-            [Tooltip("Snap IN canvas baru instan, sementara canvas lama tetap OUT animasi (bersamaan).")]
+            [Tooltip("Snap new canvas IN instantly while old canvas plays OUT animation (simultaneous).")]
             ParallelOutSnapIn,
         }
         
         [Serializable]
         public class TransitionFromRule
         {
-            [Tooltip("Canvas asal. Kosongkan atau isi '*'/'any' untuk wildcard (berlaku untuk semua asal)")]
+            [Tooltip("Source canvas. Empty or '*'/'any' for wildcard (applies to all sources)")]
             public string fromCanvasId;
             public TransitionMode mode = TransitionMode.WaitOutThenIn;
-            [Tooltip("Close previous canvas setelah IN animation complete?")]
+            [Tooltip("Close previous canvas after IN animation completes?")]
             public bool closeAfterInComplete = true;
         }
         
         [Serializable]
         public class TransitionToEntry
         {
-            [Tooltip("Canvas tujuan. Kosongkan atau isi '*'/'any' untuk wildcard (berlaku untuk semua tujuan)")]
+            [Tooltip("Target canvas. Empty or '*'/'any' for wildcard (applies to all targets)")]
             public string toCanvasId;
-            [Tooltip("Daftar rule berdasarkan From Id untuk tujuan ini")]
+            [Tooltip("Rules list by From Id for this target")]
             public List<TransitionFromRule> fromRules = new List<TransitionFromRule>();
         }
         
         [Header("Transition Rules")]
-        [Tooltip("Rules untuk transisi antar canvas. Rule pertama yang match akan digunakan.")]
+        [Tooltip("Rules for canvas transitions. First matching rule is used.")]
         public List<TransitionToEntry> transitionRules = new List<TransitionToEntry>();
     }
 }

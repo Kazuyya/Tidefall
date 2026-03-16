@@ -19,7 +19,7 @@ namespace LittleHeroJourney
 
         [Header("Debug")]
         [SerializeField] private bool showDebugLog;
-        [Tooltip("Editor only: isi level (e.g. 3) untuk lihat preview stats di bawah.")]
+        [Tooltip("Editor only: set level (e.g. 3) to see preview stats below.")]
         [SerializeField] private int debugPreviewLevel;
 
         private Health _health;

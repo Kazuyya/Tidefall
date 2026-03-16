@@ -1,22 +1,22 @@
 namespace LittleHeroJourney
 {
     /// <summary>
-    /// Interface untuk mengakses combat state dari berbagai entity (Player, AI, etc)
-    /// Menggantikan reflection pattern dengan type-safe interface
+    /// Interface to access combat state from any entity (Player, AI, etc).
+    /// Replaces reflection with a type-safe interface.
     /// </summary>
     public interface ICombatant
     {
         bool IsAttacking { get; }
         
         /// <summary>
-        /// Returns true jika entity bisa di-interrupt (trigger damaged animation).
-        /// Returns false jika entity punya Super Armor (tetap kena damage tapi tidak interrupt attack).
+        /// True if entity can be interrupted (trigger damaged animation).
+        /// False if entity has Super Armor (still takes damage but attack is not interrupted).
         /// </summary>
         bool IsInterruptible { get; }
         
         /// <summary>
-        /// Called ketika entity di-interrupt oleh damage.
-        /// Harus reset attack state, disable weapon colliders, dll.
+        /// Called when entity is interrupted by damage.
+        /// Must reset attack state, disable weapon colliders, etc.
         /// </summary>
         void OnInterrupted();
     }

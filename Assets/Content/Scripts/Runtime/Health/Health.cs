@@ -21,7 +21,7 @@ namespace LittleHeroJourney
         [SerializeField] private bool showDebugLog = false;
 
         [Header("Health Bar (Event)")]
-        [Tooltip("ID for health bar events. HealthBar with same ID updates. Empty = auto unique per clone (untuk AI). Isi tetap (e.g. Player) untuk single entity.")]
+        [Tooltip("ID for health bar events. HealthBar with same ID updates. Empty = auto unique per clone (e.g. AI). Use fixed value (e.g. Player) for single entity.")]
         [SerializeField] private string healthBarId = "";
 
         [Header("Faction")]

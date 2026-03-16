@@ -7,9 +7,9 @@ namespace LittleHeroJourney.UI
     public class CustomSliderBar : MonoBehaviour
     {
         [Header("Fill Range")]
-        [Tooltip("Fill 0% (kosong) tampil di nilai ini. 1 = mentok penuh.")]
+        [Tooltip("Fill 0% (empty) is shown at this value. 1 = full.")]
         [SerializeField] [Range(0f, 1f)] private float fillRangeMin = 0.1f;
-        [Tooltip("Fill 100% (penuh) tampil di nilai ini. 0 = mentok kosong.")]
+        [Tooltip("Fill 100% (full) is shown at this value. 0 = empty.")]
         [SerializeField] [Range(0f, 1f)] private float fillRangeMax = 0.9f;
 
         private Slider _slider;

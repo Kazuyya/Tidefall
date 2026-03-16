@@ -49,10 +49,10 @@ namespace LittleHeroJourney
         [Header("Dash Settings")]
         public DashSettingsSO dashSettings;
 
-        [Tooltip("Move + Dash actions. Joystick (virtualJoystickId) dipakai untuk move bila ada.")]
+        [Tooltip("Move + Dash actions. Joystick (virtualJoystickId) used for move when present.")]
         public InputActionAsset inputActionAsset;
         public Camera playerCamera;
-        [Tooltip("ID untuk VirtualJoystick (mobile). Move = joystick prioritas, lalu Input Action.")]
+        [Tooltip("ID for VirtualJoystick (mobile). Move = joystick priority, then Input Action.")]
         public int virtualJoystickId;
 
         // Core Components

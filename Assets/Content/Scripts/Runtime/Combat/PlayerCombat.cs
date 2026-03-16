@@ -241,8 +241,8 @@ namespace LittleHeroJourney
                 return;
             }
 
-            // FIX: Attack terakhir TETAP punya combo window untuk trigger new combo/loop
-            // Tidak lagi skip combo window untuk last attack
+            // FIX: Last attack still has combo window to trigger new combo/loop
+            // No longer skip combo window for last attack
 
             AnimatorStateInfo stateInfo = _animator.GetCurrentAnimatorStateInfo(0);
             float normalizedTime = stateInfo.normalizedTime % 1.0f;

@@ -17,9 +17,6 @@ namespace LittleHeroJourney
         [SerializeField] private JourneysDataSO journeysData;
         [SerializeField] private string journeySelectorCanvasId = "";
 
-        [Header("Story")]
-        [SerializeField] private float delayAfterTextCompleteSeconds = 1f;
-
         [Header("Debug")]
         [SerializeField] private bool showDebugLog = false;
 
@@ -157,14 +154,14 @@ namespace LittleHeroJourney
             if (sequence == null || sequence.StepCount == 0) return;
             if (string.IsNullOrEmpty(storyCanvasId) || GameManager.Instance?.CanvasManager == null)
             {
-                if (showDebugLog) Debug.LogWarning($"[{GetType().Name}] Story canvas id kosong atau CanvasManager null, skip start story.");
+                if (showDebugLog) Debug.LogWarning($"[{GetType().Name}] Story canvas id empty or CanvasManager null, skipping start story.");
                 return;
             }
             GameManager.Instance.CanvasManager.SwitchCanvas(storyCanvasId);
             var display = FindObjectOfType<StorySequenceDisplay>();
             if (display == null)
             {
-                if (showDebugLog) Debug.LogWarning($"[{GetType().Name}] StorySequenceDisplay tidak ditemukan, skip start story.");
+                if (showDebugLog) Debug.LogWarning($"[{GetType().Name}] StorySequenceDisplay not found, skipping start story.");
                 return;
             }
             StartCoroutine(PlayStorySequenceRoutine(sequence, display));
@@ -175,10 +172,10 @@ namespace LittleHeroJourney
             PlayStartStoryForStage(currentLevelNumber);
         }
 
-        private float GetDelayAfterTextForStep(StorySequenceSO.StoryStep step)
+        private static float GetDelayAfterTextForStep(StorySequenceSO.StoryStep step)
         {
             if (step != null && step.delayAfterTextComplete > 0f) return step.delayAfterTextComplete;
-            return delayAfterTextCompleteSeconds;
+            return 0f;
         }
 
         private IEnumerator PlayStorySequenceRoutine(StorySequenceSO sequence, StorySequenceDisplay display)
@@ -192,7 +189,7 @@ namespace LittleHeroJourney
                 var step = sequence.GetStep(i);
                 if (step == null) continue;
 
-                display.Clear();
+                yield return display.PrepareForNextStepRoutine();
                 display.ApplyStep(step);
                 _storyAdvanceRequested = false;
 
@@ -205,11 +202,6 @@ namespace LittleHeroJourney
                     elapsed += Time.deltaTime;
                     yield return null;
                 }
-
-                if (!_storyAdvanceRequested)
-                    yield return new WaitUntil(() => _storyAdvanceRequested);
-
-                _storyAdvanceRequested = false;
             }
 
             _currentStoryDisplay = null;

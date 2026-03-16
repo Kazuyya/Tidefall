@@ -8,19 +8,16 @@ using Unity.AI.Navigation;
 
 namespace LittleHeroJourney
 {
-    /// <summary>
-    /// Data untuk satu enemy spawn
-    /// </summary>
     [System.Serializable]
     public class EnemySpawnData
     {
-        [Tooltip("Enemy prefab yang akan di-spawn")]
+        [Tooltip("Enemy prefab to spawn")]
         public GameObject enemyPrefab;
         
-        [Tooltip("Posisi spawn untuk enemy ini")]
+        [Tooltip("Spawn position for this enemy")]
         public Transform spawnPoint;
         
-        [Tooltip("Delay sebelum spawn enemy ini (seconds dari encounter start)")]
+        [Tooltip("Delay before spawning this enemy (seconds from encounter start)")]
         public float spawnDelay = 0f;
     }
     
@@ -41,23 +38,23 @@ namespace LittleHeroJourney
         #region Serialized Fields
         
         [Header("Enemy Spawning")]
-        [Tooltip("List data spawn enemy. Setiap entry = 1 enemy dengan prefab, spawn point, dan delay masing-masing.")]
+        [Tooltip("Enemy spawn data list. Each entry = 1 enemy with prefab, spawn point, and delay.")]
         [SerializeField] private List<EnemySpawnData> enemySpawns = new List<EnemySpawnData>();
         
         [Header("Barrier Walls")]
-        [Tooltip("List GameObject barrier/wall yang akan diaktifkan saat encounter. Bisa 1, 2, 3, atau berapapun.")]
+        [Tooltip("Barrier/wall GameObjects to enable when encounter starts. Can be any number.")]
         [SerializeField] private List<GameObject> barrierWalls = new List<GameObject>();
         
 
         [Header("Barrier Walls Activation Delay")]
-        [Tooltip("Delay sebelum barrier walls diaktifkan setelah encounter started (seconds)")]
+        [Tooltip("Delay before barrier walls are enabled after encounter started (seconds)")]
         [SerializeField] private float barrierActivateDelay = 0.5f;
         
-        [Tooltip("Delay sebelum barrier walls nonaktif setelah semua enemy mati (seconds)")]
+        [Tooltip("Delay before barrier walls are disabled after all enemies dead (seconds)")]
         [SerializeField] private float barrierDeactivateDelay = 1.0f;
         
         [Header("Player Detection")]
-        [Tooltip("Tag untuk mendeteksi player")]
+        [Tooltip("Tag to detect player")]
         [SerializeField] private string playerTag = "Player";
         
         [Header("Debug")]
@@ -156,7 +153,6 @@ namespace LittleHeroJourney
             
             StartCoroutine(ActivateBarriersCoroutine());
             
-            // Spawn enemies dengan delay masing-masing
             StartCoroutine(SpawnEnemiesCoroutine());
             
             OnEncounterStarted?.Invoke();
@@ -173,7 +169,6 @@ namespace LittleHeroJourney
                 yield break;
             }
             
-            // Sort by spawn delay untuk spawn berurutan
             List<EnemySpawnData> sortedSpawns = new List<EnemySpawnData>(enemySpawns);
             sortedSpawns.Sort((a, b) => a.spawnDelay.CompareTo(b.spawnDelay));
             
@@ -183,7 +178,6 @@ namespace LittleHeroJourney
             {
                 if (spawnData.enemyPrefab == null) continue;
                 
-                // Hitung delay relatif dari spawn sebelumnya
                 float waitTime = spawnData.spawnDelay - lastDelay;
                 if (waitTime > 0)
                 {
@@ -248,7 +242,6 @@ namespace LittleHeroJourney
             
             if (showDebugLog) Debug.Log($"[{GetType().Name}] Enemy died! Remaining: {_aliveEnemyCount}");
             
-            // Check jika semua enemy mati
             if (_aliveEnemyCount <= 0)
             {
                 CompleteEncounter();
@@ -273,7 +266,6 @@ namespace LittleHeroJourney
                 }
             }
             
-            // Nonaktifkan barrier walls dengan delay
             StartCoroutine(DeactivateBarriersCoroutine());
         
             OnEncounterCompleted?.Invoke();
@@ -377,9 +369,6 @@ namespace LittleHeroJourney
         
         #region Public Methods
         
-        /// <summary>
-        /// Force start encounter (untuk testing atau scripted events)
-        /// </summary>
         public void ForceStartEncounter()
         {
             if (_currentState == EncounterState.Idle)
@@ -388,14 +377,10 @@ namespace LittleHeroJourney
             }
         }
         
-        /// <summary>
-        /// Force complete encounter (untuk testing atau skip)
-        /// </summary>
         public void ForceCompleteEncounter()
         {
             if (_currentState == EncounterState.Active)
             {
-                // Kill semua enemy
                 foreach (var enemy in _spawnedEnemies)
                 {
                     if (enemy != null)
@@ -410,9 +395,6 @@ namespace LittleHeroJourney
             }
         }
         
-        /// <summary>
-        /// Reset encounter ke state Idle (untuk replay)
-        /// </summary>
         public void ResetEncounter()
         {
             // Cleanup spawned enemies
@@ -429,7 +411,6 @@ namespace LittleHeroJourney
             // Reset state
             _currentState = EncounterState.Idle;
             
-            // Nonaktifkan barriers
             SetBarrierWallsActive(false);
             
             if (showDebugLog) Debug.Log($"[{GetType().Name}] Encounter RESET to Idle state.");
@@ -456,7 +437,6 @@ namespace LittleHeroJourney
         
         private void OnDrawGizmosSelected()
         {
-            // Draw spawn points dari enemySpawns list
             Gizmos.color = Color.green;
             foreach (var spawnData in enemySpawns)
             {
@@ -465,7 +445,6 @@ namespace LittleHeroJourney
                     Gizmos.DrawWireSphere(spawnData.spawnPoint.position, 0.5f);
                     Gizmos.DrawLine(transform.position, spawnData.spawnPoint.position);
                     
-                    // Draw label dengan delay info
                     #if UNITY_EDITOR
                     UnityEditor.Handles.Label(spawnData.spawnPoint.position + Vector3.up * 0.7f, 
                         $"Delay: {spawnData.spawnDelay}s");

@@ -20,9 +20,9 @@ namespace LittleHeroJourney
         public float GroundSmoothScaleThreshold;
 
         [Header("Animation Settings")]
-        [Tooltip("Trigger parameter dash di Animator. Pastikan ada transisi Attack → Dash (condition: trigger ini) supaya cancel attack langsung ke animasi dash.")]
+        [Tooltip("Dash trigger parameter in Animator. Ensure Attack → Dash transition exists (condition: this trigger) so attack cancel goes to dash animation.")]
         public string dashParameterName;
-        [Tooltip("True = bisa dash saat attack (override), trigger dash dipanggil. False = tidak bisa dash selama attack.")]
+        [Tooltip("True = can dash during attack (override), dash trigger is fired. False = cannot dash during attack.")]
         public bool dashOverridesAttack = true;
 
         [Header("Debug Settings")]

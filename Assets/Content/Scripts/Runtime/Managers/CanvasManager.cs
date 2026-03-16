@@ -28,8 +28,8 @@ namespace LittleHeroJourney
         private bool isTransitioning = false;
         private List<string> _canvasHistory = new List<string>();
 
-        [Header("UIActionEvent: buka canvas by id")]
-        [Tooltip("Contoh: Settings. Kalau event ActionId = salah satu ini, buka canvas itu. Kosongkan = tidak handle event.")]
+        [Header("UIActionEvent: open canvas by id")]
+        [Tooltip("E.g. Settings. If event ActionId matches one of these, open that canvas. Empty = do not handle event.")]
         [SerializeField] private List<string> canvasActionIds = new List<string>();
 
         private Dictionary<string, Action> _canvasActionHandlers = new Dictionary<string, Action>();

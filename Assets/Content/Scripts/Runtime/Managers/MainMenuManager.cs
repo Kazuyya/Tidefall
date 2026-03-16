@@ -6,7 +6,7 @@ namespace LittleHeroJourney
     public class MainMenuManager : MonoBehaviour
     {
         [Header("BGM")]
-        [Tooltip("ID effect BGM di AudioSet (nama yang sama dengan effectName di Audio Set)")]
+        [Tooltip("BGM effect ID in AudioSet (same name as effectName in Audio Set)")]
         [SerializeField] private string bgmEffectId = "MainMenuBGM";
 
         [Header("Fade out (before load scene gameplay)")]

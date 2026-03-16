@@ -9,10 +9,10 @@ namespace LittleHeroJourney
     public class WallEncounterFX : MonoBehaviour
     {
         [Header("Animation Settings")]
-        [Tooltip("Durasi animasi scale (seconds)")]
+        [Tooltip("Scale animation duration (seconds)")]
         [SerializeField] public float animationDuration = 0.5f;
         
-        [Tooltip("Ease type untuk animasi")]
+        [Tooltip("Ease type for animation")]
         [SerializeField] public AnimationCurve easeCurve = AnimationCurve.EaseInOut(0, 0, 1, 1);
         
         private Coroutine _currentAnimation;

@@ -25,7 +25,7 @@ namespace LittleHeroJourney
         [Min(0)] public float baseAttackCooldown = 0f;
 
         [Header("Scale Per Level")]
-        [Tooltip("Scale = 1 + (level-1) * ini. Contoh: 0.1 → level 1=1, level 2=1.1, level 5=1.4")]
+        [Tooltip("Scale = 1 + (level-1) * this. E.g. 0.1 → level 1=1, level 2=1.1, level 5=1.4")]
         [Range(0f, 0.5f)]
         [SerializeField] private float scalePerLevel = 0.1f;
 

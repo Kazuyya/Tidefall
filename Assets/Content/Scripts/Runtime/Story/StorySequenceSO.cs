@@ -52,6 +52,10 @@ namespace LittleHeroJourney
             public StoryTextOutEffect textOutEffect = StoryTextOutEffect.None;
             public float delayAfterTextComplete;
 
+            public bool useCustomImageFadeIn = true;
+            public float customImageFadeInDuration;
+            public bool useCustomImageFadeOutOnExit = true;
+
             public Color GetDisplayColor()
             {
                 return backgroundType == StoryBackgroundType.Solid ? backgroundColor : Color.white;
