@@ -2569,7 +2569,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2202962658132113468, guid: 426e3153225a50f449040ed24a49c51a, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 62.7
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3436934277329988750, guid: 426e3153225a50f449040ed24a49c51a, type: 3}
       propertyPath: m_Pivot.x
@@ -2655,13 +2655,9 @@ PrefabInstance:
       propertyPath: m_Name
       value: Story Panel
       objectReference: {fileID: 0}
-    - target: {fileID: 8294394817272087433, guid: 426e3153225a50f449040ed24a49c51a, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 8357163462568638746, guid: 426e3153225a50f449040ed24a49c51a, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 125.4
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

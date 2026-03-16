@@ -246,21 +246,16 @@ namespace LittleHeroJourney
 
         public void CloseAllCanvases()
         {
-            foreach (var canvas in registeredCanvases.Values)
-            {
-                canvas.Hide();
-            }
-            currentActiveCanvas = null;
+            ForEachRegisteredCanvas(canvas => canvas.Hide());
         }
         
         public void CloseAllCanvasesImmediate()
         {
-            foreach (var canvas in registeredCanvases.Values)
+            ForEachRegisteredCanvas(canvas =>
             {
-                if (canvas == null) continue;
+                if (canvas == null) return;
                 canvas.HideImmediate();
-            }
-            currentActiveCanvas = null;
+            });
         }
 
         public System.Collections.IEnumerator CloseAllCanvasesRoutine()
@@ -342,6 +337,17 @@ namespace LittleHeroJourney
 
 
         #region Transition Helpers
+
+        private void ForEachRegisteredCanvas(Action<GameCanvas> action)
+        {
+            if (action == null) return;
+            foreach (var canvas in registeredCanvases.Values)
+            {
+                if (canvas == null) continue;
+                action(canvas);
+            }
+            currentActiveCanvas = null;
+        }
 
         private static bool IsCanvasIdWildcard(string id)
         {

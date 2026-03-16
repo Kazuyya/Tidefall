@@ -117,8 +117,8 @@ namespace LittleHeroJourney
 
         private void PublishCurrentHealth()
         {
-            if (!string.IsNullOrEmpty(healthBarId))
-                GameEventSystem.PublishHealth(healthBarId, currentHealth, maxHealth);
+            if (string.IsNullOrEmpty(healthBarId)) return;
+            GameEventSystem.PublishHealth(healthBarId, currentHealth, maxHealth);
         }
 
         #endregion
@@ -138,9 +138,7 @@ namespace LittleHeroJourney
             float finalDamage = CalculateDamageWithDefense(damage);
             float oldHealth = currentHealth;
             currentHealth = Helper.ClampSub(currentHealth, finalDamage, 0f);
-            OnHealthChanged?.Invoke(currentHealth);
-            if (!string.IsNullOrEmpty(healthBarId))
-                GameEventSystem.PublishHealth(healthBarId, currentHealth, maxHealth);
+            NotifyHealthChanged();
 
             // Set damager for rotation
             if (enableRotateToDamager && damager != null)
@@ -364,9 +362,7 @@ namespace LittleHeroJourney
 
             if (showDebugLog) Debug.Log($"[{GetType().Name}] Heal +{amount}. Health {oldHealth} -> {currentHealth}");
 
-            OnHealthChanged?.Invoke(currentHealth);
-            if (!string.IsNullOrEmpty(healthBarId))
-                GameEventSystem.PublishHealth(healthBarId, currentHealth, maxHealth);
+            NotifyHealthChanged();
         }
 
         public void SetHealth(float newHealth)
@@ -376,9 +372,7 @@ namespace LittleHeroJourney
 
             if (showDebugLog) Debug.Log($"[{GetType().Name}] Health set {oldHealth} -> {currentHealth}");
 
-            OnHealthChanged?.Invoke(currentHealth);
-            if (!string.IsNullOrEmpty(healthBarId))
-                GameEventSystem.PublishHealth(healthBarId, currentHealth, maxHealth);
+            NotifyHealthChanged();
 
             if (currentHealth > 0 && oldHealth <= 0 && !_isDead)
             {
@@ -463,15 +457,20 @@ namespace LittleHeroJourney
 
         #region Utility Methods
 
+        private void NotifyHealthChanged()
+        {
+            OnHealthChanged?.Invoke(currentHealth);
+            if (string.IsNullOrEmpty(healthBarId)) return;
+            GameEventSystem.PublishHealth(healthBarId, currentHealth, maxHealth);
+        }
+
         public void ResetHealth()
         {
             currentHealth = maxHealth;
             _isDead = false;
             SetDeathControlsDisabled(false);
             if (_cachedAIAgent != null) _cachedAIAgent.Revive();
-            OnHealthChanged?.Invoke(currentHealth);
-            if (!string.IsNullOrEmpty(healthBarId))
-                GameEventSystem.PublishHealth(healthBarId, currentHealth, maxHealth);
+            NotifyHealthChanged();
         }
 
         public void Initialize(float maxHealthValue, float? currentHealthValue = null)
