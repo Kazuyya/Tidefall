@@ -37,7 +37,6 @@ namespace LittleHeroJourney
         private Action _playHandler;
         private Action _pendingAfterFade;
         private Action _fadeCompleteHandler;
-        private bool _storyAdvanceRequested;
         private StorySequenceDisplay _currentStoryDisplay;
         private static int _pendingStoryStageNumber;
 
@@ -164,7 +163,8 @@ namespace LittleHeroJourney
                 if (showDebugLog) Debug.LogWarning($"[{GetType().Name}] StorySequenceDisplay not found, skipping start story.");
                 return;
             }
-            StartCoroutine(PlayStorySequenceRoutine(sequence, display));
+            _currentStoryDisplay = display;
+            display.Play(sequence);
         }
 
         public void PlayStartStoryForCurrentStage()
@@ -172,50 +172,10 @@ namespace LittleHeroJourney
             PlayStartStoryForStage(currentLevelNumber);
         }
 
-        private static float GetDelayAfterTextForStep(StorySequenceSO.StoryStep step)
-        {
-            if (step != null && step.delayAfterTextComplete > 0f) return step.delayAfterTextComplete;
-            return 0f;
-        }
-
-        private IEnumerator PlayStorySequenceRoutine(StorySequenceSO sequence, StorySequenceDisplay display)
-        {
-            if (sequence == null || display == null) yield break;
-            _currentStoryDisplay = display;
-            display.Clear();
-
-            for (int i = 0; i < sequence.StepCount; i++)
-            {
-                var step = sequence.GetStep(i);
-                if (step == null) continue;
-
-                yield return display.PrepareForNextStepRoutine();
-                display.ApplyStep(step);
-                _storyAdvanceRequested = false;
-
-                yield return new WaitUntil(() => !display.IsAnimationPlaying);
-
-                float delay = GetDelayAfterTextForStep(step);
-                float elapsed = 0f;
-                while (elapsed < delay && !_storyAdvanceRequested)
-                {
-                    elapsed += Time.deltaTime;
-                    yield return null;
-                }
-            }
-
-            _currentStoryDisplay = null;
-        }
-
         public void RequestAdvanceStory()
         {
-            if (_currentStoryDisplay != null && _currentStoryDisplay.IsAnimationPlaying)
-            {
-                _currentStoryDisplay.CompleteAnimationNow();
-                return;
-            }
-
-            _storyAdvanceRequested = true;
+            if (_currentStoryDisplay == null) return;
+            _currentStoryDisplay.RequestAdvance();
         }
 
         #endregion

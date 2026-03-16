@@ -32,20 +32,76 @@ namespace LittleHeroJourney
         {
             if (index < 0 || index >= _stepsProp.arraySize) return CollapsedLineHeight;
             if (!IsStepExpanded(index)) return CollapsedLineHeight;
+
             SerializedProperty step = _stepsProp.GetArrayElementAtIndex(index);
-            SerializedProperty backgroundType = step.FindPropertyRelative("backgroundType");
-            bool isCustom = backgroundType != null && backgroundType.enumValueIndex == (int)StoryBackgroundType.Custom;
-            return GetStepBlockHeight(isCustom);
+            SerializedProperty contentType = step.FindPropertyRelative("contentType");
+            SerializedProperty backgroundInEffect = step.FindPropertyRelative("backgroundInEffect");
+            SerializedProperty backgroundOutEffect = step.FindPropertyRelative("backgroundOutEffect");
+
+            bool isNarrative = contentType != null && contentType.enumValueIndex == (int)StoryContentType.Narrative;
+            bool inHasDuration = backgroundInEffect != null && backgroundInEffect.enumValueIndex == (int)StoryBackgroundTransitionEffect.Fade;
+            bool outHasDuration = backgroundOutEffect != null && backgroundOutEffect.enumValueIndex == (int)StoryBackgroundTransitionEffect.Fade;
+
+            return GetExpandedStepHeight(isNarrative, inHasDuration, outHasDuration);
         }
 
-        private static float GetStepBlockHeight(bool includeBackgroundAnimation)
+        private static float GetExpandedStepHeight(bool isNarrative, bool inHasDuration, bool outHasDuration)
         {
             float line = EditorGUIUtility.singleLineHeight;
             float textBlock = line * TextBlockLines;
-            float baseH = 1f * line + Pad + 4f * line + 1f * line + Pad + (1f * line + Pad + textBlock + line + Pad) + Pad + 2f * line + Pad + 1f * line + Pad;
-            if (includeBackgroundAnimation)
-                baseH += 1f * line + Pad + 4f * line + 2f * Pad;
-            return baseH;
+
+            float h = 0f;
+
+            // Foldout line
+            h += line;
+
+            // Step body starts at +Pad after foldout
+            h += Pad;
+
+            // Id
+            h += line + Pad;
+
+            // Background Type + Background Image/Color + Content Type
+            h += line + Pad;
+            h += line + Pad;
+            h += line + Pad;
+
+            // Extra pad before text area block
+            h += Pad;
+
+            if (isNarrative)
+            {
+                // Narrative block (label line + pad + text area) as allocated by DrawStep
+                h += textBlock + line + Pad;
+            }
+            else
+            {
+                // Speaker line
+                h += line + Pad;
+                // Dialogue block (label line + pad + text area)
+                h += textBlock + line + Pad;
+            }
+
+            // Pad before text effects
+            h += Pad;
+
+            // Text In, Text Out, Delay After Text
+            h += line + Pad;
+            h += line + Pad;
+            h += line + Pad;
+
+            // Pad before background transition section
+            h += Pad;
+
+            // Background In + Background Out rows
+            h += line + Pad; // Background In
+            h += line + Pad; // Background Out
+
+            // Optional durations
+            if (inHasDuration) h += line + Pad;
+            if (outHasDuration) h += line + Pad;
+
+            return h;
         }
 
         private bool IsStepExpanded(int index)
@@ -131,9 +187,10 @@ namespace LittleHeroJourney
             SerializedProperty textInEffect = step.FindPropertyRelative("textInEffect");
             SerializedProperty textOutEffect = step.FindPropertyRelative("textOutEffect");
             SerializedProperty delayAfterTextComplete = step.FindPropertyRelative("delayAfterTextComplete");
-            SerializedProperty useCustomImageFadeIn = step.FindPropertyRelative("useCustomImageFadeIn");
-            SerializedProperty customImageFadeInDuration = step.FindPropertyRelative("customImageFadeInDuration");
-            SerializedProperty useCustomImageFadeOutOnExit = step.FindPropertyRelative("useCustomImageFadeOutOnExit");
+            SerializedProperty backgroundInEffect = step.FindPropertyRelative("backgroundInEffect");
+            SerializedProperty backgroundOutEffect = step.FindPropertyRelative("backgroundOutEffect");
+            SerializedProperty backgroundFadeInDuration = step.FindPropertyRelative("backgroundFadeInDuration");
+            SerializedProperty backgroundFadeOutDuration = step.FindPropertyRelative("backgroundFadeOutDuration");
 
             Rect r1 = new Rect(x, y, w, line);
             y += line + Pad;
@@ -204,19 +261,41 @@ namespace LittleHeroJourney
             EditorGUI.PropertyField(rOut, textOutEffect, new GUIContent("Text Out Effect"));
             EditorGUI.PropertyField(rDelay, delayAfterTextComplete, new GUIContent("Delay After Text"));
 
-            if (isCustom)
+            y += Pad;
+            float labelWidth = 130f;
+
+            // Background In
+            Rect bgInLabelRect = new Rect(x, y, labelWidth, line);
+            Rect bgInFieldRect = new Rect(x + labelWidth + 4f, y, w - labelWidth - 4f, line);
+            EditorGUI.LabelField(bgInLabelRect, "Background In");
+            EditorGUI.PropertyField(bgInFieldRect, backgroundInEffect, GUIContent.none);
+            y += line + Pad;
+
+            // Fade In Duration (only if In = Fade)
+            if (backgroundInEffect.enumValueIndex == (int)StoryBackgroundTransitionEffect.Fade)
             {
-                y += Pad;
-                EditorGUI.LabelField(new Rect(x, y, w, line), "Background animation (Custom only)", EditorStyles.miniLabel);
+                Rect fadeInLabelRect = new Rect(x, y, labelWidth, line);
+                Rect fadeInFieldRect = new Rect(x + labelWidth + 4f, y, w - labelWidth - 4f, line);
+                EditorGUI.LabelField(fadeInLabelRect, "Fade In Duration");
+                EditorGUI.PropertyField(fadeInFieldRect, backgroundFadeInDuration, GUIContent.none);
                 y += line + Pad;
-                Rect rBg1 = new Rect(x, y, w, line);
+            }
+
+            // Background Out
+            Rect bgOutLabelRect = new Rect(x, y, labelWidth, line);
+            Rect bgOutFieldRect = new Rect(x + labelWidth + 4f, y, w - labelWidth - 4f, line);
+            EditorGUI.LabelField(bgOutLabelRect, "Background Out");
+            EditorGUI.PropertyField(bgOutFieldRect, backgroundOutEffect, GUIContent.none);
+            y += line + Pad;
+
+            // Fade Out Duration (only if Out = Fade)
+            if (backgroundOutEffect.enumValueIndex == (int)StoryBackgroundTransitionEffect.Fade)
+            {
+                Rect fadeOutLabelRect = new Rect(x, y, labelWidth, line);
+                Rect fadeOutFieldRect = new Rect(x + labelWidth + 4f, y, w - labelWidth - 4f, line);
+                EditorGUI.LabelField(fadeOutLabelRect, "Fade Out Duration");
+                EditorGUI.PropertyField(fadeOutFieldRect, backgroundFadeOutDuration, GUIContent.none);
                 y += line + Pad;
-                Rect rBg2 = new Rect(x, y, w, line);
-                y += line + Pad;
-                Rect rBg3 = new Rect(x, y, w, line);
-                EditorGUI.PropertyField(rBg1, useCustomImageFadeIn, new GUIContent("Use fade in"));
-                EditorGUI.PropertyField(rBg2, customImageFadeInDuration, new GUIContent("Fade in duration"));
-                EditorGUI.PropertyField(rBg3, useCustomImageFadeOutOnExit, new GUIContent("Fade out on exit"));
             }
         }
 

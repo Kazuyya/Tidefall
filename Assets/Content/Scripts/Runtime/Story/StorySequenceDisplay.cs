@@ -1,361 +1,201 @@
 using System.Collections;
 using UnityEngine;
-using UnityEngine.UI;
-using TMPro;
 
 namespace LittleHeroJourney
 {
     public class StorySequenceDisplay : MonoBehaviour
     {
-        [Header("Text (TMP)")]
-        [SerializeField] private TextMeshProUGUI textNarrative;
-        [SerializeField] private TextMeshProUGUI textDialogue;
+        [Header("Pooling")]
+        [SerializeField] private StoryStepPanel stepPanelPrefab;
+        [SerializeField] private Transform stepPanelParent;
 
-        [Header("Background")]
-        [SerializeField] private Image solidColorImage;
-        [SerializeField] private Image customImage;
-        [SerializeField] private Image customImageBottom;
+        private StoryStepPanel[] _pool;
+        private int _activeIndex = -1;
+        private Coroutine _playRoutine;
 
-        [Header("Text effect settings")]
-        [SerializeField] private float typewriterCharsPerSecond = 35f;
-        [SerializeField] private float fadeInDuration = 0.4f;
-        [SerializeField] private float customImageFadeDuration = 0.4f;
+        private StorySequenceSO _sequence;
+        private int _stepIndex;
+        private bool _advanceRequested;
 
-        private Coroutine _effectCoroutine;
-        private Coroutine _applyStepCoroutine;
-        private bool _isAnimationPlaying;
-        private bool _completeNow;
-        private int _currentCustomSlot = -1;
-        private bool _currentStepUseFadeOutOnExit = true;
+        public bool IsPlaying => _playRoutine != null;
 
-        public bool IsAnimationPlaying => _isAnimationPlaying;
-
-        public void ApplyStep(StorySequenceSO.StoryStep step)
+        public bool IsAnimating
         {
-            if (step == null) return;
-            StopEffectCoroutine();
-            if (_applyStepCoroutine != null)
+            get
             {
-                StopCoroutine(_applyStepCoroutine);
-                _applyStepCoroutine = null;
+                if (_pool == null) return false;
+                for (int i = 0; i < _pool.Length; i++)
+                {
+                    if (_pool[i] != null && _pool[i].gameObject.activeSelf && _pool[i].IsAnimating)
+                        return true;
+                }
+                return false;
             }
-            _completeNow = false;
+        }
 
-            if (step.backgroundType == StoryBackgroundType.Custom && (customImage != null || customImageBottom != null))
+        public void Play(StorySequenceSO sequence)
+        {
+            if (sequence == null || sequence.StepCount == 0) return;
+            EnsurePool();
+            Stop();
+            _sequence = sequence;
+            _stepIndex = 0;
+            _activeIndex = -1;
+            _advanceRequested = false;
+            _playRoutine = StartCoroutine(PlayRoutine());
+        }
+
+        public void Stop()
+        {
+            if (_playRoutine != null)
             {
-                _isAnimationPlaying = true;
-                _applyStepCoroutine = StartCoroutine(ApplyStepWithCustomBackgroundRoutine(step));
+                StopCoroutine(_playRoutine);
+                _playRoutine = null;
+            }
+            if (_pool != null)
+            {
+                for (int i = 0; i < _pool.Length; i++)
+                {
+                    if (_pool[i] != null)
+                        _pool[i].gameObject.SetActive(false);
+                }
+            }
+            _sequence = null;
+            _stepIndex = 0;
+            _activeIndex = -1;
+            _advanceRequested = false;
+        }
+
+        /// <summary>
+        /// Click behavior:
+        /// - If currently animating (background/text in/out): complete immediately.
+        /// - Otherwise: request immediate advance (skips remaining delay).
+        /// </summary>
+        public void RequestAdvance()
+        {
+            if (IsAnimating)
+            {
+                CompleteAnimationsNow();
                 return;
             }
-
-            ApplyStepImmediate(step);
+            _advanceRequested = true;
         }
 
-        private void ApplyStepImmediate(StorySequenceSO.StoryStep step)
+        public void CompleteAnimationsNow()
         {
-            TextMeshProUGUI activeText = SetupTextForStep(step);
-            if (step.backgroundType == StoryBackgroundType.Solid)
+            if (_pool == null) return;
+            for (int i = 0; i < _pool.Length; i++)
             {
-                HideCustomImages();
-                _currentCustomSlot = -1;
-                if (solidColorImage != null)
-                {
-                    solidColorImage.color = step.GetDisplayColor();
-                    solidColorImage.enabled = true;
-                    solidColorImage.gameObject.SetActive(true);
-                }
+                if (_pool[i] != null && _pool[i].gameObject.activeSelf)
+                    _pool[i].CompleteNow();
             }
-            else
-            {
-                if (solidColorImage != null)
-                {
-                    solidColorImage.enabled = false;
-                    solidColorImage.gameObject.SetActive(false);
-                }
-                Image single = customImage != null ? customImage : customImageBottom;
-                if (single != null)
-                {
-                    single.sprite = step.GetDisplayImage();
-                    SetImageAlpha(single, 1f);
-                    single.enabled = true;
-                    single.gameObject.SetActive(true);
-                }
-                _currentCustomSlot = 0;
-            }
-
-            if (activeText != null && step.textInEffect != StoryTextEffect.None)
-                _effectCoroutine = StartCoroutine(PlayTextInEffectRoutine(activeText, step.textInEffect));
-            else
-                _isAnimationPlaying = false;
         }
 
-        private TextMeshProUGUI SetupTextForStep(StorySequenceSO.StoryStep step)
+        private void EnsurePool()
         {
-            TextMeshProUGUI activeText = null;
-            if (step.IsNarrative)
+            if (_pool != null && _pool.Length == 2 && _pool[0] != null && _pool[1] != null) return;
+            if (stepPanelPrefab == null) return;
+            if (stepPanelParent == null) stepPanelParent = transform;
+
+            _pool = new StoryStepPanel[2];
+            for (int i = 0; i < 2; i++)
             {
-                if (textNarrative != null)
-                {
-                    textNarrative.text = step.GetDisplayNarrativeText();
-                    textNarrative.maxVisibleCharacters = int.MaxValue;
-                    textNarrative.gameObject.SetActive(true);
-                    SetTextAlpha(textNarrative, 1f);
-                    activeText = textNarrative;
-                }
-                if (textDialogue != null) textDialogue.gameObject.SetActive(false);
+                var inst = Instantiate(stepPanelPrefab, stepPanelParent);
+                inst.gameObject.SetActive(false);
+                _pool[i] = inst;
             }
-            else
-            {
-                if (textNarrative != null) textNarrative.gameObject.SetActive(false);
-                if (textDialogue != null)
-                {
-                    textDialogue.text = step.GetDisplayDialogueText();
-                    textDialogue.maxVisibleCharacters = int.MaxValue;
-                    textDialogue.gameObject.SetActive(true);
-                    SetTextAlpha(textDialogue, 1f);
-                    activeText = textDialogue;
-                }
-            }
-            return activeText;
         }
 
-        private IEnumerator ApplyStepWithCustomBackgroundRoutine(StorySequenceSO.StoryStep step)
+        private IEnumerator PlayRoutine()
         {
-            if (solidColorImage != null)
+            if (_sequence == null || _pool == null || _pool.Length < 2) { _playRoutine = null; yield break; }
+
+            StorySequenceSO.StoryStep previousStep = null;
+            StoryStepPanel previousPanel = null;
+
+            while (_sequence != null && _stepIndex < _sequence.StepCount)
             {
-                solidColorImage.enabled = false;
-                solidColorImage.gameObject.SetActive(false);
-            }
+                var step = _sequence.GetStep(_stepIndex);
+                if (step == null) { _stepIndex++; continue; }
 
-            Image top = customImage;
-            Image bottom = customImageBottom;
-            if (top == null) top = bottom;
-            if (bottom == null) bottom = top;
-            if (top == null) { _isAnimationPlaying = false; yield break; }
+                int incomingIndex = _activeIndex < 0 ? 0 : (1 - _activeIndex);
+                StoryStepPanel incoming = _pool[incomingIndex];
+                if (incoming == null) { _stepIndex++; continue; }
 
-            int nextSlot = _currentCustomSlot < 0 ? 0 : (1 - _currentCustomSlot);
-            Image showImage = nextSlot == 0 ? top : bottom;
-            Image hideImage = nextSlot == 0 ? bottom : top;
-
-            if (hideImage != null && hideImage != showImage)
-            {
-                hideImage.gameObject.SetActive(false);
-            }
-
-            _currentStepUseFadeOutOnExit = step.useCustomImageFadeOutOnExit;
-
-            Sprite sp = step.GetDisplayImage();
-            if (showImage != null)
-            {
-                showImage.sprite = sp;
-                showImage.color = Color.white;
-                SetImageAlpha(showImage, step.useCustomImageFadeIn ? 0f : 1f);
-                showImage.enabled = true;
-                showImage.gameObject.SetActive(true);
-            }
-
-            if (showImage != null && step.useCustomImageFadeIn)
-            {
-                float dur = step.customImageFadeInDuration > 0f ? step.customImageFadeInDuration : customImageFadeDuration;
-                if (dur > 0f)
+                if (previousPanel != null && previousStep != null)
                 {
-                    yield return FadeImageRoutine(showImage, 0f, 1f, dur);
-                    if (_completeNow && showImage != null) SetImageAlpha(showImage, 1f);
+                    bool willAnimateBackground = step.backgroundInEffect == StoryBackgroundTransitionEffect.Fade &&
+                                                 (previousStep.backgroundType != step.backgroundType ||
+                                                  previousStep.GetDisplayColor() != step.GetDisplayColor() ||
+                                                  previousStep.GetDisplayImage() != step.GetDisplayImage());
+                    if (willAnimateBackground)
+                    {
+                        previousPanel.HideDialoguePanelImmediate();
+                    }
+                }
+
+                incoming.gameObject.SetActive(true);
+                incoming.transform.SetAsLastSibling();
+                incoming.ConfigureForStep(step);
+
+                bool animateBackground = step.backgroundInEffect == StoryBackgroundTransitionEffect.Fade &&
+                                         (previousStep == null ||
+                                          previousStep.backgroundType != step.backgroundType ||
+                                          previousStep.GetDisplayColor() != step.GetDisplayColor() ||
+                                          previousStep.GetDisplayImage() != step.GetDisplayImage());
+
+                bool animateDialoguePanel = step.contentType == StoryContentType.Dialogue &&
+                                            (previousStep == null || previousStep.contentType != StoryContentType.Dialogue);
+
+                float initialBg = animateBackground ? 0f : 1f;
+                float initialText;
+                if (step.contentType == StoryContentType.Dialogue)
+                {
+                    initialText = 0f;
                 }
                 else
-                    SetImageAlpha(showImage, 1f);
-            }
-            _currentCustomSlot = nextSlot;
-
-            TextMeshProUGUI activeText = SetupTextForStep(step);
-            if (activeText != null && step.textInEffect != StoryTextEffect.None)
-                yield return PlayTextInEffectRoutine(activeText, step.textInEffect);
-            else
-                _isAnimationPlaying = false;
-
-            _applyStepCoroutine = null;
-        }
-
-        private IEnumerator FadeImageRoutine(Image img, float fromA, float toA, float duration = -1f)
-        {
-            if (img == null) yield break;
-            if (duration <= 0f) duration = customImageFadeDuration;
-            if (duration <= 0f) { SetImageAlpha(img, toA); yield break; }
-            float elapsed = 0f;
-            while (elapsed < duration && !_completeNow)
-            {
-                elapsed += Time.deltaTime;
-                float t = Mathf.Clamp01(elapsed / duration);
-                float a = Mathf.Lerp(fromA, toA, t);
-                SetImageAlpha(img, a);
-                yield return null;
-            }
-            if (img != null) SetImageAlpha(img, toA);
-        }
-
-        private static void SetImageAlpha(Image img, float a)
-        {
-            if (img == null) return;
-            Color c = img.color;
-            c.a = Mathf.Clamp01(a);
-            img.color = c;
-        }
-
-        private void HideCustomImages()
-        {
-            if (customImage != null)
-            {
-                customImage.sprite = null;
-                customImage.enabled = false;
-                customImage.gameObject.SetActive(false);
-            }
-            if (customImageBottom != null)
-            {
-                customImageBottom.sprite = null;
-                customImageBottom.enabled = false;
-                customImageBottom.gameObject.SetActive(false);
-            }
-        }
-
-        private void StopEffectCoroutine()
-        {
-            if (_effectCoroutine != null)
-            {
-                StopCoroutine(_effectCoroutine);
-                _effectCoroutine = null;
-            }
-            _isAnimationPlaying = false;
-        }
-
-        private IEnumerator PlayTextInEffectRoutine(TextMeshProUGUI tmp, StoryTextEffect effect)
-        {
-            _isAnimationPlaying = true;
-            if (tmp == null) { _isAnimationPlaying = false; yield break; }
-
-            if (effect == StoryTextEffect.Typewriter)
-            {
-                tmp.ForceMeshUpdate();
-                int totalChars = tmp.textInfo.characterCount;
-                tmp.maxVisibleCharacters = 0;
-                float delayPerChar = 1f / Mathf.Max(1f, typewriterCharsPerSecond);
-                for (int i = 0; i <= totalChars && !_completeNow; i++)
                 {
-                    tmp.maxVisibleCharacters = i;
-                    yield return new WaitForSeconds(delayPerChar);
+                    initialText = step.backgroundInEffect == StoryBackgroundTransitionEffect.Fade
+                        ? 0f
+                        : (step.textInEffect == StoryTextEffect.Fade ? 0f : 1f);
                 }
-                tmp.maxVisibleCharacters = int.MaxValue;
-            }
-            else if (effect == StoryTextEffect.Fade)
-            {
+                incoming.SetInitialAlphas(initialBg, initialText);
+
+                yield return StartCoroutine(incoming.PlayInRoutine(step, animateBackground, animateDialoguePanel));
+
+                if (previousPanel != null)
+                    previousPanel.gameObject.SetActive(false);
+
+                _activeIndex = incomingIndex;
+                previousPanel = incoming;
+                previousStep = step;
+
+                float delay = Mathf.Max(0f, step.delayAfterTextComplete);
                 float elapsed = 0f;
-                while (elapsed < fadeInDuration && !_completeNow)
+                _advanceRequested = false;
+                while (elapsed < delay && !_advanceRequested)
                 {
                     elapsed += Time.deltaTime;
-                    float a = Mathf.Clamp01(elapsed / fadeInDuration);
-                    SetTextAlpha(tmp, a);
                     yield return null;
                 }
-                SetTextAlpha(tmp, 1f);
-            }
 
-            _effectCoroutine = null;
-            _isAnimationPlaying = false;
-        }
-
-        private static void SetTextAlpha(TextMeshProUGUI tmp, float a)
-        {
-            if (tmp == null) return;
-            Color c = tmp.color;
-            c.a = a;
-            tmp.color = c;
-        }
-
-        public void CompleteAnimationNow()
-        {
-            _completeNow = true;
-            if (_effectCoroutine != null)
-            {
-                StopCoroutine(_effectCoroutine);
-                _effectCoroutine = null;
-            }
-            if (_applyStepCoroutine != null)
-            {
-                StopCoroutine(_applyStepCoroutine);
-                _applyStepCoroutine = null;
-            }
-            if (customImage != null && customImage.gameObject.activeSelf)
-                SetImageAlpha(customImage, 1f);
-            if (customImageBottom != null && customImageBottom.gameObject.activeSelf)
-                SetImageAlpha(customImageBottom, 1f);
-            if (textNarrative != null && textNarrative.gameObject.activeSelf)
-            {
-                textNarrative.maxVisibleCharacters = int.MaxValue;
-                SetTextAlpha(textNarrative, 1f);
-            }
-            if (textDialogue != null && textDialogue.gameObject.activeSelf)
-            {
-                textDialogue.maxVisibleCharacters = int.MaxValue;
-                SetTextAlpha(textDialogue, 1f);
-            }
-            _isAnimationPlaying = false;
-        }
-
-        public IEnumerator PrepareForNextStepRoutine()
-        {
-            StopEffectCoroutine();
-            if (_applyStepCoroutine != null)
-            {
-                StopCoroutine(_applyStepCoroutine);
-                _applyStepCoroutine = null;
-            }
-            if (_currentCustomSlot >= 0 && _currentStepUseFadeOutOnExit)
-            {
-                Image cur = _currentCustomSlot == 0 ? customImage : customImageBottom;
-                if (cur != null && cur.gameObject.activeSelf)
+                if (!_advanceRequested && step.textOutEffect == StoryTextOutEffect.Fade)
                 {
-                    yield return FadeImageRoutine(cur, 1f, 0f);
-                    cur.gameObject.SetActive(false);
+                    yield return StartCoroutine(incoming.PlayTextOutOnlyRoutine(step));
                 }
-            }
-            if (_currentCustomSlot >= 0)
-            {
-                Image cur = _currentCustomSlot == 0 ? customImage : customImageBottom;
-                if (cur != null) cur.gameObject.SetActive(false);
-                _currentCustomSlot = -1;
-            }
-            ClearInternal();
-        }
 
-        public void Clear()
-        {
-            StopEffectCoroutine();
-            if (_applyStepCoroutine != null)
-            {
-                StopCoroutine(_applyStepCoroutine);
-                _applyStepCoroutine = null;
+                _stepIndex++;
+                _advanceRequested = false;
             }
-            _currentCustomSlot = -1;
-            ClearInternal();
-        }
 
-        private void ClearInternal()
-        {
-            if (textNarrative != null)
+            if (previousPanel != null && previousStep != null)
             {
-                textNarrative.text = "";
-                textNarrative.gameObject.SetActive(false);
+                if (previousStep.backgroundOutEffect == StoryBackgroundTransitionEffect.Fade)
+                    yield return StartCoroutine(previousPanel.PlayOutRoutine(previousStep));
+                previousPanel.gameObject.SetActive(false);
             }
-            if (textDialogue != null)
-            {
-                textDialogue.text = "";
-                textDialogue.gameObject.SetActive(false);
-            }
-            if (solidColorImage != null)
-            {
-                solidColorImage.enabled = false;
-                solidColorImage.gameObject.SetActive(false);
-            }
-            HideCustomImages();
+
+            _playRoutine = null;
         }
 
         public void OnNextClicked()

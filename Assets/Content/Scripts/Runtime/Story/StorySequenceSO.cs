@@ -29,6 +29,12 @@ namespace LittleHeroJourney
         Fade
     }
 
+    public enum StoryBackgroundTransitionEffect
+    {
+        None,
+        Fade
+    }
+
     [CreateAssetMenu(fileName = "StorySequence_", menuName = "Little Hero Journey/Story Sequence")]
     public class StorySequenceSO : ScriptableObject
     {
@@ -52,9 +58,14 @@ namespace LittleHeroJourney
             public StoryTextOutEffect textOutEffect = StoryTextOutEffect.None;
             public float delayAfterTextComplete;
 
-            public bool useCustomImageFadeIn = true;
-            public float customImageFadeInDuration;
-            public bool useCustomImageFadeOutOnExit = true;
+            [Tooltip("Background in effect for this step. Default is None.")]
+            public StoryBackgroundTransitionEffect backgroundInEffect = StoryBackgroundTransitionEffect.None;
+            [Tooltip("Background out effect for this step. Default is None.")]
+            public StoryBackgroundTransitionEffect backgroundOutEffect = StoryBackgroundTransitionEffect.None;
+            [Tooltip("Background fade in duration (seconds). 0 = use display default.")]
+            public float backgroundFadeInDuration;
+            [Tooltip("Background fade out duration (seconds). 0 = use display default.")]
+            public float backgroundFadeOutDuration;
 
             public Color GetDisplayColor()
             {

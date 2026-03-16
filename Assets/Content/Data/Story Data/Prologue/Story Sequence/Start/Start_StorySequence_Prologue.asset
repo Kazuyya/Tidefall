@@ -14,22 +14,38 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sequenceId: Prologue
   steps:
-  - stepId: "At that time\u2026 I was resting in the forest. My body felt weak, as
-      always."
+  - stepId: "At that time\u2026"
     backgroundType: 0
     backgroundImage: {fileID: 0}
     backgroundColor: {r: 0, g: 0, b: 0, a: 1}
     contentType: 0
-    narrativeText: "At that time\u2026 I was resting in the forest.\nMy body felt
-      weak, as always."
+    narrativeText: "At that time\u2026"
     speakerName: 
     dialogueLine: 
     textInEffect: 0
     textOutEffect: 1
-    delayAfterTextComplete: 1
-    useCustomImageFadeIn: 1
-    customImageFadeInDuration: 0
-    useCustomImageFadeOutOnExit: 1
+    delayAfterTextComplete: 3
+    backgroundInEffect: 0
+    backgroundOutEffect: 0
+    backgroundFadeInDuration: 0
+    backgroundFadeOutDuration: 0
+  - stepId: I was resting in the forest. My body felt weak, as always.
+    backgroundType: 0
+    backgroundImage: {fileID: 0}
+    backgroundColor: {r: 0, g: 0, b: 0, a: 1}
+    contentType: 0
+    narrativeText: 'I was resting in the forest.
+
+      My body felt weak, as always.'
+    speakerName: 
+    dialogueLine: 
+    textInEffect: 1
+    textOutEffect: 1
+    delayAfterTextComplete: 3
+    backgroundInEffect: 0
+    backgroundOutEffect: 0
+    backgroundFadeInDuration: 0
+    backgroundFadeOutDuration: 0
   - stepId: "Then suddenly\u2026 a thick fog fell from the sky."
     backgroundType: 0
     backgroundImage: {fileID: 0}
@@ -40,10 +56,11 @@ MonoBehaviour:
     dialogueLine: 
     textInEffect: 1
     textOutEffect: 1
-    delayAfterTextComplete: 1
-    useCustomImageFadeIn: 1
-    customImageFadeInDuration: 0
-    useCustomImageFadeOutOnExit: 1
+    delayAfterTextComplete: 3
+    backgroundInEffect: 0
+    backgroundOutEffect: 0
+    backgroundFadeInDuration: 0
+    backgroundFadeOutDuration: 0
   - stepId: "After that\u2026 I don't remember anything."
     backgroundType: 0
     backgroundImage: {fileID: 0}
@@ -54,10 +71,11 @@ MonoBehaviour:
     dialogueLine: 
     textInEffect: 1
     textOutEffect: 1
-    delayAfterTextComplete: 1
-    useCustomImageFadeIn: 1
-    customImageFadeInDuration: 0
-    useCustomImageFadeOutOnExit: 1
+    delayAfterTextComplete: 3
+    backgroundInEffect: 0
+    backgroundOutEffect: 0
+    backgroundFadeInDuration: 0
+    backgroundFadeOutDuration: 0
   - stepId: ...ugh...
     backgroundType: 0
     backgroundImage: {fileID: 0}
@@ -68,10 +86,11 @@ MonoBehaviour:
     dialogueLine: 
     textInEffect: 1
     textOutEffect: 1
-    delayAfterTextComplete: 1
-    useCustomImageFadeIn: 1
-    customImageFadeInDuration: 0.5
-    useCustomImageFadeOutOnExit: 0
+    delayAfterTextComplete: 3
+    backgroundInEffect: 0
+    backgroundOutEffect: 0
+    backgroundFadeInDuration: 0
+    backgroundFadeOutDuration: 0
   - stepId: "My head\u2026"
     backgroundType: 1
     backgroundImage: {fileID: 21300000, guid: 2fd0d123d0e68c641ba8d3119ba7283f, type: 3}
@@ -82,10 +101,11 @@ MonoBehaviour:
     dialogueLine: "My head\u2026"
     textInEffect: 1
     textOutEffect: 1
-    delayAfterTextComplete: 1
-    useCustomImageFadeIn: 1
-    customImageFadeInDuration: 1
-    useCustomImageFadeOutOnExit: 0
+    delayAfterTextComplete: 3
+    backgroundInEffect: 1
+    backgroundOutEffect: 0
+    backgroundFadeInDuration: 0.2
+    backgroundFadeOutDuration: 0
   - stepId: "This fog\u2026 what happened?"
     backgroundType: 1
     backgroundImage: {fileID: 21300000, guid: 2fd0d123d0e68c641ba8d3119ba7283f, type: 3}
@@ -96,10 +116,11 @@ MonoBehaviour:
     dialogueLine: "This fog\u2026 what happened?"
     textInEffect: 1
     textOutEffect: 1
-    delayAfterTextComplete: 1
-    useCustomImageFadeIn: 1
-    customImageFadeInDuration: 1
-    useCustomImageFadeOutOnExit: 0
+    delayAfterTextComplete: 3
+    backgroundInEffect: 0
+    backgroundOutEffect: 0
+    backgroundFadeInDuration: 0.2
+    backgroundFadeOutDuration: 0
   - stepId: ...what is that?
     backgroundType: 1
     backgroundImage: {fileID: 21300000, guid: 0aaedd7373956f442900b74c97a7790d, type: 3}
@@ -109,11 +130,12 @@ MonoBehaviour:
     speakerName: 
     dialogueLine: ...what is that?
     textInEffect: 1
-    textOutEffect: 1
-    delayAfterTextComplete: 1
-    useCustomImageFadeIn: 1
-    customImageFadeInDuration: 1
-    useCustomImageFadeOutOnExit: 1
+    textOutEffect: 0
+    delayAfterTextComplete: 3
+    backgroundInEffect: 1
+    backgroundOutEffect: 0
+    backgroundFadeInDuration: 1
+    backgroundFadeOutDuration: 0
   - stepId: "Wait\u2026"
     backgroundType: 0
     backgroundImage: {fileID: 0}
@@ -124,10 +146,11 @@ MonoBehaviour:
     dialogueLine: 
     textInEffect: 1
     textOutEffect: 1
-    delayAfterTextComplete: 1
-    useCustomImageFadeIn: 1
-    customImageFadeInDuration: 0
-    useCustomImageFadeOutOnExit: 1
+    delayAfterTextComplete: 3
+    backgroundInEffect: 0
+    backgroundOutEffect: 0
+    backgroundFadeInDuration: 0.4
+    backgroundFadeOutDuration: 0
   - stepId: DAMN!!! HE'S GETTING CLOSER!!!
     backgroundType: 0
     backgroundImage: {fileID: 0}
@@ -138,7 +161,8 @@ MonoBehaviour:
     dialogueLine: 
     textInEffect: 1
     textOutEffect: 1
-    delayAfterTextComplete: 1
-    useCustomImageFadeIn: 1
-    customImageFadeInDuration: 0
-    useCustomImageFadeOutOnExit: 1
+    delayAfterTextComplete: 3
+    backgroundInEffect: 0
+    backgroundOutEffect: 0
+    backgroundFadeInDuration: 0
+    backgroundFadeOutDuration: 0
