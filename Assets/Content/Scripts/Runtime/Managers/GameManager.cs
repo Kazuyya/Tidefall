@@ -37,6 +37,7 @@ namespace LittleHeroJourney
         #endregion
 
         private Action _exitGameHandler;
+        private Action _exitToMainMenuHandler;
         private Action _saveGameHandler;
 
         #region Unity Lifecycle
@@ -63,13 +64,17 @@ namespace LittleHeroJourney
         {
             _exitGameHandler = ExitGame;
             _saveGameHandler = SaveGame;
+            _exitToMainMenuHandler = ExitToMainMenu;
             GameEventSystem.SubscribeAction("ExitGame", _exitGameHandler);
+            GameEventSystem.SubscribeAction("ExitToMainMenu", _exitToMainMenuHandler);
             GameEventSystem.SubscribeAction("Save", _saveGameHandler);
         }
 
         private void OnDisable()
         {
             GameEventSystem.UnsubscribeAction("ExitGame", _exitGameHandler);
+            if (_exitToMainMenuHandler != null)
+                GameEventSystem.UnsubscribeAction("ExitToMainMenu", _exitToMainMenuHandler);
             GameEventSystem.UnsubscribeAction("Save", _saveGameHandler);
         }
 
@@ -98,6 +103,15 @@ namespace LittleHeroJourney
 #else
             Application.Quit();
 #endif
+        }
+
+        public void ExitToMainMenu()
+        {
+            if (showDebugLog)
+                Debug.Log($"[{GetType().Name}] Exit to main menu.");
+            ResetGameState();
+            if (SceneManager != null)
+                SceneManager.ReturnToMainMenu();
         }
 
         public void SaveGame()

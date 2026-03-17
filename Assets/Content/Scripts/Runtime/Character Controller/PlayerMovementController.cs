@@ -583,6 +583,21 @@ namespace LittleHeroJourney
             }
         }
 
+        public void ResetToSpawnPoint(Vector3 position, Quaternion rotation)
+        {
+            if (_motor != null)
+            {
+                _motor.SetPositionAndRotation(position, rotation, true);
+                _motor.BaseVelocity = Vector3.zero;
+            }
+            else
+            {
+                transform.SetPositionAndRotation(position, rotation);
+            }
+            _internalVelocityAdd = Vector3.zero;
+            _dashVelocity = Vector3.zero;
+        }
+
         public void ClearEncounterSpawner()
         {
             if (showEncounterBoundaryLog && _currentEncounterSpawner != null)

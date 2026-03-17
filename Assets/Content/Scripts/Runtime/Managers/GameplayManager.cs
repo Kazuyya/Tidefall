@@ -28,8 +28,13 @@ namespace LittleHeroJourney
         [SerializeField] private string cinemachineTargetLayerName = "LookAtPlayer";
         [SerializeField] private string gameplayCanvasId = "Gameplay";
         [SerializeField] private string pauseCanvasId = "Pause";
+        [SerializeField] private string transitionCanvasId = "TransitionCanvas";
+        [Tooltip("Delay after player reset to spawn before playing transition OUT (retry).")]
+        [SerializeField] private float retrySpawnToOutDelay = 1f;
         [SerializeField] private string winCanvasId = "Win";
         [SerializeField] private string loseCanvasId = "Lose";
+        [Tooltip("Only run FindReferences when this scene loads (e.g. Map). Prevents camera snap when Loading/MainMenu load during exit.")]
+        [SerializeField] private string gameplaySceneName = "Map";
 
         [Header("Debug")]
         [SerializeField] private bool showDebugLog = true;
@@ -41,6 +46,10 @@ namespace LittleHeroJourney
         private Action _pauseHandler, _resumeHandler, _lockHandler;
         private Action _nextLevelHandler, _retryHandler, _gameOverHandler, _gameWinHandler, _encounterStartedHandler, _storySequenceCompletedHandler, _encounterZoneCompletedHandler, _playerSpawnedForEncounterHandler;
         private Action<string> _loadingFinishedHandler;
+        private Action<string> _canvasOpenCompletePayloadHandler;
+        private Action<string> _canvasCloseCompletePayloadHandler;
+        private bool _isRetryTransitionActive;
+        private StoryEncounterSpawner _retrySpawner;
 
         public static GameplayManager Instance { get; private set; }
         public bool IsInputActive => isInputActive;
@@ -123,6 +132,10 @@ namespace LittleHeroJourney
             _playerSpawnedForEncounterHandler = OnPlayerSpawnedForEncounter;
             GameEventSystem.SubscribeAction("PlayerSpawnedForEncounter", _playerSpawnedForEncounterHandler);
             GameEventSystem.SubscribeAction("EncounterZoneCompleted", _encounterZoneCompletedHandler);
+            _canvasOpenCompletePayloadHandler = HandleCanvasOpenCompleteByPayload;
+            _canvasCloseCompletePayloadHandler = HandleCanvasCloseCompleteByPayload;
+            GameEventSystem.SubscribeActionWithPayload("CanvasOpenComplete", _canvasOpenCompletePayloadHandler);
+            GameEventSystem.SubscribeActionWithPayload("CanvasCloseComplete", _canvasCloseCompletePayloadHandler);
         }
 
         private void OnDisable()
@@ -151,6 +164,10 @@ namespace LittleHeroJourney
             if (_playerSpawnedForEncounterHandler != null)
                 GameEventSystem.UnsubscribeAction("PlayerSpawnedForEncounter", _playerSpawnedForEncounterHandler);
             GameEventSystem.UnsubscribeAction("EncounterZoneCompleted", _encounterZoneCompletedHandler);
+            if (_canvasOpenCompletePayloadHandler != null)
+                GameEventSystem.UnsubscribeActionWithPayload("CanvasOpenComplete", _canvasOpenCompletePayloadHandler);
+            if (_canvasCloseCompletePayloadHandler != null)
+                GameEventSystem.UnsubscribeActionWithPayload("CanvasCloseComplete", _canvasCloseCompletePayloadHandler);
         }
 
         private void OnStorySequenceCompleted()
@@ -195,6 +212,8 @@ namespace LittleHeroJourney
 
         private void HandleSceneLoaded(Scene scene, LoadSceneMode mode)
         {
+            if (!string.IsNullOrEmpty(gameplaySceneName) && !string.Equals(scene.name, gameplaySceneName, StringComparison.OrdinalIgnoreCase))
+                return;
             FindReferences();
         }
 
@@ -275,16 +294,35 @@ namespace LittleHeroJourney
             else if (showDebugLog) Debug.LogWarning("[GameplayManager] Player Controller NOT found in this scene.");
         }
 
+        private Coroutine _forceOrbitCoroutine;
+
         private void BindCinemachineToPlayer()
         {
             if (currentCamera == null || playerController == null) return;
             Transform target = GetCinemachineTargetFromPlayer(playerController.transform);
             currentCamera.Follow = target;
             currentCamera.LookAt = target;
-            float orbitY = target.eulerAngles.y;
-            currentCamera.m_XAxis.Value = orbitY;
+            ForceDefaultOrbit();
+            if (_forceOrbitCoroutine != null) StopCoroutine(_forceOrbitCoroutine);
+            _forceOrbitCoroutine = StartCoroutine(ForceDefaultOrbitAfterFrame());
+            if (showDebugLog) Debug.Log($"[GameplayManager] Cinemachine Follow/LookAt bound; orbit behind player (X=0, Y=0.5).");
+        }
+
+        private void ForceDefaultOrbit()
+        {
+            if (currentCamera == null) return;
+            currentCamera.m_XAxis.Value = 0f;
             currentCamera.m_YAxis.Value = 0.5f;
-            if (showDebugLog) Debug.Log($"[GameplayManager] Cinemachine Follow/LookAt bound; orbit set to player forward (X={orbitY:F0}°, Y=0.5).");
+            currentCamera.PreviousStateIsValid = false;
+        }
+
+        private IEnumerator ForceDefaultOrbitAfterFrame()
+        {
+            yield return null;
+            ForceDefaultOrbit();
+            yield return null;
+            ForceDefaultOrbit();
+            _forceOrbitCoroutine = null;
         }
 
         private Transform GetCinemachineTargetFromPlayer(Transform playerRoot)
@@ -383,26 +421,24 @@ namespace LittleHeroJourney
 
         #endregion
 
-        #region Pause / Resume (gameplay; time scale via GameManager)
+        #region Pause / Resume (UI only; game does not actually pause — no time scale)
 
         public void PauseGame()
         {
             if (isPaused) return;
             isPaused = true;
-            if (GameManager.Instance != null) GameManager.Instance.SetTimeScale(0f);
             if (GameManager.Instance?.CanvasManager != null && !string.IsNullOrEmpty(pauseCanvasId))
                 GameManager.Instance.CanvasManager.SwitchCanvas(pauseCanvasId);
-            if (showDebugLog) Debug.Log("[GameplayManager] Game paused");
+            if (showDebugLog) Debug.Log("[GameplayManager] Pause menu opened (canvas only; game keeps running).");
         }
 
         public void ResumeGame()
         {
             if (!isPaused) return;
             isPaused = false;
-            if (GameManager.Instance != null) GameManager.Instance.SetTimeScale(1f);
             if (GameManager.Instance?.CanvasManager != null && !string.IsNullOrEmpty(gameplayCanvasId))
                 GameManager.Instance.CanvasManager.SwitchCanvas(gameplayCanvasId);
-            if (showDebugLog) Debug.Log("[GameplayManager] Game resumed");
+            if (showDebugLog) Debug.Log("[GameplayManager] Pause menu closed.");
         }
 
         public void TogglePause()
@@ -425,7 +461,99 @@ namespace LittleHeroJourney
         public void RetryStage()
         {
             if (JourneyManager.Instance == null) return;
-            LoadStage(JourneyManager.Instance.GetCurrentLevelNumber());
+            var spawner = JourneyManager.Instance.GetStartEncounterSpawner();
+            if (spawner == null) { if (showDebugLog) Debug.LogWarning("[GameplayManager] Retry: no encounter spawner, falling back to LoadStage."); LoadStage(JourneyManager.Instance.GetCurrentLevelNumber()); return; }
+            isPaused = false;
+            _retrySpawner = spawner;
+            _isRetryTransitionActive = true;
+            SetInputActive(false);
+            if (GameManager.Instance?.CanvasManager != null && !string.IsNullOrEmpty(transitionCanvasId))
+            {
+                GameManager.Instance.CanvasManager.SwitchCanvas(transitionCanvasId);
+                if (showDebugLog) Debug.Log("[GameplayManager] Retry: opened TransitionCanvas, waiting for IN to finish.");
+            }
+            else
+            {
+                ApplyRetryNoTransitionCanvas();
+            }
+        }
+
+        private void HandleCanvasOpenCompleteByPayload(string canvasId)
+        {
+            if (!_isRetryTransitionActive || _retrySpawner == null || string.IsNullOrEmpty(transitionCanvasId)) return;
+            if (!string.Equals(canvasId, transitionCanvasId, StringComparison.OrdinalIgnoreCase)) return;
+            PerformGameplayReset(_retrySpawner);
+            StartCoroutine(DeferredSwitchToGameplayAfterRetryReset());
+        }
+
+        private IEnumerator DeferredSwitchToGameplayAfterRetryReset()
+        {
+            yield return null;
+            if (retrySpawnToOutDelay > 0f)
+                yield return new WaitForSeconds(retrySpawnToOutDelay);
+            if (GameManager.Instance?.CanvasManager != null && !string.IsNullOrEmpty(gameplayCanvasId))
+                GameManager.Instance.CanvasManager.SwitchCanvas(gameplayCanvasId);
+            if (showDebugLog) Debug.Log("[GameplayManager] Retry: IN done → reset → delay → transition OUT started.");
+        }
+
+        private void HandleCanvasCloseCompleteByPayload(string canvasId)
+        {
+            if (!_isRetryTransitionActive || string.IsNullOrEmpty(transitionCanvasId)) return;
+            if (!string.Equals(canvasId, transitionCanvasId, StringComparison.OrdinalIgnoreCase)) return;
+            _isRetryTransitionActive = false;
+            GameEventSystem.Publish(new UIActionEvent("RetryTransitionOutComplete"));
+            if (_retrySpawner != null)
+            {
+                _retrySpawner.StartEncounter();
+                GameEventSystem.Publish(new UIActionEvent("EncounterStarted"));
+            }
+            SetInputActive(true);
+            _retrySpawner = null;
+            if (showDebugLog) Debug.Log("[GameplayManager] Retry: transition out complete, encounter started, input active.");
+        }
+
+        public void PerformGameplayReset(StoryEncounterSpawner spawner)
+        {
+            if (spawner != null)
+                spawner.ResetEncounter();
+            if (spawner != null)
+            {
+                var player = FindObjectOfType<PlayerMovementController>();
+                if (player != null && spawner.PlayerSpawnPoint != null)
+                {
+                    var t = spawner.PlayerSpawnPoint;
+                    player.ResetToSpawnPoint(t.position, t.rotation);
+                    player.SetEncounterSpawner(spawner);
+                    var health = player.GetComponent<Health>();
+                    if (health != null) health.Revive(1f);
+                }
+                else if (player == null && spawner.PlayerPrefab != null && spawner.PlayerSpawnPoint != null)
+                {
+                    var t = spawner.PlayerSpawnPoint;
+                    Instantiate(spawner.PlayerPrefab, t.position, t.rotation);
+                }
+            }
+            FindReferences();
+            isLevelEnded = false;
+            isPaused = false;
+            GameEventSystem.Publish(new UIActionEvent("GameplayReset"));
+            if (showDebugLog) Debug.Log("[GameplayManager] PerformGameplayReset done. Event GameplayReset published.");
+        }
+
+        private void ApplyRetryNoTransitionCanvas()
+        {
+            if (_retrySpawner == null) return;
+            var spawner = _retrySpawner;
+            _isRetryTransitionActive = false;
+            PerformGameplayReset(spawner);
+            if (GameManager.Instance?.CanvasManager != null && !string.IsNullOrEmpty(gameplayCanvasId))
+                GameManager.Instance.CanvasManager.SwitchCanvas(gameplayCanvasId);
+            GameEventSystem.Publish(new UIActionEvent("RetryTransitionOutComplete"));
+            spawner.StartEncounter();
+            GameEventSystem.Publish(new UIActionEvent("EncounterStarted"));
+            SetInputActive(true);
+            _retrySpawner = null;
+            if (showDebugLog) Debug.Log("[GameplayManager] Retry: no TransitionCanvas, reset + encounter started directly.");
         }
 
         public void LoadStage(int stageNumber)

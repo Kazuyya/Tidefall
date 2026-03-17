@@ -245,11 +245,15 @@ namespace LittleHeroJourney
         {
             if (!_playerReadyForEncounter || !_lastStepCompleted) return;
 
+            StoryEncounterSpawner target = _pendingEncounterSpawner;
+
+            if (target != null && GameplayManager.Instance != null)
+                GameplayManager.Instance.PerformGameplayReset(target);
+
             _isStartStoryPlaying = false;
             _currentStoryDisplay = null;
             _playerReadyForEncounter = false;
             _lastStepCompleted = false;
-            StoryEncounterSpawner target = _pendingEncounterSpawner;
             _pendingEncounterSpawner = null;
 
             GameEventSystem.Publish(new UIActionEvent("StorySequenceCompleted"));
@@ -258,11 +262,11 @@ namespace LittleHeroJourney
             {
                 target.StartEncounter();
                 GameEventSystem.Publish(new UIActionEvent("EncounterStarted"));
-                if (showDebugLog) Debug.Log("[JourneyManager] Both conditions met: StorySequenceCompleted published, canvas switch, encounter started (enemies after CD).");
+                if (showDebugLog) Debug.Log("[JourneyManager] Both conditions met: reset done, StorySequenceCompleted published, encounter started (enemies after CD).");
             }
         }
 
-        private StoryEncounterSpawner GetStartEncounterSpawner()
+        public StoryEncounterSpawner GetStartEncounterSpawner()
         {
             var journey = GetCurrentJourney();
             if (journey == null) return null;

@@ -102,6 +102,7 @@ namespace LittleHeroJourney
             GameEventSystem.SubscribeAction("Pause", _unlockOnActionHandler);
             GameEventSystem.SubscribeAction("GameOver", _unlockOnActionHandler);
             GameEventSystem.SubscribeAction("GameWin", _unlockOnActionHandler);
+            GameEventSystem.SubscribeAction("GameplayReset", _unlockOnActionHandler);
             _gameplayManager = GameplayManager.Instance;
             if (_gameplayManager != null)
             {
@@ -119,6 +120,7 @@ namespace LittleHeroJourney
             GameEventSystem.UnsubscribeAction("Pause", _unlockOnActionHandler);
             GameEventSystem.UnsubscribeAction("GameOver", _unlockOnActionHandler);
             GameEventSystem.UnsubscribeAction("GameWin", _unlockOnActionHandler);
+            GameEventSystem.UnsubscribeAction("GameplayReset", _unlockOnActionHandler);
         }
 
         private void OnCameraInitializedEvent()

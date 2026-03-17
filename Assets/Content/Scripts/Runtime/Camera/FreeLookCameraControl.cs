@@ -54,6 +54,7 @@ namespace DM
         private void OnEnable()
         {
             GameEventSystem.SubscribeAction("CameraInitialized", OnCameraInitializedEvent);
+            GameEventSystem.SubscribeAction("GameplayReset", OnGameplayResetEvent);
             if (GameplayManager.Instance != null && GameplayManager.Instance.CurrentCamera != null)
                 HandleCameraInitialized(GameplayManager.Instance.CurrentCamera);
         }
@@ -61,6 +62,13 @@ namespace DM
         private void OnDisable()
         {
             GameEventSystem.UnsubscribeAction("CameraInitialized", OnCameraInitializedEvent);
+            GameEventSystem.UnsubscribeAction("GameplayReset", OnGameplayResetEvent);
+        }
+
+        private void OnGameplayResetEvent()
+        {
+            if (GameplayManager.Instance != null)
+                HandleCameraInitialized(GameplayManager.Instance.CurrentCamera);
         }
 
         private void OnCameraInitializedEvent()

@@ -256,9 +256,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 7363116633776833825}
-        m_TargetAssemblyTypeName: LittleHeroJourney.UI.GameCanvas, Assembly-CSharp
-        m_MethodName: SwitchCanvasById
+      - m_Target: {fileID: 8584894003842472084}
+        m_TargetAssemblyTypeName: LittleHeroJourney.UI.UIInputConnector, Assembly-CSharp
+        m_MethodName: InvokeAction
         m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -558,7 +558,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &7225048428805089171
 RectTransform:
   m_ObjectHideFlags: 0
@@ -729,7 +729,7 @@ MonoBehaviour:
   highRigY: 0.75
   verticalSmoothTime: 0.5
   rigHysteresis: 1
-  showDebugLog: 0
+  showDebugLog: 1
   showDebugGizmo: 0
 --- !u!1 &1013333633926479336
 GameObject:
@@ -2995,6 +2995,7 @@ MonoBehaviour:
   verticalSpeed: 18
   axisLockAngle: 30
   inputThreshold: 5
+  maxDeltaForValidDrag: 200
   showDebugLog: 0
 --- !u!1 &4996704359539949130
 GameObject:

@@ -51,6 +51,7 @@ namespace LittleHeroJourney
         private EncounterState _currentState = EncounterState.Idle;
         private readonly List<GameObject> _spawnedEnemies = new List<GameObject>();
         private int _aliveEnemyCount;
+        private Coroutine _spawnCoroutine;
 
         public EncounterState CurrentState => _currentState;
         public int AliveEnemyCount => _aliveEnemyCount;
@@ -86,7 +87,12 @@ namespace LittleHeroJourney
             if (_currentState != EncounterState.Idle) return;
 
             _currentState = EncounterState.Active;
-            StartCoroutine(SpawnEnemiesCoroutine());
+            if (_spawnCoroutine != null)
+            {
+                StopCoroutine(_spawnCoroutine);
+                _spawnCoroutine = null;
+            }
+            _spawnCoroutine = StartCoroutine(SpawnEnemiesCoroutine());
 
             OnEncounterStarted?.Invoke();
             OnEncounterStartedEvent?.Invoke();
@@ -129,6 +135,7 @@ namespace LittleHeroJourney
                 SpawnEnemy(spawnData);
             }
 
+            _spawnCoroutine = null;
             if (showDebugLog) Debug.Log($"[{GetType().Name}] All enemies spawned! Total: {_aliveEnemyCount}");
         }
 
@@ -222,6 +229,12 @@ namespace LittleHeroJourney
 
         public void ResetEncounter()
         {
+            if (_spawnCoroutine != null)
+            {
+                StopCoroutine(_spawnCoroutine);
+                _spawnCoroutine = null;
+            }
+
             foreach (var enemy in _spawnedEnemies)
             {
                 if (enemy != null)
