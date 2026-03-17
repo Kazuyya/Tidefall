@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using LittleHeroJourney.UI;
-using LittleHeroJourney.InputSystem;
 using Cinemachine;
 
 namespace LittleHeroJourney
@@ -13,14 +12,20 @@ namespace LittleHeroJourney
     {
         #region Fields
         [Header("Runtime References")]
+        [Tooltip("Leave empty to auto-find from active scene.")]
         [SerializeField] private Camera mainCamera;
+        [Tooltip("Leave empty to auto-find from active scene.")]
         [SerializeField] private CinemachineFreeLook currentCamera;
+        [Tooltip("Leave empty to auto-find from active scene (refreshed again after encounter start).")]
         [SerializeField] private PlayerMovementController playerController;
-        [SerializeField] private List<EncounterZone> encounterZones = new List<EncounterZone>();
 
         [Header("Settings")]
         [Tooltip("Delay before starting gameplay after loading screen is gone")]
         [SerializeField] private float startDelay = 0.5f;
+        [Tooltip("Delay after binding camera to player before signalling player ready (lets Cinemachine settle when story is skipped).")]
+        [SerializeField] private float cameraSettleDelay = 0.8f;
+        [Tooltip("Layer name of a child under player to use as Cinemachine Follow/LookAt (e.g. LookAtPlayer). If none found, uses player root.")]
+        [SerializeField] private string cinemachineTargetLayerName = "LookAtPlayer";
         [SerializeField] private string gameplayCanvasId = "Gameplay";
         [SerializeField] private string pauseCanvasId = "Pause";
         [SerializeField] private string winCanvasId = "Win";
@@ -33,8 +38,9 @@ namespace LittleHeroJourney
         private bool isInputActive = false;
         private bool isPaused = false;
 
-        private Action _pauseHandler, _resumeHandler, _attackHandler, _dashHandler, _lockHandler;
-        private Action _nextLevelHandler, _retryHandler, _gameOverHandler, _gameWinHandler;
+        private Action _pauseHandler, _resumeHandler, _lockHandler;
+        private Action _nextLevelHandler, _retryHandler, _gameOverHandler, _gameWinHandler, _encounterStartedHandler, _storySequenceCompletedHandler, _encounterZoneCompletedHandler, _playerSpawnedForEncounterHandler;
+        private Action<string> _loadingFinishedHandler;
 
         public static GameplayManager Instance { get; private set; }
         public bool IsInputActive => isInputActive;
@@ -42,11 +48,9 @@ namespace LittleHeroJourney
         public Camera MainCamera => mainCamera;
         public CinemachineFreeLook CurrentCamera => currentCamera;
         public PlayerMovementController PlayerController => playerController;
-        public List<EncounterZone> EncounterZones => encounterZones;
+        public List<StoryEncounterSpawner> EncounterZones => _encounterZones;
 
-        public static event System.Action<CinemachineFreeLook> OnCameraInitialized;
-        public static event System.Action<PlayerMovementController> OnPlayerInitialized;
-        public static event System.Action<List<EncounterZone>> OnEncounterZonesInitialized;
+        private List<StoryEncounterSpawner> _encounterZones = new List<StoryEncounterSpawner>();
 
         #endregion
         
@@ -92,13 +96,12 @@ namespace LittleHeroJourney
                 if (health != null) health.OnDeath += HandlePlayerDeath;
             }
 
-            LoadingManager.OnLoadingFinished += HandleLoadingFinished;
+            _loadingFinishedHandler = HandleLoadingFinished;
+            GameEventSystem.SubscribeActionWithPayload("LoadingFinished", _loadingFinishedHandler);
             UnityEngine.SceneManagement.SceneManager.sceneLoaded += HandleSceneLoaded;
 
             _pauseHandler = PauseGame;
             _resumeHandler = ResumeGame;
-            _attackHandler = () => GameInputEvents.TriggerAttack();
-            _dashHandler = () => GameInputEvents.TriggerDash();
             _lockHandler = HandleLockAction;
             _nextLevelHandler = LoadNextStage;
             _retryHandler = RetryStage;
@@ -107,13 +110,19 @@ namespace LittleHeroJourney
 
             GameEventSystem.SubscribeAction("Pause", _pauseHandler);
             GameEventSystem.SubscribeAction("Resume", _resumeHandler);
-            GameEventSystem.SubscribeAction("Attack", _attackHandler);
-            GameEventSystem.SubscribeAction("Dash", _dashHandler);
             GameEventSystem.SubscribeAction("Lock", _lockHandler);
             GameEventSystem.SubscribeAction("NextLevel", _nextLevelHandler);
             GameEventSystem.SubscribeAction("Retry", _retryHandler);
             GameEventSystem.SubscribeAction("GameOver", _gameOverHandler);
             GameEventSystem.SubscribeAction("GameWin", _gameWinHandler);
+            _encounterStartedHandler = OnEncounterStartedEvent;
+            GameEventSystem.SubscribeAction("EncounterStarted", _encounterStartedHandler);
+            _encounterZoneCompletedHandler = CheckAllEncountersCompleted;
+            _storySequenceCompletedHandler = OnStorySequenceCompleted;
+            GameEventSystem.SubscribeAction("StorySequenceCompleted", _storySequenceCompletedHandler);
+            _playerSpawnedForEncounterHandler = OnPlayerSpawnedForEncounter;
+            GameEventSystem.SubscribeAction("PlayerSpawnedForEncounter", _playerSpawnedForEncounterHandler);
+            GameEventSystem.SubscribeAction("EncounterZoneCompleted", _encounterZoneCompletedHandler);
         }
 
         private void OnDisable()
@@ -124,29 +133,54 @@ namespace LittleHeroJourney
                 if (health != null) health.OnDeath -= HandlePlayerDeath;
             }
 
-            if (encounterZones != null)
-            {
-                foreach (var zone in encounterZones)
-                {
-                    if (zone != null)
-                    {
-                        zone.OnEncounterCompleted -= CheckAllEncountersCompleted;
-                    }
-                }
-            }
-
-            LoadingManager.OnLoadingFinished -= HandleLoadingFinished;
+            if (_loadingFinishedHandler != null)
+                GameEventSystem.UnsubscribeActionWithPayload("LoadingFinished", _loadingFinishedHandler);
             UnityEngine.SceneManagement.SceneManager.sceneLoaded -= HandleSceneLoaded;
 
             GameEventSystem.UnsubscribeAction("Pause", _pauseHandler);
             GameEventSystem.UnsubscribeAction("Resume", _resumeHandler);
-            GameEventSystem.UnsubscribeAction("Attack", _attackHandler);
-            GameEventSystem.UnsubscribeAction("Dash", _dashHandler);
             GameEventSystem.UnsubscribeAction("Lock", _lockHandler);
             GameEventSystem.UnsubscribeAction("NextLevel", _nextLevelHandler);
             GameEventSystem.UnsubscribeAction("Retry", _retryHandler);
             GameEventSystem.UnsubscribeAction("GameOver", _gameOverHandler);
             GameEventSystem.UnsubscribeAction("GameWin", _gameWinHandler);
+            if (_encounterStartedHandler != null)
+                GameEventSystem.UnsubscribeAction("EncounterStarted", _encounterStartedHandler);
+            if (_storySequenceCompletedHandler != null)
+                GameEventSystem.UnsubscribeAction("StorySequenceCompleted", _storySequenceCompletedHandler);
+            if (_playerSpawnedForEncounterHandler != null)
+                GameEventSystem.UnsubscribeAction("PlayerSpawnedForEncounter", _playerSpawnedForEncounterHandler);
+            GameEventSystem.UnsubscribeAction("EncounterZoneCompleted", _encounterZoneCompletedHandler);
+        }
+
+        private void OnStorySequenceCompleted()
+        {
+            FindReferences();
+            if (GameManager.Instance?.CanvasManager != null && !string.IsNullOrEmpty(gameplayCanvasId))
+                GameManager.Instance.CanvasManager.SwitchCanvas(gameplayCanvasId);
+            SetInputActive(true);
+            if (showDebugLog) Debug.Log("[GameplayManager] Story sequence completed -> init: gameplay canvas and input active.");
+        }
+
+        private void OnPlayerSpawnedForEncounter()
+        {
+            FindReferences();
+            if (showDebugLog) Debug.Log("[GameplayManager] PlayerSpawnedForEncounter: refs refreshed, camera bound. Waiting camera settle before player ready.");
+            StartCoroutine(CameraSettleThenPlayerReadyRoutine());
+        }
+
+        private IEnumerator CameraSettleThenPlayerReadyRoutine()
+        {
+            if (cameraSettleDelay > 0f)
+                yield return new WaitForSeconds(cameraSettleDelay);
+            GameEventSystem.Publish(new UIActionEvent("PlayerReadyForEncounter"));
+            if (showDebugLog) Debug.Log("[GameplayManager] PlayerReadyForEncounter published (camera settle done).");
+        }
+
+        private void OnEncounterStartedEvent()
+        {
+            FindReferences();
+            if (showDebugLog) Debug.Log("[GameplayManager] Refreshed references after EncounterStarted.");
         }
 
         private void HandleLockAction()
@@ -167,10 +201,19 @@ namespace LittleHeroJourney
         private void HandleLoadingFinished(string loadedSceneName)
         {
             if (string.IsNullOrEmpty(loadedSceneName)) return;
-            if (loadedSceneName != "MainMenu" && loadedSceneName != "Loading")
+            if (loadedSceneName == "MainMenu" || loadedSceneName == "Loading") return;
+
+            if (JourneyManager.Instance != null)
             {
-                StartCoroutine(StartLevelSequence());
+                var journey = JourneyManager.Instance.GetCurrentJourney();
+                if (journey?.StartStorySequence != null && journey.StartStorySequence.StepCount > 0)
+                {
+                    if (showDebugLog) Debug.Log("[GameplayManager] Start story present — skipping StartLevelSequence; wait for EncounterStarted.");
+                    return;
+                }
             }
+
+            StartCoroutine(StartLevelSequence());
         }
 
         private void FindReferences()
@@ -181,67 +224,93 @@ namespace LittleHeroJourney
             FindEncounterZones();
             if (showDebugLog) Debug.Log("[GameplayManager] FindReferences completed.");
             _sceneReady = true;
+            GameEventSystem.Publish(new UIActionEvent("GameplayReady"));
             OnReady?.Invoke();
         }
 
         private void FindMainCamera()
         {
-            if (mainCamera == null) mainCamera = Camera.main;
-            if (mainCamera == null)
+            var found = Camera.main;
+            if (found == null)
             {
-                if (showDebugLog) Debug.LogWarning("[GameplayManager] Main Camera NOT found via Camera.main.");
                 var camObj = GameObject.FindGameObjectWithTag("MainCamera");
-                if (camObj != null) mainCamera = camObj.GetComponent<Camera>();
+                if (camObj != null) found = camObj.GetComponent<Camera>();
             }
+            if (found != null) mainCamera = found;
+            if (mainCamera == null && showDebugLog) Debug.LogWarning("[GameplayManager] Main Camera NOT found in this scene.");
         }
 
         private void FindCinemachineCamera()
         {
-            if (currentCamera == null) currentCamera = FindObjectOfType<CinemachineFreeLook>();
-            if (currentCamera != null)
+            var found = FindObjectOfType<CinemachineFreeLook>();
+            if (found != null)
             {
+                currentCamera = found;
                 if (showDebugLog) Debug.Log("[GameplayManager] Found Cinemachine Camera. Broadcasting event.");
-                OnCameraInitialized?.Invoke(currentCamera);
+                GameEventSystem.Publish(new UIActionEvent("CameraInitialized"));
             }
-            else if (showDebugLog) Debug.LogWarning("[GameplayManager] Cinemachine Camera NOT found in this scene.");
+            else
+            {
+                currentCamera = null;
+                if (showDebugLog) Debug.LogWarning("[GameplayManager] Cinemachine Camera NOT found in this scene.");
+            }
         }
 
         private void FindPlayer()
         {
-            if (playerController == null) playerController = FindObjectOfType<PlayerMovementController>();
+            if (playerController != null)
+            {
+                var health = playerController.GetComponent<Health>();
+                if (health != null) health.OnDeath -= HandlePlayerDeath;
+            }
+            playerController = FindObjectOfType<PlayerMovementController>();
             if (playerController != null)
             {
                 if (showDebugLog) Debug.Log("[GameplayManager] Found Player Controller. Broadcasting event.");
-                OnPlayerInitialized?.Invoke(playerController);
+                BindCinemachineToPlayer();
+                GameEventSystem.Publish(new UIActionEvent("PlayerInitialized"));
                 var health = playerController.GetComponent<Health>();
-                if (health != null)
-                {
-                    health.OnDeath -= HandlePlayerDeath;
-                    health.OnDeath += HandlePlayerDeath;
-                }
+                if (health != null) health.OnDeath += HandlePlayerDeath;
             }
             else if (showDebugLog) Debug.LogWarning("[GameplayManager] Player Controller NOT found in this scene.");
         }
 
+        private void BindCinemachineToPlayer()
+        {
+            if (currentCamera == null || playerController == null) return;
+            Transform target = GetCinemachineTargetFromPlayer(playerController.transform);
+            currentCamera.Follow = target;
+            currentCamera.LookAt = target;
+            float orbitY = target.eulerAngles.y;
+            currentCamera.m_XAxis.Value = orbitY;
+            currentCamera.m_YAxis.Value = 0.5f;
+            if (showDebugLog) Debug.Log($"[GameplayManager] Cinemachine Follow/LookAt bound; orbit set to player forward (X={orbitY:F0}°, Y=0.5).");
+        }
+
+        private Transform GetCinemachineTargetFromPlayer(Transform playerRoot)
+        {
+            if (playerRoot == null) return null;
+            if (string.IsNullOrEmpty(cinemachineTargetLayerName)) return playerRoot;
+            int layer = LayerMask.NameToLayer(cinemachineTargetLayerName);
+            if (layer < 0) return playerRoot;
+            Transform[] children = playerRoot.GetComponentsInChildren<Transform>(true);
+            for (int i = 0; i < children.Length; i++)
+            {
+                if (children[i].gameObject.layer == layer)
+                    return children[i];
+            }
+            return playerRoot;
+        }
+
         private void FindEncounterZones()
         {
-            if (encounterZones == null || encounterZones.Count == 0)
+            _encounterZones.Clear();
+            var zones = FindObjectsOfType<StoryEncounterSpawner>();
+            if (zones != null && zones.Length > 0)
             {
-                var zones = FindObjectsOfType<EncounterZone>();
-                if (zones != null && zones.Length > 0) encounterZones = new List<EncounterZone>(zones);
-            }
-            if (encounterZones != null && encounterZones.Count > 0)
-            {
-                if (showDebugLog) Debug.Log($"[GameplayManager] Found {encounterZones.Count} Encounter Zones. Broadcasting event.");
-                OnEncounterZonesInitialized?.Invoke(encounterZones);
-                foreach (var zone in encounterZones)
-                {
-                    if (zone != null)
-                    {
-                        zone.OnEncounterCompleted -= CheckAllEncountersCompleted;
-                        zone.OnEncounterCompleted += CheckAllEncountersCompleted;
-                    }
-                }
+                _encounterZones.AddRange(zones);
+                if (showDebugLog) Debug.Log($"[GameplayManager] Found {_encounterZones.Count} Encounter spawners. Broadcasting event.");
+                GameEventSystem.Publish(new UIActionEvent("EncounterZonesInitialized"));
             }
         }
 
@@ -269,11 +338,11 @@ namespace LittleHeroJourney
 
         private void CheckAllEncountersCompleted()
         {
-            if (encounterZones == null || encounterZones.Count == 0)
+            if (_encounterZones == null || _encounterZones.Count == 0)
                 return;
 
             bool allCompleted = true;
-            foreach (var zone in encounterZones)
+            foreach (var zone in _encounterZones)
             {
                 if (zone == null || !zone.IsCompleted)
                 {

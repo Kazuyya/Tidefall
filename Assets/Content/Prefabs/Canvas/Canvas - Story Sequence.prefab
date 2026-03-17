@@ -1146,6 +1146,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stepPanelPrefab: {fileID: 6575583914993325436, guid: 426e3153225a50f449040ed24a49c51a, type: 3}
   stepPanelParent: {fileID: 5261781343915362864}
+  initialDelayBeforeFirstStep: 3
 --- !u!1 &3973071926009993871
 GameObject:
   m_ObjectHideFlags: 0

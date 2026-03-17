@@ -4,8 +4,6 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-using LittleHeroJourney.InputSystem;
-
 namespace LittleHeroJourney
 {
     public class PlayerCombat : MonoBehaviour, ICombatant
@@ -88,7 +86,7 @@ namespace LittleHeroJourney
 
         protected virtual void OnEnable()
         {
-            GameInputEvents.OnAttack += TriggerAttack;
+            GameEventSystem.SubscribeAction("Attack", TriggerAttack);
 
             foreach (var weaponEntry in availableWeapons)
             {
@@ -101,7 +99,7 @@ namespace LittleHeroJourney
 
         protected virtual void OnDisable()
         {
-            GameInputEvents.OnAttack -= TriggerAttack;
+            GameEventSystem.UnsubscribeAction("Attack", TriggerAttack);
 
             foreach (var weaponEntry in availableWeapons)
             {

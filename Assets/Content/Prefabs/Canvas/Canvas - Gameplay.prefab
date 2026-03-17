@@ -124,14 +124,14 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 8584894003842472084}
         m_TargetAssemblyTypeName: LittleHeroJourney.UI.UIInputConnector, Assembly-CSharp
-        m_MethodName: OnDashButtonPressed
-        m_Mode: 1
+        m_MethodName: InvokeAction
+        m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: 
+          m_StringArgument: Dash
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!1 &410393615289067249
@@ -855,14 +855,14 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 8584894003842472084}
         m_TargetAssemblyTypeName: LittleHeroJourney.UI.UIInputConnector, Assembly-CSharp
-        m_MethodName: OnLockButtonPressed
-        m_Mode: 1
+        m_MethodName: InvokeAction
+        m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: 
+          m_StringArgument: Lock
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!1 &1126987397444656089
@@ -1347,14 +1347,14 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 8584894003842472084}
         m_TargetAssemblyTypeName: LittleHeroJourney.UI.UIInputConnector, Assembly-CSharp
-        m_MethodName: OnAttackButtonPressed
-        m_Mode: 1
+        m_MethodName: InvokeAction
+        m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: 
+          m_StringArgument: Attack
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!1 &1992921243021713477

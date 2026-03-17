@@ -33,6 +33,10 @@ namespace LittleHeroJourney
         [SerializeField] private List<string> canvasActionIds = new List<string>();
 
         private Dictionary<string, Action> _canvasActionHandlers = new Dictionary<string, Action>();
+        private Action<string> _canvasOpenStartHandler;
+        private Action<string> _canvasOpenCompleteHandler;
+        private Action<string> _canvasCloseStartHandler;
+        private Action<string> _canvasCloseCompleteHandler;
 
         #endregion
 
@@ -41,6 +45,14 @@ namespace LittleHeroJourney
         private void OnEnable()
         {
             _eventSystem = EventSystem.current != null ? EventSystem.current : FindObjectOfType<EventSystem>();
+            _canvasOpenStartHandler = HandleCanvasOpenStartByPayload;
+            _canvasOpenCompleteHandler = HandleCanvasOpenCompleteByPayload;
+            _canvasCloseStartHandler = HandleCanvasCloseStartByPayload;
+            _canvasCloseCompleteHandler = HandleCanvasCloseCompleteByPayload;
+            GameEventSystem.SubscribeActionWithPayload("CanvasOpenStart", _canvasOpenStartHandler);
+            GameEventSystem.SubscribeActionWithPayload("CanvasOpenComplete", _canvasOpenCompleteHandler);
+            GameEventSystem.SubscribeActionWithPayload("CanvasCloseStart", _canvasCloseStartHandler);
+            GameEventSystem.SubscribeActionWithPayload("CanvasCloseComplete", _canvasCloseCompleteHandler);
             foreach (var id in canvasActionIds)
             {
                 if (string.IsNullOrEmpty(id)) continue;
@@ -53,6 +65,10 @@ namespace LittleHeroJourney
 
         private void OnDisable()
         {
+            if (_canvasOpenStartHandler != null) GameEventSystem.UnsubscribeActionWithPayload("CanvasOpenStart", _canvasOpenStartHandler);
+            if (_canvasOpenCompleteHandler != null) GameEventSystem.UnsubscribeActionWithPayload("CanvasOpenComplete", _canvasOpenCompleteHandler);
+            if (_canvasCloseStartHandler != null) GameEventSystem.UnsubscribeActionWithPayload("CanvasCloseStart", _canvasCloseStartHandler);
+            if (_canvasCloseCompleteHandler != null) GameEventSystem.UnsubscribeActionWithPayload("CanvasCloseComplete", _canvasCloseCompleteHandler);
             foreach (var kv in _canvasActionHandlers)
                 GameEventSystem.UnsubscribeAction(kv.Key, kv.Value);
             _canvasActionHandlers.Clear();
@@ -78,7 +94,6 @@ namespace LittleHeroJourney
                 if (oldCanvas != canvas)
                 {
                     if (showDebugLog) Debug.LogWarning($"[{GetType().Name}] Duplicate canvas ID registered: {canvas.ID}. Replacing old instance.");
-                    UnsubscribeCanvasEvents(oldCanvas);
                 }
                 else
                 {
@@ -88,8 +103,6 @@ namespace LittleHeroJourney
             }
 
             registeredCanvases[canvas.ID] = canvas;
-            SubscribeCanvasEvents(canvas);
-            
             if (showDebugLog) Debug.Log($"[{GetType().Name}] Registered Canvas: {canvas.ID}");
         }
 
@@ -100,7 +113,6 @@ namespace LittleHeroJourney
             if (registeredCanvases.ContainsKey(canvas.ID) && registeredCanvases[canvas.ID] == canvas)
             {
                 registeredCanvases.Remove(canvas.ID);
-                UnsubscribeCanvasEvents(canvas);
                 if (showDebugLog) Debug.Log($"[{GetType().Name}] Unregistered Canvas: {canvas.ID}");
             }
         }
@@ -275,48 +287,38 @@ namespace LittleHeroJourney
         
         #region Internal
         
-        private void SubscribeCanvasEvents(GameCanvas canvas)
+        private void HandleCanvasOpenStartByPayload(string canvasId)
         {
+            var canvas = GetCanvas(canvasId);
             if (canvas == null) return;
-            canvas.OnOpenStart += HandleCanvasOpenStart;
-            canvas.OnOpenComplete += HandleCanvasOpenComplete;
-            canvas.OnCloseStart += HandleCanvasCloseStart;
-            canvas.OnCloseComplete += HandleCanvasCloseComplete;
-        }
-        
-        private void UnsubscribeCanvasEvents(GameCanvas canvas)
-        {
-            if (canvas == null) return;
-            canvas.OnOpenStart -= HandleCanvasOpenStart;
-            canvas.OnOpenComplete -= HandleCanvasOpenComplete;
-            canvas.OnCloseStart -= HandleCanvasCloseStart;
-            canvas.OnCloseComplete -= HandleCanvasCloseComplete;
-        }
-        
-        private void HandleCanvasOpenStart(GameCanvas canvas)
-        {
-            if (showDebugLog) Debug.Log($"[{GetType().Name}] Open start: {canvas?.ID}");
+            if (showDebugLog) Debug.Log($"[{GetType().Name}] Open start: {canvasId}");
             if (disableEventSystemDuringTransition) SetEventSystemEnabled(false);
             OnOpenStart?.Invoke(canvas);
         }
         
-        private void HandleCanvasOpenComplete(GameCanvas canvas)
+        private void HandleCanvasOpenCompleteByPayload(string canvasId)
         {
-            if (showDebugLog) Debug.Log($"[{GetType().Name}] Open complete: {canvas?.ID}");
+            var canvas = GetCanvas(canvasId);
+            if (canvas == null) return;
+            if (showDebugLog) Debug.Log($"[{GetType().Name}] Open complete: {canvasId}");
             if (disableEventSystemDuringTransition) SetEventSystemEnabled(true);
             OnOpenComplete?.Invoke(canvas);
         }
         
-        private void HandleCanvasCloseStart(GameCanvas canvas)
+        private void HandleCanvasCloseStartByPayload(string canvasId)
         {
-            if (showDebugLog) Debug.Log($"[{GetType().Name}] Close start: {canvas?.ID}");
+            var canvas = GetCanvas(canvasId);
+            if (canvas == null) return;
+            if (showDebugLog) Debug.Log($"[{GetType().Name}] Close start: {canvasId}");
             if (disableEventSystemDuringTransition) SetEventSystemEnabled(false);
             OnCloseStart?.Invoke(canvas);
         }
         
-        private void HandleCanvasCloseComplete(GameCanvas canvas)
+        private void HandleCanvasCloseCompleteByPayload(string canvasId)
         {
-            if (showDebugLog) Debug.Log($"[{GetType().Name}] Close complete: {canvas?.ID}");
+            var canvas = GetCanvas(canvasId);
+            if (canvas == null) return;
+            if (showDebugLog) Debug.Log($"[{GetType().Name}] Close complete: {canvasId}");
             if (disableEventSystemDuringTransition) SetEventSystemEnabled(true);
             OnCloseComplete?.Invoke(canvas);
         }

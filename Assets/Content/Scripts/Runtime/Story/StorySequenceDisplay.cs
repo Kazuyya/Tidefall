@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -8,6 +9,10 @@ namespace LittleHeroJourney
         [Header("Pooling")]
         [SerializeField] private StoryStepPanel stepPanelPrefab;
         [SerializeField] private Transform stepPanelParent;
+
+        [Header("Timing")]
+        [Tooltip("Optional delay before the first story step starts playing (seconds).")]
+        [SerializeField] private float initialDelayBeforeFirstStep = 1f;
 
         private StoryStepPanel[] _pool;
         private int _activeIndex = -1;
@@ -113,6 +118,18 @@ namespace LittleHeroJourney
             StorySequenceSO.StoryStep previousStep = null;
             StoryStepPanel previousPanel = null;
 
+            if (initialDelayBeforeFirstStep > 0f)
+            {
+                float elapsedInitial = 0f;
+                _advanceRequested = false;
+                while (elapsedInitial < initialDelayBeforeFirstStep && !_advanceRequested)
+                {
+                    elapsedInitial += Time.deltaTime;
+                    yield return null;
+                }
+                _advanceRequested = false;
+            }
+
             while (_sequence != null && _stepIndex < _sequence.StepCount)
             {
                 var step = _sequence.GetStep(_stepIndex);
@@ -161,6 +178,10 @@ namespace LittleHeroJourney
                 }
                 incoming.SetInitialAlphas(initialBg, initialText);
 
+                // Last step: publish as soon as we're about to show it (before anim in), so player spawns while step plays
+                if (_sequence != null && _stepIndex == _sequence.StepCount - 1)
+                    GameEventSystem.Publish(new UIActionEvent("StoryLastStepStarted"));
+
                 yield return StartCoroutine(incoming.PlayInRoutine(step, animateBackground, animateDialoguePanel));
 
                 if (previousPanel != null)
@@ -183,6 +204,9 @@ namespace LittleHeroJourney
                 {
                     yield return StartCoroutine(incoming.PlayTextOutOnlyRoutine(step));
                 }
+
+                if (_sequence != null && _stepIndex == _sequence.StepCount - 1)
+                    GameEventSystem.Publish(new UIActionEvent("StoryLastStepCompleted"));
 
                 _stepIndex++;
                 _advanceRequested = false;

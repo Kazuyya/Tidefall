@@ -37,8 +37,15 @@ namespace LittleHeroJourney
         private Action _playHandler;
         private Action _pendingAfterFade;
         private Action _fadeCompleteHandler;
+        private Action _storyLastStepStartedHandler;
+        private Action _storyLastStepCompletedHandler;
+        private Action _playerReadyForEncounterHandler;
         private StorySequenceDisplay _currentStoryDisplay;
         private static int _pendingStoryStageNumber;
+        private bool _isStartStoryPlaying;
+        private bool _playerReadyForEncounter;
+        private bool _lastStepCompleted;
+        private StoryEncounterSpawner _pendingEncounterSpawner;
 
         private void Awake()
         {
@@ -51,6 +58,12 @@ namespace LittleHeroJourney
             GameEventSystem.SubscribeAction("Play", _playHandler);
             _fadeCompleteHandler = OnStartJourneyFadeComplete;
             GameEventSystem.SubscribeAction("StartJourneyFadeComplete", _fadeCompleteHandler);
+            _storyLastStepStartedHandler = OnStoryLastStepStarted;
+            GameEventSystem.SubscribeAction("StoryLastStepStarted", _storyLastStepStartedHandler);
+            _storyLastStepCompletedHandler = OnStoryLastStepCompleted;
+            GameEventSystem.SubscribeAction("StoryLastStepCompleted", _storyLastStepCompletedHandler);
+            _playerReadyForEncounterHandler = OnPlayerReadyForEncounter;
+            GameEventSystem.SubscribeAction("PlayerReadyForEncounter", _playerReadyForEncounterHandler);
         }
 
         private void HandlePlay()
@@ -97,6 +110,12 @@ namespace LittleHeroJourney
             GameEventSystem.UnsubscribeAction("Play", _playHandler);
             if (_fadeCompleteHandler != null)
                 GameEventSystem.UnsubscribeAction("StartJourneyFadeComplete", _fadeCompleteHandler);
+            if (_storyLastStepStartedHandler != null)
+                GameEventSystem.UnsubscribeAction("StoryLastStepStarted", _storyLastStepStartedHandler);
+            if (_storyLastStepCompletedHandler != null)
+                GameEventSystem.UnsubscribeAction("StoryLastStepCompleted", _storyLastStepCompletedHandler);
+            if (_playerReadyForEncounterHandler != null)
+                GameEventSystem.UnsubscribeAction("PlayerReadyForEncounter", _playerReadyForEncounterHandler);
         }
 
         private void Start()
@@ -164,6 +183,7 @@ namespace LittleHeroJourney
                 return;
             }
             _currentStoryDisplay = display;
+            _isStartStoryPlaying = true;
             display.Play(sequence);
         }
 
@@ -176,6 +196,86 @@ namespace LittleHeroJourney
         {
             if (_currentStoryDisplay == null) return;
             _currentStoryDisplay.RequestAdvance();
+        }
+
+        private void OnStoryLastStepStarted()
+        {
+            if (!_isStartStoryPlaying) return;
+            StoryEncounterSpawner target = GetStartEncounterSpawner();
+            if (target == null) return;
+
+            _pendingEncounterSpawner = target;
+
+            var player = FindObjectOfType<PlayerMovementController>();
+            if (player != null && target.PlayerSpawnPoint != null)
+            {
+                Transform spawn = target.PlayerSpawnPoint;
+                player.transform.position = spawn.position;
+                player.transform.rotation = spawn.rotation;
+                player.SetEncounterSpawner(target);
+            }
+            else if (player == null && target.PlayerPrefab != null && target.PlayerSpawnPoint != null)
+            {
+                Transform spawn = target.PlayerSpawnPoint;
+                Instantiate(target.PlayerPrefab, spawn.position, spawn.rotation);
+            }
+
+            GameEventSystem.Publish(new UIActionEvent("PlayerSpawnedForEncounter"));
+            if (showDebugLog) Debug.Log("[JourneyManager] StoryLastStepStarted: player spawned. Waiting for camera settle (PlayerReadyForEncounter) and last step completed.");
+            CheckBothConditionsForEncounter();
+        }
+
+        private void OnPlayerReadyForEncounter()
+        {
+            if (!_isStartStoryPlaying) return;
+            _playerReadyForEncounter = true;
+            if (showDebugLog) Debug.Log("[JourneyManager] PlayerReadyForEncounter: camera settled. Waiting for last step completed if not yet.");
+            CheckBothConditionsForEncounter();
+        }
+
+        private void OnStoryLastStepCompleted()
+        {
+            if (!_isStartStoryPlaying) return;
+            _lastStepCompleted = true;
+            if (showDebugLog) Debug.Log("[JourneyManager] StoryLastStepCompleted. Waiting for player ready if not yet.");
+            CheckBothConditionsForEncounter();
+        }
+
+        private void CheckBothConditionsForEncounter()
+        {
+            if (!_playerReadyForEncounter || !_lastStepCompleted) return;
+
+            _isStartStoryPlaying = false;
+            _currentStoryDisplay = null;
+            _playerReadyForEncounter = false;
+            _lastStepCompleted = false;
+            StoryEncounterSpawner target = _pendingEncounterSpawner;
+            _pendingEncounterSpawner = null;
+
+            GameEventSystem.Publish(new UIActionEvent("StorySequenceCompleted"));
+
+            if (target != null)
+            {
+                target.StartEncounter();
+                GameEventSystem.Publish(new UIActionEvent("EncounterStarted"));
+                if (showDebugLog) Debug.Log("[JourneyManager] Both conditions met: StorySequenceCompleted published, canvas switch, encounter started (enemies after CD).");
+            }
+        }
+
+        private StoryEncounterSpawner GetStartEncounterSpawner()
+        {
+            var journey = GetCurrentJourney();
+            if (journey == null) return null;
+            string encounterId = journey.StartEncounterId;
+            if (string.IsNullOrEmpty(encounterId)) return null;
+            var spawners = FindObjectsOfType<StoryEncounterSpawner>();
+            for (int i = 0; i < spawners.Length; i++)
+            {
+                if (spawners[i] != null && string.Equals(spawners[i].EncounterId, encounterId, StringComparison.Ordinal))
+                    return spawners[i];
+            }
+            if (showDebugLog) Debug.LogWarning($"[{GetType().Name}] No StoryEncounterSpawner found with id '{encounterId}'.");
+            return null;
         }
 
         #endregion

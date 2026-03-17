@@ -95,8 +95,9 @@ namespace LittleHeroJourney
         void OnEnable()
         {
             UnitySceneManager.sceneLoaded += OnSceneLoaded;
-            GameplayManager.OnCameraInitialized += HandleCameraInitialized;
-            GameplayManager.OnPlayerInitialized += HandlePlayerInitialized;
+            GameEventSystem.SubscribeAction("CameraInitialized", OnCameraInitializedEvent);
+            GameEventSystem.SubscribeAction("PlayerInitialized", OnPlayerInitializedEvent);
+            GameEventSystem.SubscribeAction("GameplayReady", HandleGameplayReady);
             _unlockOnActionHandler = UnlockTarget;
             GameEventSystem.SubscribeAction("Pause", _unlockOnActionHandler);
             GameEventSystem.SubscribeAction("GameOver", _unlockOnActionHandler);
@@ -104,7 +105,6 @@ namespace LittleHeroJourney
             _gameplayManager = GameplayManager.Instance;
             if (_gameplayManager != null)
             {
-                _gameplayManager.OnReady += HandleGameplayReady;
                 if (_gameplayManager.CurrentCamera != null) HandleCameraInitialized(_gameplayManager.CurrentCamera);
                 if (_gameplayManager.PlayerController != null) HandlePlayerInitialized(_gameplayManager.PlayerController);
             }
@@ -113,12 +113,24 @@ namespace LittleHeroJourney
         void OnDisable()
         {
             UnitySceneManager.sceneLoaded -= OnSceneLoaded;
-            GameplayManager.OnCameraInitialized -= HandleCameraInitialized;
-            GameplayManager.OnPlayerInitialized -= HandlePlayerInitialized;
+            GameEventSystem.UnsubscribeAction("CameraInitialized", OnCameraInitializedEvent);
+            GameEventSystem.UnsubscribeAction("PlayerInitialized", OnPlayerInitializedEvent);
+            GameEventSystem.UnsubscribeAction("GameplayReady", HandleGameplayReady);
             GameEventSystem.UnsubscribeAction("Pause", _unlockOnActionHandler);
             GameEventSystem.UnsubscribeAction("GameOver", _unlockOnActionHandler);
             GameEventSystem.UnsubscribeAction("GameWin", _unlockOnActionHandler);
-            if (_gameplayManager != null) _gameplayManager.OnReady -= HandleGameplayReady;
+        }
+
+        private void OnCameraInitializedEvent()
+        {
+            if (GameplayManager.Instance != null)
+                HandleCameraInitialized(GameplayManager.Instance.CurrentCamera);
+        }
+
+        private void OnPlayerInitializedEvent()
+        {
+            if (GameplayManager.Instance != null)
+                HandlePlayerInitialized(GameplayManager.Instance.PlayerController);
         }
 
         private void SetupFreeLookCamera()

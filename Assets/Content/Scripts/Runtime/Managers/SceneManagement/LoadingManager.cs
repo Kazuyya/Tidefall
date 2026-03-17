@@ -25,11 +25,7 @@ namespace LittleHeroJourney
 
         public bool IsLoading { get; private set; }
 
-        public static event Action<string> OnLoadingStart;
         public static event Action<float> OnProgress;
-        public static event Action<string> OnSceneReady;
-        /// <summary>Invoked when loading is done and loading scene is unloaded. Parameter = loaded scene name (e.g. "MainMenu").</summary>
-        public static event Action<string> OnLoadingFinished;
 
         private GameCanvas _loadingCanvas;
         private LittleHeroJourney.UI.LoadingUIController _ui;
@@ -61,7 +57,7 @@ namespace LittleHeroJourney
         {
             if (showDebugLog) Debug.Log($"[LoadingManager] LoadSceneSequence: Starting for scene '{sceneName}'");
             IsLoading = true;
-            OnLoadingStart?.Invoke(sceneName);
+            GameEventSystem.Publish(new UIActionEvent("LoadingStart", sceneName));
 
             yield return OpenPhaseRoutine(closeBeforeLoading);
 
@@ -83,7 +79,7 @@ namespace LittleHeroJourney
                 if (showDebugLog) Debug.LogWarning($"[LoadingManager] Failed to load scene: {sceneName}");
                 yield return HideLoadingSceneRoutine();
                 IsLoading = false;
-                OnLoadingFinished?.Invoke(string.Empty);
+                GameEventSystem.Publish(new UIActionEvent("LoadingFinished", string.Empty));
                 onComplete?.Invoke();
                 yield break;
             }
@@ -100,7 +96,7 @@ namespace LittleHeroJourney
                 if (asyncOperation.progress >= 0.9f && timeProgress >= 1f)
                 {
                     if (showDebugLog) Debug.Log($"[LoadingManager] LoadSceneSequence: Scene ready, activating...");
-                    OnSceneReady?.Invoke(sceneName);
+                    GameEventSystem.Publish(new UIActionEvent("SceneReady", sceneName));
                     asyncOperation.allowSceneActivation = true;
                 }
 
@@ -129,9 +125,9 @@ namespace LittleHeroJourney
             onComplete?.Invoke();
 
             yield return ClosePhaseRoutine(mode, targetScene, loadedSceneName);
-            if (showDebugLog) Debug.Log("[LoadingManager] LoadSceneSequence: Completed! Firing OnLoadingFinished for '" + loadedSceneName + "'");
+            if (showDebugLog) Debug.Log("[LoadingManager] LoadSceneSequence: Completed! Firing LoadingFinished for '" + loadedSceneName + "'");
             IsLoading = false;
-            OnLoadingFinished?.Invoke(loadedSceneName);
+            GameEventSystem.Publish(new UIActionEvent("LoadingFinished", loadedSceneName));
         }
 
         private IEnumerator OpenPhaseRoutine(bool closeBeforeLoading)

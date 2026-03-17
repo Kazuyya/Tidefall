@@ -16,7 +16,7 @@ MonoBehaviour:
   - effectName: MainMenuBGM
     audioClips:
     - clip: {fileID: 8300000, guid: 5e8f571febbcd9948ac10528cd6e6c3f, type: 3}
-      volume: 1
+      volume: 0.5
     playType: 0
     spatialBlend: 0
     poolSize: 0
@@ -24,7 +24,7 @@ MonoBehaviour:
   - effectName: MonsterBite
     audioClips:
     - clip: {fileID: 8300000, guid: cdf01d3bbb3fd1f48a886e830898bc58, type: 3}
-      volume: 0.5
+      volume: 1
     playType: 0
     spatialBlend: 0
     poolSize: 0

@@ -19,3 +19,4 @@ MonoBehaviour:
   description: 
   startStorySequence: {fileID: 11400000, guid: e90b2278a929602489fda8290fbb54a9, type: 2}
   endStorySequence: {fileID: 11400000, guid: 7abadbc834eb3ff45b90fed899ce0c03, type: 2}
+  startEncounterId: Prolougue

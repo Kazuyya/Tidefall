@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using DG.Tweening;
 using System.Collections.Generic;
+using LittleHeroJourney;
 
 namespace LittleHeroJourney.UI
 {
@@ -41,11 +42,6 @@ namespace LittleHeroJourney.UI
         
         private Sequence sequenceRunner;
         
-        public event System.Action<GameCanvas> OnOpenStart;
-        public event System.Action<GameCanvas> OnOpenComplete;
-        public event System.Action<GameCanvas> OnCloseStart;
-        public event System.Action<GameCanvas> OnCloseComplete;
-
         public string ID => canvasID;
 
         private void Awake()
@@ -66,7 +62,7 @@ namespace LittleHeroJourney.UI
                 if (showDebugLog) Debug.LogWarning($"[{GetType().Name}] GameManager or CanvasManager is null during OnEnable for {canvasID}");
             }
 
-            LoadingManager.OnLoadingFinished += HandleLoadingFinished;
+            GameEventSystem.SubscribeActionWithPayload("LoadingFinished", HandleLoadingFinished);
             UnityEngine.SceneManagement.SceneManager.sceneLoaded += HandleSceneLoaded;
         }
 
@@ -80,7 +76,7 @@ namespace LittleHeroJourney.UI
 
         private void OnDisable()
         {
-            LoadingManager.OnLoadingFinished -= HandleLoadingFinished;
+            GameEventSystem.UnsubscribeActionWithPayload("LoadingFinished", HandleLoadingFinished);
             UnityEngine.SceneManagement.SceneManager.sceneLoaded -= HandleSceneLoaded;
         }
 
@@ -95,14 +91,14 @@ namespace LittleHeroJourney.UI
         public virtual void Show()
         {
             gameObject.SetActive(true);
-            OnOpenStart?.Invoke(this);
+            GameEventSystem.Publish(new UIActionEvent("CanvasOpenStart", canvasID));
             StartCoroutine(ShowRoutine());
         }
 
         public System.Collections.IEnumerator ShowAndWait()
         {
             gameObject.SetActive(true);
-            OnOpenStart?.Invoke(this);
+            GameEventSystem.Publish(new UIActionEvent("CanvasOpenStart", canvasID));
             yield return ShowRoutine();
         }
         
@@ -112,7 +108,7 @@ namespace LittleHeroJourney.UI
             SetTargetParentsActive(true);
             yield return PlaySequenceRoutine(openSequence);
             if (showDebugLog) Debug.Log($"[{GetType().Name}] ShowRoutine: Complete for {canvasID}");
-            OnOpenComplete?.Invoke(this);
+            GameEventSystem.Publish(new UIActionEvent("CanvasOpenComplete", canvasID));
         }
 
         public virtual void Hide()
@@ -133,7 +129,7 @@ namespace LittleHeroJourney.UI
         {
             if (showDebugLog) Debug.Log($"[{GetType().Name}] HideRoutine: Starting for {canvasID}");
             SetTargetParentsActive(true);
-            OnCloseStart?.Invoke(this);
+            GameEventSystem.Publish(new UIActionEvent("CanvasCloseStart", canvasID));
             yield return PlaySequenceRoutine(closeSequence);
             SetOpenTargetsToFromState();
             if (disableGameObjectOnClose)
@@ -142,7 +138,7 @@ namespace LittleHeroJourney.UI
                 if (showDebugLog) Debug.Log($"[{GetType().Name}] HideRoutine: Canvas deactivated {canvasID}");
             }
             SetTargetParentsActive(false);
-            OnCloseComplete?.Invoke(this);
+            GameEventSystem.Publish(new UIActionEvent("CanvasCloseComplete", canvasID));
         }
 
         public void SwitchCanvasById(string targetCanvasId)
@@ -301,14 +297,14 @@ namespace LittleHeroJourney.UI
             if (showDebugLog) Debug.Log($"[{GetType().Name}] CloseForTransitionRoutine: Starting for {canvasID}");
             
             SetTargetParentsActive(true);
-            OnCloseStart?.Invoke(this);
+            GameEventSystem.Publish(new UIActionEvent("CanvasCloseStart", canvasID));
             
             // Play close sequence (DOTween animations)
             yield return PlaySequenceRoutine(closeSequence);
             SetOpenTargetsToFromState();
             if (disableGameObjectOnClose) gameObject.SetActive(false);
             SetTargetParentsActive(false);
-            OnCloseComplete?.Invoke(this);
+            GameEventSystem.Publish(new UIActionEvent("CanvasCloseComplete", canvasID));
         }
 
         private void SetOpenTargetsToFromState()

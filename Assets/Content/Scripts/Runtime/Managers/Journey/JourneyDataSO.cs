@@ -12,6 +12,8 @@ namespace LittleHeroJourney
         [TextArea(2, 4)] [SerializeField] private string description = "";
         [SerializeField] private StorySequenceSO startStorySequence;
         [SerializeField] private StorySequenceSO endStorySequence;
+        [Header("Encounter")]
+        [SerializeField] private string startEncounterId = "";
 
         public string JourneyId => journeyId;
         public string SceneName => sceneName ?? "";
@@ -20,5 +22,6 @@ namespace LittleHeroJourney
         public string Description => description ?? "";
         public StorySequenceSO StartStorySequence => startStorySequence;
         public StorySequenceSO EndStorySequence => endStorySequence;
+        public string StartEncounterId => startEncounterId ?? "";
     }
 }

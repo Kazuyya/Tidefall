@@ -6,12 +6,18 @@ namespace LittleHeroJourney
     public struct UIActionEvent
     {
         public string ActionId;
-        public UIActionEvent(string actionId) => ActionId = actionId;
+        public string Payload;
+        public UIActionEvent(string actionId, string payload = null)
+        {
+            ActionId = actionId;
+            Payload = payload;
+        }
     }
 
     public static class GameEventSystem
     {
         private static readonly Dictionary<string, List<Action>> _actionHandlers = new Dictionary<string, List<Action>>();
+        private static readonly Dictionary<string, List<Action<string>>> _actionPayloadHandlers = new Dictionary<string, List<Action<string>>>();
         private static readonly Dictionary<string, List<Action<float, float>>> _healthHandlers = new Dictionary<string, List<Action<float, float>>>();
         private static readonly Dictionary<string, List<Action>> _healthDeathHandlers = new Dictionary<string, List<Action>>();
         private static readonly Dictionary<string, (float current, float max)> _lastHealthPerId = new Dictionary<string, (float, float)>();
@@ -41,19 +47,56 @@ namespace LittleHeroJourney
             }
         }
 
+        public static void SubscribeActionWithPayload(string actionId, Action<string> handler)
+        {
+            if (string.IsNullOrEmpty(actionId) || handler == null) return;
+            lock (_lock)
+            {
+                if (!_actionPayloadHandlers.TryGetValue(actionId, out var list))
+                {
+                    list = new List<Action<string>>();
+                    _actionPayloadHandlers[actionId] = list;
+                }
+                list.Add(handler);
+            }
+        }
+
+        public static void UnsubscribeActionWithPayload(string actionId, Action<string> handler)
+        {
+            if (string.IsNullOrEmpty(actionId) || handler == null) return;
+            lock (_lock)
+            {
+                if (_actionPayloadHandlers.TryGetValue(actionId, out var list))
+                    list.Remove(handler);
+            }
+        }
+
         public static void Publish(UIActionEvent e)
         {
             if (string.IsNullOrEmpty(e.ActionId)) return;
             List<Action> actionCopy;
+            List<Action<string>> payloadCopy = null;
             lock (_lock)
             {
-                if (!_actionHandlers.TryGetValue(e.ActionId, out var list) || list.Count == 0) return;
-                actionCopy = new List<Action>(list);
+                if (_actionHandlers.TryGetValue(e.ActionId, out var list) && list.Count > 0)
+                    actionCopy = new List<Action>(list);
+                else
+                    actionCopy = new List<Action>();
+                if (!string.IsNullOrEmpty(e.Payload) && _actionPayloadHandlers.TryGetValue(e.ActionId, out var payloadList) && payloadList.Count > 0)
+                    payloadCopy = new List<Action<string>>(payloadList);
             }
             foreach (var a in actionCopy)
             {
                 try { a?.Invoke(); }
                 catch (Exception ex) { UnityEngine.Debug.LogException(ex); }
+            }
+            if (payloadCopy != null)
+            {
+                foreach (var p in payloadCopy)
+                {
+                    try { p?.Invoke(e.Payload); }
+                    catch (Exception ex) { UnityEngine.Debug.LogException(ex); }
+                }
             }
         }
 
@@ -152,6 +195,7 @@ namespace LittleHeroJourney
             lock (_lock)
             {
                 _actionHandlers.Clear();
+                _actionPayloadHandlers.Clear();
                 _healthHandlers.Clear();
                 _healthDeathHandlers.Clear();
                 _lastHealthPerId.Clear();

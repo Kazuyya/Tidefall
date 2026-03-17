@@ -13,8 +13,7 @@ namespace LittleHeroJourney
         private bool _isKnockedBack;
         private Coroutine _knockbackCoroutine;
         
-        // Encounter Zone Reference
-        private EncounterZone _currentEncounterZone;
+        private StoryEncounterSpawner _currentEncounterSpawner;
 
         [Header("Knockback")]
         [Min(0.1f)]
@@ -70,10 +69,8 @@ namespace LittleHeroJourney
 
             transform.position = targetPosition;
             
-            // Validate and clamp position to stay within encounter zone if active
-            if (_currentEncounterZone != null)
+            if (_currentEncounterSpawner != null)
             {
-                _currentEncounterZone.ValidateAndClampPosition(transform, boundaryClampOffset);
             }
 
             if (wasEnabled)
@@ -93,29 +90,22 @@ namespace LittleHeroJourney
             }
         }
 
-        /// <summary>
-        /// Set the encounter zone reference when AI enters an encounter
-        /// Called by EncounterZone.OnEnemySpawned or similar
-        /// </summary>
-        public void SetEncounterZone(EncounterZone encounterZone)
+        public void SetEncounterZone(StoryEncounterSpawner encounterSpawner)
         {
-            _currentEncounterZone = encounterZone;
+            _currentEncounterSpawner = encounterSpawner;
             if (showEncounterBoundaryLog)
             {
-                Debug.Log($"[{GetType().Name}] Encounter zone reference set: {(encounterZone != null ? encounterZone.gameObject.name : "null")}");
+                Debug.Log($"[{GetType().Name}] Encounter spawner reference set: {(encounterSpawner != null ? encounterSpawner.gameObject.name : "null")}");
             }
         }
 
-        /// <summary>
-        /// Clear the encounter zone reference when encounter ends or AI dies
-        /// </summary>
         public void ClearEncounterZone()
         {
-            if (showEncounterBoundaryLog && _currentEncounterZone != null)
+            if (showEncounterBoundaryLog && _currentEncounterSpawner != null)
             {
-                Debug.Log($"[{GetType().Name}] Encounter zone reference cleared");
+                Debug.Log($"[{GetType().Name}] Encounter spawner reference cleared");
             }
-            _currentEncounterZone = null;
+            _currentEncounterSpawner = null;
         }
     }
 }

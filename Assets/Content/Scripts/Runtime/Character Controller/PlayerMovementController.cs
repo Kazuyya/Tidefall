@@ -5,8 +5,6 @@ using UnityEngine;
 using KinematicCharacterController;
 using UnityEngine.InputSystem;
 using Terresquall;
-using LittleHeroJourney.InputSystem;
-
 #pragma warning disable CS0618
 
 namespace LittleHeroJourney
@@ -89,9 +87,8 @@ namespace LittleHeroJourney
         private bool _ignorePlayerMovementInput = false;
         public bool IsPlayerMovementInputIgnored => _ignorePlayerMovementInput;
 
-        // Encounter Zone Reference - Set when player enters encounter zone
-        private EncounterZone _currentEncounterZone;
-        public EncounterZone CurrentEncounterZone => _currentEncounterZone;
+        private StoryEncounterSpawner _currentEncounterSpawner;
+        public StoryEncounterSpawner CurrentEncounterSpawner => _currentEncounterSpawner;
         
         [Header("Encounter Settings")]
         [SerializeField] private float boundaryClampOffset = 0.5f;
@@ -160,12 +157,16 @@ namespace LittleHeroJourney
 
         private void OnEnable()
         {
-            GameInputEvents.OnDash += TriggerDash;
+            GameEventSystem.SubscribeAction("Dash", TriggerDash);
+            GameEventSystem.SubscribeAction("CameraInitialized", HandleCameraReady);
+            GameEventSystem.SubscribeAction("GameplayReady", HandleCameraReady);
         }
 
         private void OnDisable()
         {
-            GameInputEvents.OnDash -= TriggerDash;
+            GameEventSystem.UnsubscribeAction("Dash", TriggerDash);
+            GameEventSystem.UnsubscribeAction("CameraInitialized", HandleCameraReady);
+            GameEventSystem.UnsubscribeAction("GameplayReady", HandleCameraReady);
         }
 
         private void Awake()
@@ -212,10 +213,32 @@ namespace LittleHeroJourney
             Motor.CharacterController = this;
             SetupInputActions();
             SetupAnimator();
+            // Try bind camera immediately if already available
+            HandleCameraReady();
 
             if (_health != null)
             {
                 _health.OnDeath += HandleDeath;
+            }
+        }
+
+        private void HandleCameraReady()
+        {
+            if (playerCamera != null) return;
+
+            // Prefer GameplayManager's main camera if available
+            if (GameplayManager.Instance != null && GameplayManager.Instance.MainCamera != null)
+            {
+                playerCamera = GameplayManager.Instance.MainCamera;
+                if (showDebugLog) Debug.Log($"[{GetType().Name}] Bound playerCamera from GameplayManager.MainCamera.");
+                return;
+            }
+
+            // Fallback to Camera.main
+            if (Camera.main != null)
+            {
+                playerCamera = Camera.main;
+                if (showDebugLog) Debug.Log($"[{GetType().Name}] Bound playerCamera from Camera.main.");
             }
         }
 
@@ -535,11 +558,6 @@ namespace LittleHeroJourney
 
             Motor.SetPosition(targetPosition);
             
-            // Validate and clamp position to stay within encounter zone if active
-            if (_currentEncounterZone != null)
-            {
-                _currentEncounterZone.ValidateAndClampPosition(transform, boundaryClampOffset);
-            }
             
             _isKnockedBack = false;
             _knockbackCoroutine = null;
@@ -554,31 +572,24 @@ namespace LittleHeroJourney
 
         #endregion
 
-        #region Encounter Zone Reference
+        #region Encounter Spawner Reference
 
-        /// <summary>
-        /// Set the encounter zone reference when player enters an encounter
-        /// Called by EncounterZone.OnTriggerEnter
-        /// </summary>
-        public void SetEncounterZone(EncounterZone encounterZone)
+        public void SetEncounterSpawner(StoryEncounterSpawner encounterSpawner)
         {
-            _currentEncounterZone = encounterZone;
+            _currentEncounterSpawner = encounterSpawner;
             if (showEncounterBoundaryLog)
             {
-                if (showDebugLog) Debug.Log($"[{GetType().Name}] Encounter zone reference set: {(encounterZone != null ? encounterZone.gameObject.name : "null")}");
+                if (showDebugLog) Debug.Log($"[{GetType().Name}] Encounter spawner reference set: {(encounterSpawner != null ? encounterSpawner.gameObject.name : "null")}");
             }
         }
 
-        /// <summary>
-        /// Clear the encounter zone reference when encounter ends or player leaves
-        /// </summary>
-        public void ClearEncounterZone()
+        public void ClearEncounterSpawner()
         {
-            if (showEncounterBoundaryLog && _currentEncounterZone != null)
+            if (showEncounterBoundaryLog && _currentEncounterSpawner != null)
             {
-                if (showDebugLog) Debug.Log($"[{GetType().Name}] Encounter zone reference cleared");
+                if (showDebugLog) Debug.Log($"[{GetType().Name}] Encounter spawner reference cleared");
             }
-            _currentEncounterZone = null;
+            _currentEncounterSpawner = null;
         }
 
         #endregion

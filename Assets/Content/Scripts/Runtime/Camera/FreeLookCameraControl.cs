@@ -27,6 +27,8 @@ namespace DM
         [Tooltip("Minimum pixel movement to register as input")]
         [SerializeField] private float inputThreshold;
 
+        [Tooltip("If drag delta exceeds this (e.g. after canvas switch), treat as fresh start to avoid sensitivity spike. Pixels.")]
+        [SerializeField] private float maxDeltaForValidDrag = 200f;
 
         [Header("Debug")]
         [SerializeField] private bool showDebugLog;
@@ -51,17 +53,20 @@ namespace DM
 
         private void OnEnable()
         {
-            GameplayManager.OnCameraInitialized += HandleCameraInitialized;
-            
+            GameEventSystem.SubscribeAction("CameraInitialized", OnCameraInitializedEvent);
             if (GameplayManager.Instance != null && GameplayManager.Instance.CurrentCamera != null)
-            {
                 HandleCameraInitialized(GameplayManager.Instance.CurrentCamera);
-            }
         }
 
         private void OnDisable()
         {
-            GameplayManager.OnCameraInitialized -= HandleCameraInitialized;
+            GameEventSystem.UnsubscribeAction("CameraInitialized", OnCameraInitializedEvent);
+        }
+
+        private void OnCameraInitializedEvent()
+        {
+            if (GameplayManager.Instance != null)
+                HandleCameraInitialized(GameplayManager.Instance.CurrentCamera);
         }
 
         private void Update()
@@ -89,7 +94,9 @@ namespace DM
         private void HandleCameraInitialized(CinemachineFreeLook cam)
         {
             freeLookCamera = cam;
-            if (showDebugLog) Debug.Log($"[{GetType().Name}] Received Camera Reference from GameplayManager");
+            isDragging = false;
+            StopCameraInput();
+            if (showDebugLog) Debug.Log($"[{GetType().Name}] Received Camera Reference from GameplayManager (drag state reset).");
         }
         #endregion
 
@@ -114,6 +121,13 @@ namespace DM
             Vector2 rawDelta = eventData.position - lastPointerPos;
             lastPointerPos = eventData.position;
 
+            if (rawDelta.magnitude > maxDeltaForValidDrag)
+            {
+                freeLookCamera.m_XAxis.m_InputAxisValue = 0f;
+                freeLookCamera.m_YAxis.m_InputAxisValue = 0f;
+                return;
+            }
+
             if (rawDelta.magnitude < inputThreshold)
             {
                 freeLookCamera.m_XAxis.m_InputAxisValue = 0f;
@@ -134,6 +148,10 @@ namespace DM
             {
                 inputY *= 0.2f;
             }
+
+            const float maxInputPerFrame = 1.5f;
+            inputX = Mathf.Clamp(inputX, -maxInputPerFrame, maxInputPerFrame);
+            inputY = Mathf.Clamp(inputY, -maxInputPerFrame, maxInputPerFrame);
 
             freeLookCamera.m_XAxis.m_InputAxisValue = inputX;
             freeLookCamera.m_YAxis.m_InputAxisValue = inputY;
