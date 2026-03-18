@@ -31,8 +31,6 @@ namespace LittleHeroJourney
         [SerializeField] private string transitionCanvasId = "TransitionCanvas";
         [Tooltip("Delay after player reset to spawn before playing transition OUT (retry).")]
         [SerializeField] private float retrySpawnToOutDelay = 1f;
-        [SerializeField] private string winCanvasId = "Win";
-        [SerializeField] private string loseCanvasId = "Lose";
         [Tooltip("Only run FindReferences when this scene loads (e.g. Map). Prevents camera snap when Loading/MainMenu load during exit.")]
         [SerializeField] private string gameplaySceneName = "Map";
 
@@ -44,7 +42,7 @@ namespace LittleHeroJourney
         private bool isPaused = false;
 
         private Action _pauseHandler, _resumeHandler, _lockHandler;
-        private Action _nextLevelHandler, _retryHandler, _gameOverHandler, _gameWinHandler, _encounterStartedHandler, _storySequenceCompletedHandler, _encounterZoneCompletedHandler, _playerSpawnedForEncounterHandler;
+        private Action _nextLevelHandler, _retryHandler, _encounterStartedHandler, _storySequenceCompletedHandler, _encounterZoneCompletedHandler, _playerSpawnedForEncounterHandler, _endStorySequenceCompletedHandler;
         private Action<string> _loadingFinishedHandler;
         private Action<string> _canvasOpenCompletePayloadHandler;
         private Action<string> _canvasCloseCompletePayloadHandler;
@@ -114,21 +112,19 @@ namespace LittleHeroJourney
             _lockHandler = HandleLockAction;
             _nextLevelHandler = LoadNextStage;
             _retryHandler = RetryStage;
-            _gameOverHandler = () => { if (GameManager.Instance?.CanvasManager != null && !string.IsNullOrEmpty(loseCanvasId)) GameManager.Instance.CanvasManager.SwitchCanvas(loseCanvasId); };
-            _gameWinHandler = () => { if (GameManager.Instance?.CanvasManager != null && !string.IsNullOrEmpty(winCanvasId)) GameManager.Instance.CanvasManager.SwitchCanvas(winCanvasId); };
 
             GameEventSystem.SubscribeAction("Pause", _pauseHandler);
             GameEventSystem.SubscribeAction("Resume", _resumeHandler);
             GameEventSystem.SubscribeAction("Lock", _lockHandler);
             GameEventSystem.SubscribeAction("NextLevel", _nextLevelHandler);
             GameEventSystem.SubscribeAction("Retry", _retryHandler);
-            GameEventSystem.SubscribeAction("GameOver", _gameOverHandler);
-            GameEventSystem.SubscribeAction("GameWin", _gameWinHandler);
             _encounterStartedHandler = OnEncounterStartedEvent;
             GameEventSystem.SubscribeAction("EncounterStarted", _encounterStartedHandler);
             _encounterZoneCompletedHandler = CheckAllEncountersCompleted;
             _storySequenceCompletedHandler = OnStorySequenceCompleted;
             GameEventSystem.SubscribeAction("StorySequenceCompleted", _storySequenceCompletedHandler);
+            _endStorySequenceCompletedHandler = OnEndStorySequenceCompleted;
+            GameEventSystem.SubscribeAction("EndStorySequenceCompleted", _endStorySequenceCompletedHandler);
             _playerSpawnedForEncounterHandler = OnPlayerSpawnedForEncounter;
             GameEventSystem.SubscribeAction("PlayerSpawnedForEncounter", _playerSpawnedForEncounterHandler);
             GameEventSystem.SubscribeAction("EncounterZoneCompleted", _encounterZoneCompletedHandler);
@@ -155,12 +151,12 @@ namespace LittleHeroJourney
             GameEventSystem.UnsubscribeAction("Lock", _lockHandler);
             GameEventSystem.UnsubscribeAction("NextLevel", _nextLevelHandler);
             GameEventSystem.UnsubscribeAction("Retry", _retryHandler);
-            GameEventSystem.UnsubscribeAction("GameOver", _gameOverHandler);
-            GameEventSystem.UnsubscribeAction("GameWin", _gameWinHandler);
             if (_encounterStartedHandler != null)
                 GameEventSystem.UnsubscribeAction("EncounterStarted", _encounterStartedHandler);
             if (_storySequenceCompletedHandler != null)
                 GameEventSystem.UnsubscribeAction("StorySequenceCompleted", _storySequenceCompletedHandler);
+            if (_endStorySequenceCompletedHandler != null)
+                GameEventSystem.UnsubscribeAction("EndStorySequenceCompleted", _endStorySequenceCompletedHandler);
             if (_playerSpawnedForEncounterHandler != null)
                 GameEventSystem.UnsubscribeAction("PlayerSpawnedForEncounter", _playerSpawnedForEncounterHandler);
             GameEventSystem.UnsubscribeAction("EncounterZoneCompleted", _encounterZoneCompletedHandler);
@@ -177,6 +173,14 @@ namespace LittleHeroJourney
                 GameManager.Instance.CanvasManager.SwitchCanvas(gameplayCanvasId);
             SetInputActive(true);
             if (showDebugLog) Debug.Log("[GameplayManager] Story sequence completed -> init: gameplay canvas and input active.");
+        }
+
+        private void OnEndStorySequenceCompleted()
+        {
+            if (GameManager.Instance?.CanvasManager != null && !string.IsNullOrEmpty(gameplayCanvasId))
+                GameManager.Instance.CanvasManager.SwitchCanvas(gameplayCanvasId);
+            SetInputActive(true);
+            if (showDebugLog) Debug.Log("[GameplayManager] End story sequence completed -> gameplay canvas and input active.");
         }
 
         private void OnPlayerSpawnedForEncounter()
@@ -408,15 +412,10 @@ namespace LittleHeroJourney
         public void TriggerLevelWin()
         {
             if (isLevelEnded) return;
-            if (showDebugLog) Debug.Log("[GameplayManager] Objective Reached -> Trigger Win");
+            if (showDebugLog) Debug.Log("[GameplayManager] Combat finished -> notifying JourneyManager (end story then save).");
             isLevelEnded = true;
             SetInputActive(false);
-            if (JourneyManager.Instance != null)
-            {
-                int currentLevel = JourneyManager.Instance.GetCurrentLevelNumber();
-                JourneyManager.Instance.CompleteLevel(currentLevel);
-            }
-            GameEventSystem.Publish(new UIActionEvent("GameWin"));
+            GameEventSystem.Publish(new UIActionEvent("CombatFinished"));
         }
 
         #endregion

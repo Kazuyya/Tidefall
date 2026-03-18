@@ -40,9 +40,16 @@ namespace LittleHeroJourney
         private Action _storyLastStepStartedHandler;
         private Action _storyLastStepCompletedHandler;
         private Action _playerReadyForEncounterHandler;
+        private Action _combatFinishedHandler;
+        private Action<string> _canvasOpenCompleteHandler;
+        private Action<string> _loadingFinishedHandler;
         private StorySequenceDisplay _currentStoryDisplay;
         private static int _pendingStoryStageNumber;
+        private StorySequenceSO _pendingEndStorySequence;
+        private StorySequenceSO _pendingStartStorySequence;
+        private bool _startStoryCanvasOpened;
         private bool _isStartStoryPlaying;
+        private bool _isEndStoryPlaying;
         private bool _playerReadyForEncounter;
         private bool _lastStepCompleted;
         private StoryEncounterSpawner _pendingEncounterSpawner;
@@ -64,6 +71,12 @@ namespace LittleHeroJourney
             GameEventSystem.SubscribeAction("StoryLastStepCompleted", _storyLastStepCompletedHandler);
             _playerReadyForEncounterHandler = OnPlayerReadyForEncounter;
             GameEventSystem.SubscribeAction("PlayerReadyForEncounter", _playerReadyForEncounterHandler);
+            _combatFinishedHandler = OnCombatFinished;
+            GameEventSystem.SubscribeAction("CombatFinished", _combatFinishedHandler);
+            _canvasOpenCompleteHandler = OnCanvasOpenCompleteByPayload;
+            GameEventSystem.SubscribeActionWithPayload("CanvasOpenComplete", _canvasOpenCompleteHandler);
+            _loadingFinishedHandler = OnLoadingFinished;
+            GameEventSystem.SubscribeActionWithPayload("LoadingFinished", _loadingFinishedHandler);
         }
 
         private void HandlePlay()
@@ -116,6 +129,12 @@ namespace LittleHeroJourney
                 GameEventSystem.UnsubscribeAction("StoryLastStepCompleted", _storyLastStepCompletedHandler);
             if (_playerReadyForEncounterHandler != null)
                 GameEventSystem.UnsubscribeAction("PlayerReadyForEncounter", _playerReadyForEncounterHandler);
+            if (_combatFinishedHandler != null)
+                GameEventSystem.UnsubscribeAction("CombatFinished", _combatFinishedHandler);
+            if (_canvasOpenCompleteHandler != null)
+                GameEventSystem.UnsubscribeActionWithPayload("CanvasOpenComplete", _canvasOpenCompleteHandler);
+            if (_loadingFinishedHandler != null)
+                GameEventSystem.UnsubscribeActionWithPayload("LoadingFinished", _loadingFinishedHandler);
         }
 
         private void Start()
@@ -175,16 +194,14 @@ namespace LittleHeroJourney
                 if (showDebugLog) Debug.LogWarning($"[{GetType().Name}] Story canvas id empty or CanvasManager null, skipping start story.");
                 return;
             }
-            GameManager.Instance.CanvasManager.SwitchCanvas(storyCanvasId);
-            var display = FindObjectOfType<StorySequenceDisplay>();
-            if (display == null)
-            {
-                if (showDebugLog) Debug.LogWarning($"[{GetType().Name}] StorySequenceDisplay not found, skipping start story.");
-                return;
-            }
-            _currentStoryDisplay = display;
             _isStartStoryPlaying = true;
-            display.Play(sequence);
+            _pendingStartStorySequence = sequence;
+            _startStoryCanvasOpened = false;
+            if (LoadingManager.Instance != null && LoadingManager.Instance.IsLoading)
+            {
+                LoadingManager.Instance.DelayCloseUntilSignaled();
+            }
+            GameManager.Instance.CanvasManager.SwitchCanvas(storyCanvasId);
         }
 
         public void PlayStartStoryForCurrentStage()
@@ -235,10 +252,95 @@ namespace LittleHeroJourney
 
         private void OnStoryLastStepCompleted()
         {
+            if (_isEndStoryPlaying)
+            {
+                CompleteLevel(currentLevelNumber);
+                _isEndStoryPlaying = false;
+                _currentStoryDisplay = null;
+                GameEventSystem.Publish(new UIActionEvent("EndStorySequenceCompleted"));
+                if (showDebugLog) Debug.Log("[JourneyManager] End story sequence completed -> saved progress.");
+                return;
+            }
             if (!_isStartStoryPlaying) return;
             _lastStepCompleted = true;
             if (showDebugLog) Debug.Log("[JourneyManager] StoryLastStepCompleted. Waiting for player ready if not yet.");
             CheckBothConditionsForEncounter();
+        }
+
+        private void OnCombatFinished()
+        {
+            var endStory = EndStorySequence;
+            if (endStory != null && endStory.StepCount > 0)
+            {
+                if (string.IsNullOrEmpty(storyCanvasId) || GameManager.Instance?.CanvasManager == null)
+                {
+                    if (showDebugLog) Debug.LogWarning($"[{GetType().Name}] No story canvas or CanvasManager, completing level without end story.");
+                    CompleteLevel(currentLevelNumber);
+                    return;
+                }
+                _pendingEndStorySequence = endStory;
+                _isEndStoryPlaying = true;
+                GameManager.Instance.CanvasManager.SwitchCanvas(storyCanvasId);
+                if (showDebugLog) Debug.Log("[JourneyManager] Combat finished -> switching to story canvas (fade/in). After open complete, display will be set up and end story played.");
+            }
+            else
+            {
+                CompleteLevel(currentLevelNumber);
+                if (showDebugLog) Debug.Log("[JourneyManager] Combat finished, no end story -> saved progress.");
+            }
+        }
+
+        private void OnCanvasOpenCompleteByPayload(string canvasId)
+        {
+            if (_pendingStartStorySequence != null && !string.IsNullOrEmpty(storyCanvasId) && string.Equals(canvasId, storyCanvasId, StringComparison.OrdinalIgnoreCase))
+            {
+                _startStoryCanvasOpened = true;
+                if (LoadingManager.Instance != null && LoadingManager.Instance.IsLoading)
+                {
+                    LoadingManager.Instance.SignalCloseAllowed();
+                }
+            }
+
+            if (_pendingEndStorySequence == null) return;
+            if (string.IsNullOrEmpty(storyCanvasId) || !string.Equals(canvasId, storyCanvasId, StringComparison.OrdinalIgnoreCase))
+                return;
+
+            var display = FindObjectOfType<StorySequenceDisplay>();
+            if (display == null)
+            {
+                if (showDebugLog) Debug.LogWarning($"[{GetType().Name}] StorySequenceDisplay not found after story canvas open, completing level without end story.");
+                CompleteLevel(currentLevelNumber);
+                _pendingEndStorySequence = null;
+                _isEndStoryPlaying = false;
+                return;
+            }
+            display.Stop();
+            display.Play(_pendingEndStorySequence);
+            _currentStoryDisplay = display;
+            _pendingEndStorySequence = null;
+            if (showDebugLog) Debug.Log("[JourneyManager] Story canvas open complete -> display pool set up, end story sequence playing. Save when sequence completes.");
+        }
+
+        private void OnLoadingFinished(string loadedSceneName)
+        {
+            if (_pendingStartStorySequence == null) return;
+
+            if (!_startStoryCanvasOpened) return;
+
+            var display = FindObjectOfType<StorySequenceDisplay>();
+            if (display == null)
+            {
+                if (showDebugLog) Debug.LogWarning($"[{GetType().Name}] StorySequenceDisplay not found on LoadingFinished, skipping start story.");
+                _pendingStartStorySequence = null;
+                _isStartStoryPlaying = false;
+                return;
+            }
+
+            display.Stop();
+            display.Play(_pendingStartStorySequence);
+            _currentStoryDisplay = display;
+            _pendingStartStorySequence = null;
+            if (showDebugLog) Debug.Log("[JourneyManager] Loading finished + story canvas open -> start story playing.");
         }
 
         private void CheckBothConditionsForEncounter()

@@ -33,9 +33,23 @@ namespace LittleHeroJourney
         private readonly List<Func<IEnumerator>> _preLoadTasks = new List<Func<IEnumerator>>();
         private readonly List<Func<IEnumerator>> _postLoadTasks = new List<Func<IEnumerator>>();
 
+        private bool _delayCloseUntilSignaled;
+        private bool _closeAllowedSignal;
+
         private void Awake()
         {
             _instance = this;
+        }
+
+        public void DelayCloseUntilSignaled()
+        {
+            _delayCloseUntilSignaled = true;
+            _closeAllowedSignal = false;
+        }
+
+        public void SignalCloseAllowed()
+        {
+            _closeAllowedSignal = true;
         }
 
         public void RegisterPreLoadTask(Func<IEnumerator> task)
@@ -161,6 +175,15 @@ namespace LittleHeroJourney
         private IEnumerator ClosePhaseRoutine(LoadSceneMode mode, Scene targetScene, string loadedSceneName)
         {
             PrepareTargetSceneCanvases(loadedSceneName);
+            if (_delayCloseUntilSignaled)
+            {
+                if (showDebugLog) Debug.Log("[LoadingManager] Close phase delayed until external signal.");
+                while (!_closeAllowedSignal)
+                    yield return null;
+                _delayCloseUntilSignaled = false;
+                _closeAllowedSignal = false;
+                if (showDebugLog) Debug.Log("[LoadingManager] External close signal received. Continuing close phase.");
+            }
             if (showDebugLog) Debug.Log("[LoadingManager] LoadSceneSequence: Playing close sequence...");
             if (_ui != null)
             {

@@ -22,7 +22,7 @@ MonoBehaviour:
     narrativeText: "At that time\u2026"
     speakerName: 
     dialogueLine: 
-    textInEffect: 2
+    textInEffect: 1
     textOutEffect: 1
     delayAfterTextComplete: 3
     backgroundInEffect: 0
