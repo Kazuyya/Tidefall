@@ -65,29 +65,29 @@ MonoBehaviour:
     backgroundFadeOutDuration: 0
   - stepId: "This place\u2026"
     canSkipStep: 1
-    backgroundType: 0
-    backgroundImage: {fileID: 0}
-    backgroundColor: {r: 0, g: 0, b: 0, a: 1}
-    contentType: 0
-    narrativeText: "This place\u2026"
+    backgroundType: 1
+    backgroundImage: {fileID: 21300000, guid: e9964e6e33f6d5144a16cd40879f28c0, type: 3}
+    backgroundColor: {r: 1, g: 1, b: 1, a: 1}
+    contentType: 1
+    narrativeText: 
     speakerName: 
-    dialogueLine: 
+    dialogueLine: "This place\u2026"
     textInEffect: 1
     textOutEffect: 1
     delayAfterTextComplete: 3
-    backgroundInEffect: 0
+    backgroundInEffect: 1
     backgroundOutEffect: 0
-    backgroundFadeInDuration: 0
+    backgroundFadeInDuration: 0.2
     backgroundFadeOutDuration: 0
   - stepId: ...it used to be full of animals.
     canSkipStep: 1
-    backgroundType: 0
-    backgroundImage: {fileID: 0}
-    backgroundColor: {r: 0, g: 0, b: 0, a: 1}
-    contentType: 0
-    narrativeText: ...it used to be full of animals.
+    backgroundType: 1
+    backgroundImage: {fileID: 21300000, guid: e9964e6e33f6d5144a16cd40879f28c0, type: 3}
+    backgroundColor: {r: 1, g: 1, b: 1, a: 1}
+    contentType: 1
+    narrativeText: 
     speakerName: 
-    dialogueLine: 
+    dialogueLine: ...it used to be full of animals.
     textInEffect: 1
     textOutEffect: 1
     delayAfterTextComplete: 3
@@ -114,7 +114,7 @@ MonoBehaviour:
   - stepId: ...wait.
     canSkipStep: 1
     backgroundType: 1
-    backgroundImage: {fileID: 21300000, guid: 2fd0d123d0e68c641ba8d3119ba7283f, type: 3}
+    backgroundImage: {fileID: 21300000, guid: f704915510924bd48a4ef57bf94bb5a2, type: 3}
     backgroundColor: {r: 1, g: 1, b: 1, a: 1}
     contentType: 1
     narrativeText: 
@@ -130,7 +130,7 @@ MonoBehaviour:
   - stepId: "That thing again\u2026"
     canSkipStep: 1
     backgroundType: 1
-    backgroundImage: {fileID: 21300000, guid: 2fd0d123d0e68c641ba8d3119ba7283f, type: 3}
+    backgroundImage: {fileID: 21300000, guid: f704915510924bd48a4ef57bf94bb5a2, type: 3}
     backgroundColor: {r: 1, g: 1, b: 1, a: 1}
     contentType: 1
     narrativeText: 
@@ -141,7 +141,7 @@ MonoBehaviour:
     delayAfterTextComplete: 3
     backgroundInEffect: 0
     backgroundOutEffect: 0
-    backgroundFadeInDuration: 0.2
+    backgroundFadeInDuration: 0
     backgroundFadeOutDuration: 0
   - stepId: "DAMN IT\u2026!"
     canSkipStep: 1
@@ -155,7 +155,7 @@ MonoBehaviour:
     textInEffect: 1
     textOutEffect: 0
     delayAfterTextComplete: 3
-    backgroundInEffect: 1
+    backgroundInEffect: 0
     backgroundOutEffect: 0
     backgroundFadeInDuration: 1
     backgroundFadeOutDuration: 0

@@ -147,7 +147,7 @@ MonoBehaviour:
   - stepId: ...what is that?
     canSkipStep: 1
     backgroundType: 1
-    backgroundImage: {fileID: 21300000, guid: 0aaedd7373956f442900b74c97a7790d, type: 3}
+    backgroundImage: {fileID: 21300000, guid: a068f69eef7e5734e9e58f20d8cb5fa0, type: 3}
     backgroundColor: {r: 1, g: 1, b: 1, a: 1}
     contentType: 1
     narrativeText: 
