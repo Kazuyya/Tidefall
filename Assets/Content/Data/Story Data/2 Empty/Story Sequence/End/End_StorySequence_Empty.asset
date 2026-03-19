@@ -1,0 +1,96 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5519bc30cdf3bbd4ca0e9f53ea1b1da7, type: 3}
+  m_Name: End_StorySequence_Empty
+  m_EditorClassIdentifier: 
+  sequenceId: EmptyEnd
+  steps:
+  - stepId: ...huff...
+    canSkipStep: 1
+    backgroundType: 0
+    backgroundImage: {fileID: 0}
+    backgroundColor: {r: 0, g: 0, b: 0, a: 0}
+    contentType: 0
+    narrativeText: ...huff...
+    speakerName: 
+    dialogueLine: 
+    textInEffect: 1
+    textOutEffect: 1
+    delayAfterTextComplete: 3
+    backgroundInEffect: 0
+    backgroundOutEffect: 0
+    backgroundFadeInDuration: 0
+    backgroundFadeOutDuration: 0
+  - stepId: "Damn\u2026 that was close."
+    canSkipStep: 1
+    backgroundType: 0
+    backgroundImage: {fileID: 0}
+    backgroundColor: {r: 0, g: 0, b: 0, a: 0}
+    contentType: 0
+    narrativeText: "Damn\u2026 that was close."
+    speakerName: 
+    dialogueLine: 
+    textInEffect: 1
+    textOutEffect: 1
+    delayAfterTextComplete: 3
+    backgroundInEffect: 0
+    backgroundOutEffect: 0
+    backgroundFadeInDuration: 0
+    backgroundFadeOutDuration: 0
+  - stepId: "Did those creatures\u2026 eat all the animals?"
+    canSkipStep: 1
+    backgroundType: 0
+    backgroundImage: {fileID: 0}
+    backgroundColor: {r: 0, g: 0, b: 0, a: 0}
+    contentType: 0
+    narrativeText: "Did those creatures\u2026 eat all the animals?"
+    speakerName: 
+    dialogueLine: 
+    textInEffect: 1
+    textOutEffect: 1
+    delayAfterTextComplete: 3
+    backgroundInEffect: 0
+    backgroundOutEffect: 0
+    backgroundFadeInDuration: 0
+    backgroundFadeOutDuration: 0
+  - stepId: "Or\u2026"
+    canSkipStep: 1
+    backgroundType: 0
+    backgroundImage: {fileID: 0}
+    backgroundColor: {r: 0, g: 0, b: 0, a: 0}
+    contentType: 0
+    narrativeText: "Or\u2026"
+    speakerName: 
+    dialogueLine: 
+    textInEffect: 1
+    textOutEffect: 1
+    delayAfterTextComplete: 3
+    backgroundInEffect: 0
+    backgroundOutEffect: 0
+    backgroundFadeInDuration: 0
+    backgroundFadeOutDuration: 0
+  - stepId: I need to find out more.
+    canSkipStep: 1
+    backgroundType: 0
+    backgroundImage: {fileID: 0}
+    backgroundColor: {r: 0, g: 0, b: 0, a: 0}
+    contentType: 0
+    narrativeText: I need to find out more.
+    speakerName: 
+    dialogueLine: 
+    textInEffect: 1
+    textOutEffect: 1
+    delayAfterTextComplete: 3
+    backgroundInEffect: 0
+    backgroundOutEffect: 0
+    backgroundFadeInDuration: 0
+    backgroundFadeOutDuration: 0

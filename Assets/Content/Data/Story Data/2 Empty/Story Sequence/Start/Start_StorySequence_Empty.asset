@@ -1,0 +1,161 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5519bc30cdf3bbd4ca0e9f53ea1b1da7, type: 3}
+  m_Name: Start_StorySequence_Empty
+  m_EditorClassIdentifier: 
+  sequenceId: EmptyStart
+  steps:
+  - stepId: '#2 empty'
+    canSkipStep: 0
+    backgroundType: 0
+    backgroundImage: {fileID: 0}
+    backgroundColor: {r: 0, g: 0, b: 0, a: 1}
+    contentType: 0
+    narrativeText: '#2 empty'
+    speakerName: 
+    dialogueLine: 
+    textInEffect: 2
+    textOutEffect: 1
+    delayAfterTextComplete: 3
+    backgroundInEffect: 0
+    backgroundOutEffect: 0
+    backgroundFadeInDuration: 0
+    backgroundFadeOutDuration: 0
+  - stepId: "I kept walking through the fog.  This forest\u2026 started to change."
+    canSkipStep: 1
+    backgroundType: 0
+    backgroundImage: {fileID: 0}
+    backgroundColor: {r: 0, g: 0, b: 0, a: 1}
+    contentType: 0
+    narrativeText: "I kept walking through the fog.\n\nThis forest\u2026 started
+      to change."
+    speakerName: 
+    dialogueLine: 
+    textInEffect: 1
+    textOutEffect: 1
+    delayAfterTextComplete: 3
+    backgroundInEffect: 0
+    backgroundOutEffect: 0
+    backgroundFadeInDuration: 0
+    backgroundFadeOutDuration: 0
+  - stepId: "The leaves\u2026 they're all yellow."
+    canSkipStep: 1
+    backgroundType: 0
+    backgroundImage: {fileID: 0}
+    backgroundColor: {r: 0, g: 0, b: 0, a: 1}
+    contentType: 0
+    narrativeText: "The leaves\u2026 they're all yellow."
+    speakerName: 
+    dialogueLine: 
+    textInEffect: 1
+    textOutEffect: 1
+    delayAfterTextComplete: 3
+    backgroundInEffect: 0
+    backgroundOutEffect: 0
+    backgroundFadeInDuration: 0
+    backgroundFadeOutDuration: 0
+  - stepId: "This place\u2026"
+    canSkipStep: 1
+    backgroundType: 0
+    backgroundImage: {fileID: 0}
+    backgroundColor: {r: 0, g: 0, b: 0, a: 1}
+    contentType: 0
+    narrativeText: "This place\u2026"
+    speakerName: 
+    dialogueLine: 
+    textInEffect: 1
+    textOutEffect: 1
+    delayAfterTextComplete: 3
+    backgroundInEffect: 0
+    backgroundOutEffect: 0
+    backgroundFadeInDuration: 0
+    backgroundFadeOutDuration: 0
+  - stepId: ...it used to be full of animals.
+    canSkipStep: 1
+    backgroundType: 0
+    backgroundImage: {fileID: 0}
+    backgroundColor: {r: 0, g: 0, b: 0, a: 1}
+    contentType: 0
+    narrativeText: ...it used to be full of animals.
+    speakerName: 
+    dialogueLine: 
+    textInEffect: 1
+    textOutEffect: 1
+    delayAfterTextComplete: 3
+    backgroundInEffect: 0
+    backgroundOutEffect: 0
+    backgroundFadeInDuration: 0
+    backgroundFadeOutDuration: 0
+  - stepId: "Where\u2026 did they all go?"
+    canSkipStep: 1
+    backgroundType: 0
+    backgroundImage: {fileID: 0}
+    backgroundColor: {r: 0, g: 0, b: 0, a: 1}
+    contentType: 0
+    narrativeText: "Where\u2026 did they all go?"
+    speakerName: 
+    dialogueLine: 
+    textInEffect: 1
+    textOutEffect: 1
+    delayAfterTextComplete: 3
+    backgroundInEffect: 0
+    backgroundOutEffect: 0
+    backgroundFadeInDuration: 0
+    backgroundFadeOutDuration: 0
+  - stepId: ...wait.
+    canSkipStep: 1
+    backgroundType: 1
+    backgroundImage: {fileID: 21300000, guid: 2fd0d123d0e68c641ba8d3119ba7283f, type: 3}
+    backgroundColor: {r: 1, g: 1, b: 1, a: 1}
+    contentType: 1
+    narrativeText: 
+    speakerName: 
+    dialogueLine: ...wait.
+    textInEffect: 1
+    textOutEffect: 1
+    delayAfterTextComplete: 3
+    backgroundInEffect: 1
+    backgroundOutEffect: 0
+    backgroundFadeInDuration: 0.2
+    backgroundFadeOutDuration: 0
+  - stepId: "That thing again\u2026"
+    canSkipStep: 1
+    backgroundType: 1
+    backgroundImage: {fileID: 21300000, guid: 2fd0d123d0e68c641ba8d3119ba7283f, type: 3}
+    backgroundColor: {r: 1, g: 1, b: 1, a: 1}
+    contentType: 1
+    narrativeText: 
+    speakerName: 
+    dialogueLine: "That thing again\u2026"
+    textInEffect: 1
+    textOutEffect: 1
+    delayAfterTextComplete: 3
+    backgroundInEffect: 0
+    backgroundOutEffect: 0
+    backgroundFadeInDuration: 0.2
+    backgroundFadeOutDuration: 0
+  - stepId: "DAMN IT\u2026!"
+    canSkipStep: 1
+    backgroundType: 1
+    backgroundImage: {fileID: 21300000, guid: 0aaedd7373956f442900b74c97a7790d, type: 3}
+    backgroundColor: {r: 1, g: 1, b: 1, a: 1}
+    contentType: 1
+    narrativeText: 
+    speakerName: 
+    dialogueLine: "DAMN IT\u2026!"
+    textInEffect: 1
+    textOutEffect: 0
+    delayAfterTextComplete: 3
+    backgroundInEffect: 1
+    backgroundOutEffect: 0
+    backgroundFadeInDuration: 1
+    backgroundFadeOutDuration: 0
