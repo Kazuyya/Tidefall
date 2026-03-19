@@ -12,25 +12,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c8b77e5b534f5841bd8588886056410, type: 3}
   m_Name: AIMonsterPlantSettings
   m_EditorClassIdentifier: 
-  MoveSpeed: 2.8
+  MoveSpeed: 2.2
   RotationSpeed: 200
   StoppingDistance: 2
-  DetectionRange: 20
-  AggroRange: 7
+  DetectionRange: 16
+  AggroRange: 6.5
   AttackRange: 1.5
   TargetLayers:
     serializedVersion: 2
     m_Bits: 8
   DetectionUpdateInterval: 0.5
-  TauntDuration: 1.2
-  AggroBuildupTime: 2
-  CombatCooldownTime: 6
+  TauntDuration: 1.4
+  AggroBuildupTime: 2.5
+  CombatCooldownTime: 10
   LoseAggroDistance: 16
   IdleMoveRadius: 4
   IdleWaitTime: 3
-  AttackPreparationTime: 0.8
-  PostAttackRepositionDistance: 2.8
-  MovementPreparationTime: 0.7
+  AttackPreparationTime: 1
+  PostAttackRepositionDistance: 3
+  MovementPreparationTime: 0.8
   speedParameterName: speed
   tauntTriggerName: taunt
   ShowDebugGizmos: 1

@@ -35,6 +35,7 @@ namespace LittleHeroJourney
         private int currentPlayerHealth = 100;
 
         private Action _playHandler;
+        private Action _continueJourneyHandler;
         private Action _pendingAfterFade;
         private Action _fadeCompleteHandler;
         private Action _storyLastStepStartedHandler;
@@ -63,6 +64,8 @@ namespace LittleHeroJourney
         {
             _playHandler = HandlePlay;
             GameEventSystem.SubscribeAction("Play", _playHandler);
+            _continueJourneyHandler = RequestContinueJourney;
+            GameEventSystem.SubscribeAction("ContinueJourney", _continueJourneyHandler);
             _fadeCompleteHandler = OnStartJourneyFadeComplete;
             GameEventSystem.SubscribeAction("StartJourneyFadeComplete", _fadeCompleteHandler);
             _storyLastStepStartedHandler = OnStoryLastStepStarted;
@@ -121,6 +124,8 @@ namespace LittleHeroJourney
         private void OnDisable()
         {
             GameEventSystem.UnsubscribeAction("Play", _playHandler);
+            if (_continueJourneyHandler != null)
+                GameEventSystem.UnsubscribeAction("ContinueJourney", _continueJourneyHandler);
             if (_fadeCompleteHandler != null)
                 GameEventSystem.UnsubscribeAction("StartJourneyFadeComplete", _fadeCompleteHandler);
             if (_storyLastStepStartedHandler != null)

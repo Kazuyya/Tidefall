@@ -12,25 +12,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c8b77e5b534f5841bd8588886056410, type: 3}
   m_Name: AIPamSettings
   m_EditorClassIdentifier: 
-  MoveSpeed: 2.4
+  MoveSpeed: 3
   RotationSpeed: 200
   StoppingDistance: 1.2
-  DetectionRange: 20
+  DetectionRange: 16
   AggroRange: 6
   AttackRange: 1.2
   TargetLayers:
     serializedVersion: 2
     m_Bits: 8
   DetectionUpdateInterval: 0.6
-  TauntDuration: 1.5
-  AggroBuildupTime: 2.5
-  CombatCooldownTime: 8
+  TauntDuration: 1.2
+  AggroBuildupTime: 2
+  CombatCooldownTime: 7
   LoseAggroDistance: 14
   IdleMoveRadius: 3
   IdleWaitTime: 3.5
-  AttackPreparationTime: 0.9
-  PostAttackRepositionDistance: 2
-  MovementPreparationTime: 0.8
+  AttackPreparationTime: 0.7
+  PostAttackRepositionDistance: 2.5
+  MovementPreparationTime: 0.6
   speedParameterName: speed
   tauntTriggerName: taunt
   ShowDebugGizmos: 1

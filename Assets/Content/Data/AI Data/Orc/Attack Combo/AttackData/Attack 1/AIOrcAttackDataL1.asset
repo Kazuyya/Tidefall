@@ -27,4 +27,4 @@ MonoBehaviour:
   particleEffects: []
   vfxEffects: []
   audioEffects: []
-  aiComboContinueChance: 0.3
+  aiComboContinueChance: 0.35

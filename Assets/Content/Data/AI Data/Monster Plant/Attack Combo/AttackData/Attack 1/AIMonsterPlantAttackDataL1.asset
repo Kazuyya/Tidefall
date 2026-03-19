@@ -34,4 +34,4 @@ MonoBehaviour:
     scale: {x: 0, y: 0, z: 0}
     followCharacter: 1
   trailEffects: []
-  aiComboContinueChance: 1
+  aiComboContinueChance: 0.4

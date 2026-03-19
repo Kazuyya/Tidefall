@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2065cb6120ff4234eb925f1f41b6afd5, type: 3}
   m_Name: DoubleSwordDamageDataL4
   m_EditorClassIdentifier: 
-  baseDamage: 70
+  baseDamage: 65
   damageType: 0
-  criticalChance: 0.1
+  criticalChance: 0.12
   criticalMultiplier: 1.5
-  damageVariance: 8.4
-  knockbackForce: 55
-  stunDamage: 12
+  damageVariance: 7
+  knockbackForce: 45
+  stunDamage: 10
   canDamageFactions: 2

@@ -1,5 +1,7 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
 
 namespace LittleHeroJourney
 {
@@ -16,12 +18,20 @@ namespace LittleHeroJourney
         [Header("Debug")]
         [SerializeField] private bool showDebugLog;
 
+        [Header("Main Menu UI")]
+        [Tooltip("Main primary button label (Start / Journeys).")]
+        [SerializeField] private TextMeshProUGUI primaryButtonLabel;
+        [Tooltip("Primary button (publishes Play).")]
+        [SerializeField] private Button primaryButton;
+        [Tooltip("Continue button (publishes ContinueJourney). Hidden until journey 1 completed.")]
+        [SerializeField] private GameObject continueButtonRoot;
+        [SerializeField] private Button continueButton;
+
         private System.Action _startJourneyHandler;
 
         private void OnEnable()
         {
-            if (string.IsNullOrEmpty(bgmEffectId)) return;
-            if (CharacterEffectManager.Instance != null)
+            if (!string.IsNullOrEmpty(bgmEffectId) && CharacterEffectManager.Instance != null)
             {
                 CharacterEffectManager.Instance.PlayBGM(bgmEffectId);
                 if (showDebugLog) Debug.Log($"[{GetType().Name}] BGM started: {bgmEffectId}");
@@ -29,6 +39,8 @@ namespace LittleHeroJourney
 
             _startJourneyHandler = OnStartJourney;
             GameEventSystem.SubscribeAction("StartJourney", _startJourneyHandler);
+
+            RefreshMenuUI();
         }
 
         private void OnDisable()
@@ -40,6 +52,34 @@ namespace LittleHeroJourney
             }
             if (CharacterEffectManager.Instance != null)
                 CharacterEffectManager.Instance.StopBGM();
+        }
+
+        private void RefreshMenuUI()
+        {
+            bool hasProgressBeyondJourney1 = JourneyManager.Instance != null &&
+                                             JourneyManager.HasAnySave() &&
+                                             JourneyManager.Instance.GetFirstUncompletedStageNumber() > 1;
+
+            if (primaryButton != null)
+            {
+                primaryButton.onClick.RemoveAllListeners();
+                primaryButton.onClick.AddListener(() => GameEventSystem.Publish(new UIActionEvent("Play")));
+            }
+
+            if (continueButton != null)
+            {
+                continueButton.onClick.RemoveAllListeners();
+                continueButton.onClick.AddListener(() => GameEventSystem.Publish(new UIActionEvent("ContinueJourney")));
+            }
+
+            if (continueButtonRoot != null)
+                continueButtonRoot.SetActive(hasProgressBeyondJourney1);
+
+            if (primaryButtonLabel != null)
+                primaryButtonLabel.text = hasProgressBeyondJourney1 ? "journeys" : "start";
+
+            if (showDebugLog)
+                Debug.Log($"[{GetType().Name}] RefreshMenuUI: showContinue={hasProgressBeyondJourney1}, primaryLabel={(primaryButtonLabel != null ? primaryButtonLabel.text : "<null>")}");
         }
 
         private void OnStartJourney()
