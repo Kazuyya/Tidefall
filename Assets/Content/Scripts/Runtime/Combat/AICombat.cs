@@ -18,7 +18,7 @@ namespace LittleHeroJourney
             AnimatorStateInfo state = Animator.GetCurrentAnimatorStateInfo(0);
             float normTime = state.normalizedTime % 1f;
             if (normTime < 0.15f) return true;
-            return normTime >= attack.movementDisableWindow.x && normTime <= attack.movementDisableWindow.y;
+            return attack.IsMovementDisabledAt(normTime);
         }
 
         protected override Animator GetCombatAnimator()

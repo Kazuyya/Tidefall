@@ -10,16 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5519bc30cdf3bbd4ca0e9f53ea1b1da7, type: 3}
-  m_Name: End_StorySequence_Prologue
+  m_Name: End_StorySequence_Unknow
   m_EditorClassIdentifier: 
-  sequenceId: Prologue
+  sequenceId: UnknowEnd
   steps:
-  - stepId: aaa
+  - stepId: ...huff...
     backgroundType: 0
     backgroundImage: {fileID: 0}
     backgroundColor: {r: 0, g: 0, b: 0, a: 0}
     contentType: 0
-    narrativeText: aaaaaaaaaaaaa
+    narrativeText: ...huff...
     speakerName: 
     dialogueLine: 
     textInEffect: 1
@@ -29,12 +29,12 @@ MonoBehaviour:
     backgroundOutEffect: 0
     backgroundFadeInDuration: 0
     backgroundFadeOutDuration: 0
-  - stepId: aaa
+  - stepId: "What\u2026 was that?"
     backgroundType: 0
     backgroundImage: {fileID: 0}
     backgroundColor: {r: 0, g: 0, b: 0, a: 0}
     contentType: 0
-    narrativeText: aaaaaaaaaaaaa
+    narrativeText: "What\u2026 was that?"
     speakerName: 
     dialogueLine: 
     textInEffect: 1
@@ -44,12 +44,43 @@ MonoBehaviour:
     backgroundOutEffect: 0
     backgroundFadeInDuration: 0
     backgroundFadeOutDuration: 0
-  - stepId: aaa
+  - stepId: "I've never seen creatures like that\u2026  "
     backgroundType: 0
     backgroundImage: {fileID: 0}
     backgroundColor: {r: 0, g: 0, b: 0, a: 0}
     contentType: 0
-    narrativeText: aaaaaaaaaaaaa
+    narrativeText: "I've never seen creatures like that\u2026"
+    speakerName: 
+    dialogueLine: 
+    textInEffect: 1
+    textOutEffect: 1
+    delayAfterTextComplete: 3
+    backgroundInEffect: 0
+    backgroundOutEffect: 0
+    backgroundFadeInDuration: 0
+    backgroundFadeOutDuration: 0
+  - stepId: "And when they die\u2026 their bodies vanish, merging into the fog."
+    backgroundType: 0
+    backgroundImage: {fileID: 0}
+    backgroundColor: {r: 0, g: 0, b: 0, a: 0}
+    contentType: 0
+    narrativeText: "And when they die\u2026\ntheir bodies vanish, merging into the
+      fog."
+    speakerName: 
+    dialogueLine: 
+    textInEffect: 1
+    textOutEffect: 1
+    delayAfterTextComplete: 3
+    backgroundInEffect: 0
+    backgroundOutEffect: 0
+    backgroundFadeInDuration: 0
+    backgroundFadeOutDuration: 0
+  - stepId: What is actually happening in this place?
+    backgroundType: 0
+    backgroundImage: {fileID: 0}
+    backgroundColor: {r: 0, g: 0, b: 0, a: 0}
+    contentType: 0
+    narrativeText: What is actually happening in this place?
     speakerName: 
     dialogueLine: 
     textInEffect: 1

@@ -60,6 +60,8 @@ namespace LittleHeroJourney
 
             // Id
             h += line + Pad;
+            // Can skip step
+            h += line + Pad;
 
             // Background Type + Background Image/Color + Content Type
             h += line + Pad;
@@ -160,6 +162,7 @@ namespace LittleHeroJourney
 
             SerializedProperty step = _stepsProp.GetArrayElementAtIndex(index);
             SerializedProperty stepId = step.FindPropertyRelative("stepId");
+            SerializedProperty canSkipStep = step.FindPropertyRelative("canSkipStep");
             string idLabel = string.IsNullOrEmpty(stepId.stringValue) ? $"Step {index}" : stepId.stringValue;
             bool expanded = IsStepExpanded(index);
 
@@ -176,6 +179,11 @@ namespace LittleHeroJourney
             Rect r0 = new Rect(x, y, w, line);
             y += line + Pad;
             EditorGUI.PropertyField(r0, stepId, new GUIContent("Id"));
+
+            Rect rSkip = new Rect(x, y, w, line);
+            y += line + Pad;
+            if (canSkipStep != null)
+                EditorGUI.PropertyField(rSkip, canSkipStep, new GUIContent("Can Skip Step"));
 
             SerializedProperty backgroundType = step.FindPropertyRelative("backgroundType");
             SerializedProperty backgroundImage = step.FindPropertyRelative("backgroundImage");

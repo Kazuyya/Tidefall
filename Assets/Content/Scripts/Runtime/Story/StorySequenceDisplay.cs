@@ -21,6 +21,7 @@ namespace LittleHeroJourney
         private StorySequenceSO _sequence;
         private int _stepIndex;
         private bool _advanceRequested;
+        private StoryStepPanel _animatingPanel;
 
         public bool IsPlaying => _playRoutine != null;
 
@@ -78,6 +79,11 @@ namespace LittleHeroJourney
         /// </summary>
         public void RequestAdvance()
         {
+            if (_sequence != null)
+            {
+                var step = _sequence.GetStep(_stepIndex);
+                if (step != null && !step.canSkipStep) return;
+            }
             if (IsAnimating)
             {
                 CompleteAnimationsNow();
@@ -92,7 +98,12 @@ namespace LittleHeroJourney
             for (int i = 0; i < _pool.Length; i++)
             {
                 if (_pool[i] != null && _pool[i].gameObject.activeSelf)
-                    _pool[i].CompleteNow();
+                {
+                    if (_pool[i] == _animatingPanel)
+                        _pool[i].CompleteNow();
+                    else
+                        _pool[i].HideAllTextImmediate();
+                }
             }
         }
 
@@ -141,6 +152,8 @@ namespace LittleHeroJourney
 
                 if (previousPanel != null && previousStep != null)
                 {
+                    previousPanel.HideAllTextImmediate();
+
                     bool willAnimateBackground = step.backgroundInEffect == StoryBackgroundTransitionEffect.Fade &&
                                                  (previousStep.backgroundType != step.backgroundType ||
                                                   previousStep.GetDisplayColor() != step.GetDisplayColor() ||
@@ -182,7 +195,9 @@ namespace LittleHeroJourney
                 if (_sequence != null && _stepIndex == _sequence.StepCount - 1)
                     GameEventSystem.Publish(new UIActionEvent("StoryLastStepStarted"));
 
+                _animatingPanel = incoming;
                 yield return StartCoroutine(incoming.PlayInRoutine(step, animateBackground, animateDialoguePanel));
+                _animatingPanel = null;
 
                 if (previousPanel != null)
                     previousPanel.gameObject.SetActive(false);
@@ -224,6 +239,11 @@ namespace LittleHeroJourney
 
         public void OnNextClicked()
         {
+            if (_sequence != null)
+            {
+                var step = _sequence.GetStep(_stepIndex);
+                if (step != null && !step.canSkipStep) return;
+            }
             if (JourneyManager.Instance != null)
                 JourneyManager.Instance.RequestAdvanceStory();
         }

@@ -21,8 +21,13 @@ MonoBehaviour:
     colliderTriggerWindow: {x: 0.45, y: 0.6}
   attackDamageData: {fileID: 11400000, guid: 7a12fa435e8808b4b8f459179fa2028f, type: 2}
   inputWindow: {x: 0.8, y: 1}
-  interruptibleWindow: {x: 0, y: 1}
-  movementDisableWindow: {x: 0.4, y: 0.95}
+  interruptibleWindows:
+  - {x: 0, y: 0.2}
+  - {x: 0.7, y: 1}
+  movementDisableWindows:
+  - {x: 0.4, y: 0.95}
+  _legacyInterruptibleWindow: {x: 0, y: 0.2}
+  _legacyMovementDisableWindow: {x: 0.4, y: 0.95}
   resetComboOnAnimationEnd: 1
   particleEffects: []
   vfxEffects: []

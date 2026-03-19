@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace LittleHeroJourney
 {
@@ -44,11 +45,16 @@ namespace LittleHeroJourney
     [Tooltip("Time window for next combo input (start-end in animation 0-1)")]
     public Vector2 inputWindow = new Vector2(0.4f, 0.8f);
 
-    [Tooltip("Time window when attack can be interrupted (start-end in animation 0-1)")]
-    public Vector2 interruptibleWindow = new Vector2(0.0f, 0.7f);
+    [Tooltip("Time windows when attack can be interrupted (start-end in animation 0-1).")]
+    public List<Vector2> interruptibleWindows = new List<Vector2>();
 
-    [Tooltip("Time window when movement input is disabled (start-end in animation 0-1)")]
-    public Vector2 movementDisableWindow = new Vector2(0.0f, 0.8f);
+    [Tooltip("Time windows when movement input is disabled (start-end in animation 0-1).")]
+    public List<Vector2> movementDisableWindows = new List<Vector2>();
+
+    [FormerlySerializedAs("interruptibleWindow")]
+    [SerializeField, HideInInspector] private Vector2 _legacyInterruptibleWindow = new Vector2(0.0f, 0.7f);
+    [FormerlySerializedAs("movementDisableWindow")]
+    [SerializeField, HideInInspector] private Vector2 _legacyMovementDisableWindow = new Vector2(0.0f, 0.8f);
 
     [Tooltip("Reset combo if no input during animation?")]
     public bool resetComboOnAnimationEnd = true;
@@ -70,5 +76,38 @@ namespace LittleHeroJourney
     [Tooltip("Probability for AI to continue combo after this attack (0-1). Only used by AI, player uses inputWindow instead")]
     [Range(0f, 1f)]
     public float aiComboContinueChance = 1.0f;
+
+    public bool IsInterruptibleAt(float normalizedTime, float epsilon = 0.001f) =>
+        IsWithinAnyWindow(normalizedTime, interruptibleWindows, epsilon);
+
+    public bool IsMovementDisabledAt(float normalizedTime, float epsilon = 0.001f) =>
+        IsWithinAnyWindow(normalizedTime, movementDisableWindows, epsilon);
+
+    private static bool IsWithinAnyWindow(float t, List<Vector2> windows, float epsilon)
+    {
+        if (windows == null || windows.Count == 0) return false;
+        for (int i = 0; i < windows.Count; i++)
+        {
+            float a = Mathf.Min(windows[i].x, windows[i].y);
+            float b = Mathf.Max(windows[i].x, windows[i].y);
+            if (t >= (a - epsilon) && t <= (b + epsilon))
+                return true;
+        }
+        return false;
+    }
+
+    private void OnValidate()
+    {
+        if ((interruptibleWindows == null || interruptibleWindows.Count == 0) && _legacyInterruptibleWindow != Vector2.zero)
+        {
+            if (interruptibleWindows == null) interruptibleWindows = new List<Vector2>();
+            interruptibleWindows.Add(_legacyInterruptibleWindow);
+        }
+        if ((movementDisableWindows == null || movementDisableWindows.Count == 0) && _legacyMovementDisableWindow != Vector2.zero)
+        {
+            if (movementDisableWindows == null) movementDisableWindows = new List<Vector2>();
+            movementDisableWindows.Add(_legacyMovementDisableWindow);
+        }
+    }
     }
 }

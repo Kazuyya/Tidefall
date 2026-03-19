@@ -45,6 +45,8 @@ namespace LittleHeroJourney
         public class StoryStep
         {
             public string stepId = "";
+            [Tooltip("If false, player cannot skip/advance this step via Next.")]
+            public bool canSkipStep = true;
             public StoryBackgroundType backgroundType = StoryBackgroundType.Solid;
             [HideInInspector] public Sprite backgroundImage;
             [HideInInspector] public Color backgroundColor = Color.black;

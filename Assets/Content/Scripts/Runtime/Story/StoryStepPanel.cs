@@ -261,6 +261,24 @@ namespace LittleHeroJourney
             }
         }
 
+        public void HideAllTextImmediate()
+        {
+            if (textGroup != null)
+                textGroup.alpha = 0f;
+
+            if (textNarrative != null)
+            {
+                textNarrative.maxVisibleCharacters = 0;
+                SetTextAlpha(textNarrative, 0f);
+            }
+
+            if (textDialogue != null)
+            {
+                textDialogue.maxVisibleCharacters = 0;
+                SetTextAlpha(textDialogue, 0f);
+            }
+        }
+
         private TextMeshProUGUI GetActiveText()
         {
             if (textNarrative != null && textNarrative.gameObject.activeSelf) return textNarrative;

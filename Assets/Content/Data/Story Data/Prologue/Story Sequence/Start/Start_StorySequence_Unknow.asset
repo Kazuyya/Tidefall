@@ -10,11 +10,28 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5519bc30cdf3bbd4ca0e9f53ea1b1da7, type: 3}
-  m_Name: Start_StorySequence_Prologue
+  m_Name: Start_StorySequence_Unknow
   m_EditorClassIdentifier: 
-  sequenceId: Prologue
+  sequenceId: UnknowStart
   steps:
+  - stepId: '#1 unknow'
+    canSkipStep: 0
+    backgroundType: 0
+    backgroundImage: {fileID: 0}
+    backgroundColor: {r: 0, g: 0, b: 0, a: 1}
+    contentType: 0
+    narrativeText: '#1 unknow'
+    speakerName: 
+    dialogueLine: 
+    textInEffect: 2
+    textOutEffect: 1
+    delayAfterTextComplete: 3
+    backgroundInEffect: 0
+    backgroundOutEffect: 0
+    backgroundFadeInDuration: 0
+    backgroundFadeOutDuration: 0
   - stepId: "At that time\u2026"
+    canSkipStep: 1
     backgroundType: 0
     backgroundImage: {fileID: 0}
     backgroundColor: {r: 0, g: 0, b: 0, a: 1}
@@ -30,6 +47,7 @@ MonoBehaviour:
     backgroundFadeInDuration: 0
     backgroundFadeOutDuration: 0
   - stepId: I was resting in the forest. My body felt weak, as always.
+    canSkipStep: 1
     backgroundType: 0
     backgroundImage: {fileID: 0}
     backgroundColor: {r: 0, g: 0, b: 0, a: 1}
@@ -47,6 +65,7 @@ MonoBehaviour:
     backgroundFadeInDuration: 0
     backgroundFadeOutDuration: 0
   - stepId: "Then suddenly\u2026 a thick fog fell from the sky."
+    canSkipStep: 1
     backgroundType: 0
     backgroundImage: {fileID: 0}
     backgroundColor: {r: 0, g: 0, b: 0, a: 1}
@@ -62,6 +81,7 @@ MonoBehaviour:
     backgroundFadeInDuration: 0
     backgroundFadeOutDuration: 0
   - stepId: "After that\u2026 I don't remember anything."
+    canSkipStep: 1
     backgroundType: 0
     backgroundImage: {fileID: 0}
     backgroundColor: {r: 0, g: 0, b: 0, a: 1}
@@ -77,6 +97,7 @@ MonoBehaviour:
     backgroundFadeInDuration: 0
     backgroundFadeOutDuration: 0
   - stepId: ...ugh...
+    canSkipStep: 1
     backgroundType: 0
     backgroundImage: {fileID: 0}
     backgroundColor: {r: 0, g: 0, b: 0, a: 1}
@@ -92,6 +113,7 @@ MonoBehaviour:
     backgroundFadeInDuration: 0
     backgroundFadeOutDuration: 0
   - stepId: "My head\u2026"
+    canSkipStep: 1
     backgroundType: 1
     backgroundImage: {fileID: 21300000, guid: 2fd0d123d0e68c641ba8d3119ba7283f, type: 3}
     backgroundColor: {r: 1, g: 1, b: 1, a: 1}
@@ -107,6 +129,7 @@ MonoBehaviour:
     backgroundFadeInDuration: 0.2
     backgroundFadeOutDuration: 0
   - stepId: "This fog\u2026 what happened?"
+    canSkipStep: 1
     backgroundType: 1
     backgroundImage: {fileID: 21300000, guid: 2fd0d123d0e68c641ba8d3119ba7283f, type: 3}
     backgroundColor: {r: 1, g: 1, b: 1, a: 1}
@@ -122,6 +145,7 @@ MonoBehaviour:
     backgroundFadeInDuration: 0.2
     backgroundFadeOutDuration: 0
   - stepId: ...what is that?
+    canSkipStep: 1
     backgroundType: 1
     backgroundImage: {fileID: 21300000, guid: 0aaedd7373956f442900b74c97a7790d, type: 3}
     backgroundColor: {r: 1, g: 1, b: 1, a: 1}
@@ -137,6 +161,7 @@ MonoBehaviour:
     backgroundFadeInDuration: 1
     backgroundFadeOutDuration: 0
   - stepId: "Wait\u2026"
+    canSkipStep: 1
     backgroundType: 0
     backgroundImage: {fileID: 0}
     backgroundColor: {r: 0, g: 0, b: 0, a: 1}
@@ -152,6 +177,7 @@ MonoBehaviour:
     backgroundFadeInDuration: 0.4
     backgroundFadeOutDuration: 0
   - stepId: DAMN!!! HE'S GETTING CLOSER!!!
+    canSkipStep: 1
     backgroundType: 0
     backgroundImage: {fileID: 0}
     backgroundColor: {r: 0, g: 0, b: 0, a: 1}

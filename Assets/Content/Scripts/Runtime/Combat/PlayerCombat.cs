@@ -55,11 +55,7 @@ namespace LittleHeroJourney
                 AnimatorStateInfo stateInfo = _animator.GetCurrentAnimatorStateInfo(0);
                 float normalizedTime = stateInfo.normalizedTime % 1.0f;
                 
-                Vector2 interruptWindow = currentAttack.interruptibleWindow;
-                bool isInInterruptibleWindow = normalizedTime >= interruptWindow.x && 
-                                               normalizedTime <= interruptWindow.y;
-                
-                return isInInterruptibleWindow;
+                return currentAttack.IsInterruptibleAt(normalizedTime);
             }
         }
 
@@ -245,8 +241,8 @@ namespace LittleHeroJourney
             AnimatorStateInfo stateInfo = _animator.GetCurrentAnimatorStateInfo(0);
             float normalizedTime = stateInfo.normalizedTime % 1.0f;
 
-            Vector2 inputWindow = currentAttack.inputWindow;
             const float EPSILON = 0.001f;  
+            Vector2 inputWindow = currentAttack.inputWindow;
             bool isWithinInputWindow = normalizedTime >= (inputWindow.x - EPSILON) && 
                                        normalizedTime <= (inputWindow.y + EPSILON);
 
@@ -563,8 +559,7 @@ namespace LittleHeroJourney
         protected virtual void UpdateMovementDisableFromAttack(AttackDataSO currentAttack, float normalizedTime)
         {
             if (currentAttack == null) return;
-            bool shouldMovementBeDisabled = normalizedTime >= currentAttack.movementDisableWindow.x &&
-                                           normalizedTime <= currentAttack.movementDisableWindow.y;
+            bool shouldMovementBeDisabled = currentAttack.IsMovementDisabledAt(normalizedTime);
             SetMovementDisabled(shouldMovementBeDisabled);
         }
 
@@ -896,9 +891,8 @@ namespace LittleHeroJourney
                 return false;
 
             float normalizedTime = GetCurrentAttackNormalizedTime();
-            Vector2 movementWindow = currentAttack.movementDisableWindow;
             const float EPSILON = 0.001f;
-            return normalizedTime >= (movementWindow.x - EPSILON) && normalizedTime <= (movementWindow.y + EPSILON);
+            return currentAttack.IsMovementDisabledAt(normalizedTime, EPSILON);
         }
 
         #endregion

@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEditor;
+using UnityEditorInternal;
 
 namespace LittleHeroJourney
 {
@@ -7,10 +8,68 @@ namespace LittleHeroJourney
     public class AttackDataSOEditor : UnityEditor.Editor
     {
         private AttackDataSO attackData;
+        private ReorderableList _interruptibleList;
+        private ReorderableList _movementDisableList;
 
         private void OnEnable()
         {
             attackData = (AttackDataSO)target;
+            var interruptProp = serializedObject.FindProperty("interruptibleWindows");
+            var movementProp = serializedObject.FindProperty("movementDisableWindows");
+            _interruptibleList = new ReorderableList(serializedObject, interruptProp, true, true, true, true)
+            {
+                drawHeaderCallback = r => EditorGUI.LabelField(r, "Interruptible Windows (0-1)"),
+                drawElementCallback = (rect, index, active, focused) => DrawWindowElement(rect, interruptProp, index)
+            };
+            _movementDisableList = new ReorderableList(serializedObject, movementProp, true, true, true, true)
+            {
+                drawHeaderCallback = r => EditorGUI.LabelField(r, "Movement Disable Windows (0-1)"),
+                drawElementCallback = (rect, index, active, focused) => DrawWindowElement(rect, movementProp, index)
+            };
+        }
+
+        private void DrawWindowElement(Rect rect, SerializedProperty listProp, int index)
+        {
+            SerializedProperty element = listProp.GetArrayElementAtIndex(index);
+            float line = EditorGUIUtility.singleLineHeight;
+            float min = element.vector2Value.x;
+            float max = element.vector2Value.y;
+
+            Rect labelRect = new Rect(rect.x, rect.y, 50, line);
+            EditorGUI.LabelField(labelRect, $" [{index}]");
+
+            float sliderWidth = Mathf.Max(120, rect.width - 50 - 50 - 10 - 50 - 10);
+            Rect sliderRect = new Rect(rect.x + 50, rect.y, sliderWidth, line);
+            EditorGUI.BeginChangeCheck();
+            EditorGUI.MinMaxSlider(sliderRect, ref min, ref max, 0f, 1f);
+            if (EditorGUI.EndChangeCheck())
+            {
+                min = Mathf.Clamp01(min);
+                max = Mathf.Clamp01(max);
+                if (min > max) max = min;
+                element.vector2Value = new Vector2(min, max);
+            }
+
+            min = element.vector2Value.x;
+            max = element.vector2Value.y;
+
+            float fieldW = 48f;
+            Rect startRect = new Rect(rect.x + 50 + sliderWidth + 4, rect.y, fieldW, line);
+            float newStart = EditorGUI.FloatField(startRect, min);
+            newStart = Mathf.Clamp01(newStart);
+
+            Rect dashRect = new Rect(rect.x + 50 + sliderWidth + 4 + fieldW, rect.y, 12, line);
+            EditorGUI.LabelField(dashRect, "-");
+
+            Rect endRect = new Rect(rect.x + 50 + sliderWidth + 4 + fieldW + 12, rect.y, fieldW, line);
+            float newEnd = EditorGUI.FloatField(endRect, max);
+            newEnd = Mathf.Clamp01(newEnd);
+
+            if (newStart != min || newEnd != max)
+            {
+                if (newStart > newEnd) newEnd = newStart;
+                element.vector2Value = new Vector2(newStart, newEnd);
+            }
         }
 
         public override void OnInspectorGUI()
@@ -71,11 +130,11 @@ namespace LittleHeroJourney
             // Combo Window
             DrawTimingWindowSlider("Combo Window", "inputWindow", "Time window for next combo input");
 
-            // Interruptible Window
-            DrawTimingWindowSlider("Interruptible Window", "interruptibleWindow", "Time window when attack can be interrupted");
+            // Interruptible Windows
+            _interruptibleList.DoLayoutList();
 
-            // Movement Disable Window
-            DrawTimingWindowSlider("Movement Disable Window", "movementDisableWindow", "Player movement input is disabled during this window");
+            // Movement Disable Windows
+            _movementDisableList.DoLayoutList();
 
             EditorGUILayout.PropertyField(serializedObject.FindProperty("resetComboOnAnimationEnd"));
             EditorGUILayout.Space();
