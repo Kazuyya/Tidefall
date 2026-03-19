@@ -48,7 +48,7 @@ namespace LittleHeroJourney.UI
             if (_slider == null) _slider = GetComponent<Slider>();
             if (_slider == null) return null;
             float target = GetTargetValue(normalized);
-            return _slider.DOValue(target, duration).SetEase(ease);
+            return _slider.DOValue(target, duration).SetEase(ease).SetUpdate(true);
         }
 
         public Slider Slider => _slider != null ? _slider : (_slider = GetComponent<Slider>());

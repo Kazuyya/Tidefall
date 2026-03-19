@@ -552,6 +552,8 @@ MonoBehaviour:
   storyCanvasId: StorySequence
   journeysData: {fileID: 11400000, guid: fab6114fdf79c3d42aae71ae0fd0278b, type: 2}
   journeySelectorCanvasId: 
+  autoPlayNextJourney: 1
+  autoAdvanceDelay: 1.5
   showDebugLog: 1
 --- !u!114 &209297274
 MonoBehaviour:

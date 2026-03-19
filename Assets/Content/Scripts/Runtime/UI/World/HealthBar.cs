@@ -165,11 +165,21 @@ namespace LittleHeroJourney.UI
             _mainBarTween?.Kill();
             _ghostTween?.Kill();
 
+            if (!isActiveAndEnabled || !gameObject.activeInHierarchy)
+            {
+                mainSliderBar.SetNormalized(normalized);
+                if (ghostBar != null) ghostBar.SetNormalized(normalized);
+                if (ghostBarIncrease != null) ghostBarIncrease.SetNormalized(normalized);
+                if (ghostBarDecrease != null) ghostBarDecrease.SetNormalized(normalized);
+                _lastNormalized = normalized;
+                return;
+            }
+
             if (isIncrease)
             {
                 Sequence mainSeq = null;
                 if (fillOnIncrease == FillAnimationType.Lerp)
-                    mainSeq = DOTween.Sequence();
+                    mainSeq = DOTween.Sequence().SetUpdate(true);
 
                 if (useGhost)
                 {
@@ -183,7 +193,7 @@ namespace LittleHeroJourney.UI
                             if (ghostAnimOnIncrease == FillAnimationType.Lerp)
                             {
                                 float incDelay = ghostIncreaseDelayDual;
-                                var ghostSeq = DOTween.Sequence();
+                                var ghostSeq = DOTween.Sequence().SetUpdate(true);
                                 ghostSeq.AppendInterval(incDelay);
                                 ghostSeq.Append(ghostBarIncrease.TweenToNormalized(normalized, ghostDurationIncrease, Ease.OutQuad));
                                 _ghostTween = ghostSeq;
@@ -206,7 +216,7 @@ namespace LittleHeroJourney.UI
                         if (ghostAnimOnIncrease == FillAnimationType.Lerp)
                         {
                             float incDelay = ghostIncreaseDelay;
-                            var ghostSeq = DOTween.Sequence();
+                            var ghostSeq = DOTween.Sequence().SetUpdate(true);
                             ghostSeq.AppendInterval(incDelay);
                             ghostSeq.Append(ghostBar.TweenToNormalized(normalized, ghostDuration, Ease.OutQuad));
                             _ghostTween = ghostSeq;
@@ -241,7 +251,7 @@ namespace LittleHeroJourney.UI
                     mainSliderBar.SetNormalized(normalized);
                 else
                 {
-                    var decSeq = DOTween.Sequence();
+                    var decSeq = DOTween.Sequence().SetUpdate(true);
                     decSeq.AppendInterval(fillDelayDecrease).Append(mainSliderBar.TweenToNormalized(normalized, fillDurationDecrease, Ease.OutQuad));
                     _mainBarTween = decSeq;
                 }
@@ -267,7 +277,7 @@ namespace LittleHeroJourney.UI
                         float ghostStart = ghostDec.GetNormalized();
                         ghostStart = Mathf.Max(ghostStart, normalized);
                         ghostDec.SetNormalized(ghostStart);
-                        var seq = DOTween.Sequence();
+                        var seq = DOTween.Sequence().SetUpdate(true);
                         seq.AppendInterval(delay);
                         seq.Append(ghostDec.TweenToNormalized(normalized, dur, Ease.OutQuad));
                         _ghostTween = seq;
@@ -323,10 +333,10 @@ namespace LittleHeroJourney.UI
             switch (type)
             {
                 case BarAnimationType.Shake:
-                    _animTween = target.DOShakeAnchorPos(duration, strength, 30);
+                    _animTween = target.DOShakeAnchorPos(duration, strength, 30).SetUpdate(true);
                     break;
                 case BarAnimationType.PunchScale:
-                    _animTween = target.DOPunchScale(Vector3.one * (strength * 0.1f), duration, 8);
+                    _animTween = target.DOPunchScale(Vector3.one * (strength * 0.1f), duration, 8).SetUpdate(true);
                     break;
             }
         }

@@ -58,6 +58,7 @@ namespace LittleHeroJourney
         public List<StoryEncounterSpawner> EncounterZones => _encounterZones;
 
         private List<StoryEncounterSpawner> _encounterZones = new List<StoryEncounterSpawner>();
+        private StoryEncounterSpawner _activeJourneyEncounterZone;
 
         #endregion
         
@@ -347,12 +348,47 @@ namespace LittleHeroJourney
         private void FindEncounterZones()
         {
             _encounterZones.Clear();
-            var zones = FindObjectsOfType<StoryEncounterSpawner>();
-            if (zones != null && zones.Length > 0)
+            _activeJourneyEncounterZone = null;
+
+            string requiredEncounterId = string.Empty;
+            if (JourneyManager.Instance != null)
             {
-                _encounterZones.AddRange(zones);
-                if (showDebugLog) Debug.Log($"[GameplayManager] Found {_encounterZones.Count} Encounter spawners. Broadcasting event.");
+                var journey = JourneyManager.Instance.GetCurrentJourney();
+                if (journey != null)
+                    requiredEncounterId = journey.StartEncounterId;
+            }
+
+            var zones = FindObjectsOfType<StoryEncounterSpawner>();
+            if (zones == null || zones.Length == 0)
+            {
+                if (showDebugLog) Debug.LogWarning("[GameplayManager] No encounter spawner found in this scene.");
+                return;
+            }
+
+            if (string.IsNullOrEmpty(requiredEncounterId))
+            {
+                if (showDebugLog) Debug.LogWarning("[GameplayManager] Current journey has empty StartEncounterId; no encounter zone will be tracked.");
+                return;
+            }
+
+            for (int i = 0; i < zones.Length; i++)
+            {
+                var zone = zones[i];
+                if (zone == null) continue;
+                if (!string.Equals(zone.EncounterId, requiredEncounterId, StringComparison.Ordinal)) continue;
+                _activeJourneyEncounterZone = zone;
+                _encounterZones.Add(zone);
+                break;
+            }
+
+            if (_activeJourneyEncounterZone != null)
+            {
+                if (showDebugLog) Debug.Log($"[GameplayManager] Tracking journey encounter zone id '{requiredEncounterId}'. Other zones ignored.");
                 GameEventSystem.Publish(new UIActionEvent("EncounterZonesInitialized"));
+            }
+            else if (showDebugLog)
+            {
+                Debug.LogWarning($"[GameplayManager] No encounter spawner matched Journey StartEncounterId '{requiredEncounterId}'.");
             }
         }
 
@@ -380,22 +416,12 @@ namespace LittleHeroJourney
 
         private void CheckAllEncountersCompleted()
         {
-            if (_encounterZones == null || _encounterZones.Count == 0)
+            if (_activeJourneyEncounterZone == null)
                 return;
 
-            bool allCompleted = true;
-            foreach (var zone in _encounterZones)
+            if (_activeJourneyEncounterZone.IsCompleted)
             {
-                if (zone == null || !zone.IsCompleted)
-                {
-                    allCompleted = false;
-                    break;
-                }
-            }
-
-            if (allCompleted)
-            {
-                if (showDebugLog) Debug.Log("[GameplayManager] All encounter zones completed -> Triggering Win!");
+                if (showDebugLog) Debug.Log("[GameplayManager] Journey encounter zone completed -> Triggering Win!");
                 TriggerLevelWin();
             }
         }

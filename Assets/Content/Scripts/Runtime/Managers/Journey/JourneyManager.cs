@@ -17,6 +17,11 @@ namespace LittleHeroJourney
         [SerializeField] private JourneysDataSO journeysData;
         [SerializeField] private string journeySelectorCanvasId = "";
 
+        [Header("Auto Advance")]
+        [SerializeField] private bool autoPlayNextJourney = true;
+        [Tooltip("Delay (seconds) after end story / combat finished before loading next journey.")]
+        [SerializeField] private float autoAdvanceDelay = 1.5f;
+
         [Header("Debug")]
         [SerializeField] private bool showDebugLog = false;
 
@@ -259,11 +264,9 @@ namespace LittleHeroJourney
         {
             if (_isEndStoryPlaying)
             {
-                CompleteLevel(currentLevelNumber);
                 _isEndStoryPlaying = false;
                 _currentStoryDisplay = null;
-                GameEventSystem.Publish(new UIActionEvent("EndStorySequenceCompleted"));
-                if (showDebugLog) Debug.Log("[JourneyManager] End story sequence completed -> saved progress.");
+                CompleteJourneyAndHandleAutoAdvance(true);
                 return;
             }
             if (!_isStartStoryPlaying) return;
@@ -280,7 +283,7 @@ namespace LittleHeroJourney
                 if (string.IsNullOrEmpty(storyCanvasId) || GameManager.Instance?.CanvasManager == null)
                 {
                     if (showDebugLog) Debug.LogWarning($"[{GetType().Name}] No story canvas or CanvasManager, completing level without end story.");
-                    CompleteLevel(currentLevelNumber);
+                    CompleteJourneyAndHandleAutoAdvance(false);
                     return;
                 }
                 _pendingEndStorySequence = endStory;
@@ -290,8 +293,7 @@ namespace LittleHeroJourney
             }
             else
             {
-                CompleteLevel(currentLevelNumber);
-                if (showDebugLog) Debug.Log("[JourneyManager] Combat finished, no end story -> saved progress.");
+                CompleteJourneyAndHandleAutoAdvance(false);
             }
         }
 
@@ -314,7 +316,7 @@ namespace LittleHeroJourney
             if (display == null)
             {
                 if (showDebugLog) Debug.LogWarning($"[{GetType().Name}] StorySequenceDisplay not found after story canvas open, completing level without end story.");
-                CompleteLevel(currentLevelNumber);
+                CompleteJourneyAndHandleAutoAdvance(false);
                 _pendingEndStorySequence = null;
                 _isEndStoryPlaying = false;
                 return;
@@ -399,6 +401,47 @@ namespace LittleHeroJourney
             if (state != null) state.isCompleted = true;
             SetLevelUnlocked(stageNumber + 1, true);
             ES3.Save(CurrentSaveKey, GetSaveData());
+        }
+
+        private void CompleteJourneyAndHandleAutoAdvance(bool hadEndStory)
+        {
+            int completedStage = currentLevelNumber;
+            CompleteLevel(completedStage);
+
+            if (!autoPlayNextJourney)
+            {
+                if (hadEndStory)
+                    GameEventSystem.Publish(new UIActionEvent("EndStorySequenceCompleted"));
+                if (showDebugLog) Debug.Log("[JourneyManager] Journey completed -> saved progress.");
+                return;
+            }
+
+            int nextStage = completedStage + 1;
+            var nextJourney = GetJourneyByNumber(nextStage);
+            if (nextJourney == null)
+            {
+                if (hadEndStory)
+                    GameEventSystem.Publish(new UIActionEvent("EndStorySequenceCompleted"));
+                if (showDebugLog) Debug.Log("[JourneyManager] Journey completed -> no next journey, all journeys done.");
+                return;
+            }
+
+            if (showDebugLog) Debug.Log($"[JourneyManager] Journey {completedStage} completed -> auto advancing to journey {nextStage} after {autoAdvanceDelay}s.");
+            StartCoroutine(AutoAdvanceToNextJourneyRoutine(nextStage));
+        }
+
+        private IEnumerator AutoAdvanceToNextJourneyRoutine(int nextStage)
+        {
+            if (autoAdvanceDelay > 0f)
+                yield return new WaitForSeconds(autoAdvanceDelay);
+
+            if (GameManager.Instance != null)
+            {
+                GameManager.Instance.SetTimeScale(1f);
+                GameManager.Instance.ResetGameState();
+            }
+
+            LoadStage(nextStage);
         }
 
         private void SetLevelUnlocked(int stageNumber, bool unlocked)
