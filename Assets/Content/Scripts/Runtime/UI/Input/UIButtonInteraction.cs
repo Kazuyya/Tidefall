@@ -7,8 +7,13 @@ namespace LittleHeroJourney.UI
 {
     [DisallowMultipleComponent]
     [RequireComponent(typeof(Button))]
-    public class UIButtonClickFeedback : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPointerExitHandler
+    public class UIButtonInteraction : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPointerExitHandler
     {
+        [Header("Click Audio")]
+        [SerializeField] private bool playClickSfx = true;
+        [SerializeField] private string clickSfxId = string.Empty;
+
+        [Header("Click Feedback")]
         [SerializeField] private RectTransform target;
         [SerializeField] private bool useUnscaledTime = true;
         [SerializeField] [Range(0.8f, 1f)] private float clickScale = 0.92f;
@@ -33,7 +38,7 @@ namespace LittleHeroJourney.UI
         {
             if (_button == null) _button = GetComponent<Button>();
             if (_button != null)
-                _button.onClick.AddListener(OnClickPulse);
+                _button.onClick.AddListener(OnClick);
 
             if (target != null)
                 target.localScale = _baseScale;
@@ -42,7 +47,7 @@ namespace LittleHeroJourney.UI
         private void OnDisable()
         {
             if (_button != null)
-                _button.onClick.RemoveListener(OnClickPulse);
+                _button.onClick.RemoveListener(OnClick);
             KillTween();
             if (target != null)
                 target.localScale = _baseScale;
@@ -66,7 +71,7 @@ namespace LittleHeroJourney.UI
             AnimateTo(_baseScale, returnDuration, Ease.OutExpo);
         }
 
-        private void OnClickPulse()
+        private void OnClick()
         {
             if (!CanAnimate()) return;
             KillTween();
@@ -81,6 +86,11 @@ namespace LittleHeroJourney.UI
                     if (target != null) target.localScale = _baseScale;
                     _scaleTween = null;
                 });
+
+            if (playClickSfx && !string.IsNullOrEmpty(clickSfxId))
+            {
+                CharacterEffectManager.Instance?.PlayAudio(clickSfxId, Vector3.zero);
+            }
         }
 
         private bool CanAnimate()
@@ -108,5 +118,10 @@ namespace LittleHeroJourney.UI
             shrinkDuration = Mathf.Max(0.01f, shrinkDuration);
             returnDuration = Mathf.Max(0.01f, returnDuration);
         }
+    }
+
+    // Backward-compat alias for existing components in scenes/prefabs.
+    public class UIButtonClickFeedback : UIButtonInteraction
+    {
     }
 }

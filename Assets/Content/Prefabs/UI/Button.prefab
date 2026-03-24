@@ -144,7 +144,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6553095999449452347}
   - component: {fileID: 6885738587363170605}
-  - component: {fileID: 4903593818718883218}
+  - component: {fileID: 7014602724335557432}
   m_Layer: 0
   m_Name: Button
   m_TagString: Untagged
@@ -228,7 +228,7 @@ MonoBehaviour:
           m_StringArgument: Story
           m_BoolArgument: 0
         m_CallState: 2
---- !u!114 &4903593818718883218
+--- !u!114 &7014602724335557432
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -237,12 +237,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 3866330951230822381}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b396f6e6780425841a9075c8a0f4ab53, type: 3}
+  m_Script: {fileID: 11500000, guid: 6d7330d81a8a24544b0eda8c42a1c344, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playClickSfx: 1
+  clickSfxId: ButtonClickPositif
   target: {fileID: 2726918125792458207}
   useUnscaledTime: 1
-  clickScale: 0.98
+  clickScale: 0.92
   shrinkDuration: 0.06
   returnDuration: 0.1
 --- !u!1 &7173027136939940314

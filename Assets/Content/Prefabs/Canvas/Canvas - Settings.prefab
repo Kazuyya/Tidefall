@@ -5955,6 +5955,10 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_StringArgument
       value: CloseSettings
       objectReference: {fileID: 0}
+    - target: {fileID: 7014602724335557432, guid: 254ce7b529fb7dd4b9c50539a5a5d4aa, type: 3}
+      propertyPath: clickSfxId
+      value: ButtonClickNegatif
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

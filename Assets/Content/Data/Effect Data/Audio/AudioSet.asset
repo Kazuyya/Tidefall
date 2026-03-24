@@ -26,6 +26,32 @@ MonoBehaviour:
       clips: []
       playType: 2
       cycleDelay: 0
+  - effectName: ButtonClickPositif
+    audioClips:
+    - clip: {fileID: 8300000, guid: 59b42a61a0ebee6479aa29f7cb8f318c, type: 3}
+      volume: 1
+    playType: 0
+    spatialBlend: 0
+    poolSize: 0
+    loop: 0
+    useLoopSection: 0
+    loopSection:
+      clips: []
+      playType: 2
+      cycleDelay: 0
+  - effectName: ButtonClickNegatif
+    audioClips:
+    - clip: {fileID: 8300000, guid: 64d38c9ffcace4545bc1897bfb39e086, type: 3}
+      volume: 1
+    playType: 0
+    spatialBlend: 0
+    poolSize: 0
+    loop: 0
+    useLoopSection: 0
+    loopSection:
+      clips: []
+      playType: 2
+      cycleDelay: 0
   - effectName: MainmenuBGM
     audioClips:
     - clip: {fileID: 8300000, guid: e01c81bb3dd9b494195ac61697c17021, type: 3}
@@ -43,7 +69,7 @@ MonoBehaviour:
       cycleDelay: 0
   - effectName: BattleBGM
     audioClips:
-    - clip: {fileID: 8300000, guid: dd6548f17c063b04283fec532ed263a1, type: 3}
+    - clip: {fileID: 8300000, guid: 6f2130bfad8199c47b5a14fa2651bbca, type: 3}
       volume: 1
     playType: 0
     spatialBlend: 0
@@ -52,13 +78,13 @@ MonoBehaviour:
     useLoopSection: 1
     loopSection:
       clips:
-      - clip: {fileID: 8300000, guid: f02ac12ba2e830a438a44a603223891a, type: 3}
+      - clip: {fileID: 8300000, guid: 8cd1fd2908a0e7e4aa5653638e905782, type: 3}
         volume: 1
       playType: 0
       cycleDelay: 0
   - effectName: StoryBGM
     audioClips:
-    - clip: {fileID: 8300000, guid: 4502d7a72a77075459c5cd52eaeb42cf, type: 3}
+    - clip: {fileID: 8300000, guid: 22e5d3a4bddcb024d9d4acdfca02f490, type: 3}
       volume: 1
     playType: 0
     spatialBlend: 0
@@ -67,7 +93,7 @@ MonoBehaviour:
     useLoopSection: 1
     loopSection:
       clips:
-      - clip: {fileID: 8300000, guid: a413d38cd5db97d4f8acb36555b7b17d, type: 3}
+      - clip: {fileID: 8300000, guid: 585db457c49bbc34da59729e6fbcf878, type: 3}
         volume: 1
       playType: 0
       cycleDelay: 0
