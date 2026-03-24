@@ -7,6 +7,7 @@ namespace LittleHeroJourney
     public class SettingsManager : MonoBehaviour
     {
         public const string OpenSettingsEvent = "OpenSettings";
+        public const string CloseSettingsEvent = "CloseSettings";
         public const string SetAudioVolumeByIdEvent = "SetAudioVolumeById";
         public const string RequestAudioValuesEvent = "RequestAudioSettingsValues";
         public const string AudioVolumeValueByIdEvent = "AudioVolumeValueById";
@@ -61,6 +62,10 @@ namespace LittleHeroJourney
         private Action<string> _setAudioByIdHandler;
         private Action _requestValuesHandler;
         private Action _openSettingsHandler;
+        private Action _closeSettingsHandler;
+        private Action<string> _canvasOpenCompleteHandler;
+        private string _currentCanvasId = string.Empty;
+        private string _previousCanvasBeforeSettings = string.Empty;
 
         private void Awake()
         {
@@ -84,6 +89,10 @@ namespace LittleHeroJourney
             GameEventSystem.SubscribeAction(RequestAudioValuesEvent, _requestValuesHandler);
             _openSettingsHandler = OpenSettingsCanvas;
             GameEventSystem.SubscribeAction(OpenSettingsEvent, _openSettingsHandler);
+            _closeSettingsHandler = CloseSettingsCanvas;
+            GameEventSystem.SubscribeAction(CloseSettingsEvent, _closeSettingsHandler);
+            _canvasOpenCompleteHandler = OnCanvasOpenComplete;
+            GameEventSystem.SubscribeActionWithPayload("CanvasOpenComplete", _canvasOpenCompleteHandler);
         }
 
         private void OnDisable()
@@ -94,6 +103,10 @@ namespace LittleHeroJourney
                 GameEventSystem.UnsubscribeAction(RequestAudioValuesEvent, _requestValuesHandler);
             if (_openSettingsHandler != null)
                 GameEventSystem.UnsubscribeAction(OpenSettingsEvent, _openSettingsHandler);
+            if (_closeSettingsHandler != null)
+                GameEventSystem.UnsubscribeAction(CloseSettingsEvent, _closeSettingsHandler);
+            if (_canvasOpenCompleteHandler != null)
+                GameEventSystem.UnsubscribeActionWithPayload("CanvasOpenComplete", _canvasOpenCompleteHandler);
         }
 
         public void SetMasterVolume(float value)
@@ -241,7 +254,33 @@ namespace LittleHeroJourney
         {
             if (string.IsNullOrEmpty(settingsCanvasId)) return;
             if (GameManager.Instance?.CanvasManager == null) return;
+
+            if (!string.IsNullOrEmpty(_currentCanvasId) &&
+                !string.Equals(_currentCanvasId, settingsCanvasId, StringComparison.OrdinalIgnoreCase))
+            {
+                _previousCanvasBeforeSettings = _currentCanvasId;
+            }
             GameManager.Instance.CanvasManager.SwitchCanvas(settingsCanvasId);
+        }
+
+        private void CloseSettingsCanvas()
+        {
+            if (GameManager.Instance?.CanvasManager == null) return;
+
+            if (!string.IsNullOrEmpty(_previousCanvasBeforeSettings))
+            {
+                string target = _previousCanvasBeforeSettings;
+                _previousCanvasBeforeSettings = string.Empty;
+                GameManager.Instance.CanvasManager.SwitchCanvas(target, addCurrentToHistory: false);
+                return;
+            }
+
+            GameManager.Instance.CanvasManager.ReturnToPreviousCanvas();
+        }
+
+        private void OnCanvasOpenComplete(string canvasId)
+        {
+            _currentCanvasId = canvasId ?? string.Empty;
         }
     }
 }
