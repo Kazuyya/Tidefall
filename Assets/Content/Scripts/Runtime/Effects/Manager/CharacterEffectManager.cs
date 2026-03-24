@@ -85,6 +85,8 @@ namespace LittleHeroJourney
         private int _bgmFirstPlaySequentialIndex;
         private int _bgmLoopSequentialIndex;
         private const double BgmSeamlessPreRollSeconds = 0.2d;
+        private readonly Dictionary<AudioSource, float> _audioBaseVolumes = new Dictionary<AudioSource, float>();
+        private readonly HashSet<AudioSource> _bgmTrackedSources = new HashSet<AudioSource>();
 
         #endregion
 
@@ -107,6 +109,18 @@ namespace LittleHeroJourney
 
             // Initialize pools
             InitializePools();
+            _ = SettingsManager.Instance;
+            ApplyAudioSettingsToAllSources();
+        }
+
+        private void OnEnable()
+        {
+            SettingsManager.AudioSettingsChanged += HandleAudioSettingsChanged;
+        }
+
+        private void OnDisable()
+        {
+            SettingsManager.AudioSettingsChanged -= HandleAudioSettingsChanged;
         }
 
         private void OnDestroy()
@@ -115,6 +129,7 @@ namespace LittleHeroJourney
             {
                 _instance = null;
             }
+            SettingsManager.AudioSettingsChanged -= HandleAudioSettingsChanged;
         }
 
         private void LateUpdate()
@@ -412,6 +427,56 @@ namespace LittleHeroJourney
 
         #endregion
 
+        private void HandleAudioSettingsChanged()
+        {
+            ApplyAudioSettingsToAllSources();
+        }
+
+        private float GetSfxVolume(float baseVolume)
+        {
+            float master = SettingsManager.Instance != null ? SettingsManager.Instance.MasterVolume : 1f;
+            float sfx = SettingsManager.Instance != null ? SettingsManager.Instance.SfxVolume : 1f;
+            return Mathf.Clamp01(baseVolume) * master * sfx;
+        }
+
+        private float GetBgmVolume(float baseVolume)
+        {
+            float master = SettingsManager.Instance != null ? SettingsManager.Instance.MasterVolume : 1f;
+            float bgm = SettingsManager.Instance != null ? SettingsManager.Instance.BgmVolume : 1f;
+            return Mathf.Clamp01(baseVolume) * master * bgm;
+        }
+
+        private void TrackAudioSource(AudioSource source, float baseVolume, bool isBgm)
+        {
+            if (source == null) return;
+            _audioBaseVolumes[source] = Mathf.Clamp01(baseVolume);
+            if (isBgm) _bgmTrackedSources.Add(source);
+            else _bgmTrackedSources.Remove(source);
+            ApplyVolumeForSource(source);
+        }
+
+        private void UntrackAudioSource(AudioSource source)
+        {
+            if (source == null) return;
+            _audioBaseVolumes.Remove(source);
+            _bgmTrackedSources.Remove(source);
+        }
+
+        private void ApplyVolumeForSource(AudioSource source)
+        {
+            if (source == null) return;
+            float baseVolume = _audioBaseVolumes.TryGetValue(source, out float v) ? v : source.volume;
+            source.volume = _bgmTrackedSources.Contains(source) ? GetBgmVolume(baseVolume) : GetSfxVolume(baseVolume);
+        }
+
+        private void ApplyAudioSettingsToAllSources()
+        {
+            if (_audioBaseVolumes.Count == 0) return;
+            var sources = new List<AudioSource>(_audioBaseVolumes.Keys);
+            for (int i = 0; i < sources.Count; i++)
+                ApplyVolumeForSource(sources[i]);
+        }
+
         #region Audio Methods
 
         /// <summary>
@@ -453,10 +518,10 @@ namespace LittleHeroJourney
                 if (audioSource == null) continue;
 
                 audioSource.clip = clipData.clip;
-                audioSource.volume = clipData.volume;
                 audioSource.loop = false;
                 audioSource.transform.position = position;
                 audioSource.gameObject.SetActive(true);
+                TrackAudioSource(audioSource, clipData.volume, false);
                 audioSource.Play();
 
                 _activeAudio.Add(audioSource);
@@ -491,10 +556,10 @@ namespace LittleHeroJourney
             if (audioSource == null) return;
 
             audioSource.clip = clipData.clip;
-            audioSource.volume = clipData.volume;
             audioSource.loop = false;
             audioSource.transform.position = position;
             audioSource.gameObject.SetActive(true);
+            TrackAudioSource(audioSource, clipData.volume, false);
             audioSource.Play();
 
             _activeAudio.Add(audioSource);
@@ -534,10 +599,10 @@ namespace LittleHeroJourney
             if (audioSource == null) return;
 
             audioSource.clip = clipData.clip;
-            audioSource.volume = clipData.volume;
             audioSource.loop = false;
             audioSource.transform.position = position;
             audioSource.gameObject.SetActive(true);
+            TrackAudioSource(audioSource, clipData.volume, false);
             audioSource.Play();
 
             _activeAudio.Add(audioSource);
@@ -553,7 +618,7 @@ namespace LittleHeroJourney
                 AudioClipData clipData = audioData.GetClipSequential(i);
                 if (clipData?.clip == null) continue;
                 audioSource.clip = clipData.clip;
-                audioSource.volume = clipData.volume;
+                TrackAudioSource(audioSource, clipData.volume, false);
                 audioSource.Play();
                 totalDuration += clipData.clip.length;
                 yield return new WaitForSeconds(clipData.clip.length + 0.05f);
@@ -583,12 +648,14 @@ namespace LittleHeroJourney
             _bgmSource.transform.position = Vector3.zero;
             _bgmSource.spatialBlend = audioData.spatialBlend;
             _bgmSource.gameObject.SetActive(true);
+            TrackAudioSource(_bgmSource, 1f, true);
             _activeAudio.Add(_bgmSource);
             if (_bgmSecondarySource != null)
             {
                 _bgmSecondarySource.transform.position = Vector3.zero;
                 _bgmSecondarySource.spatialBlend = audioData.spatialBlend;
                 _bgmSecondarySource.gameObject.SetActive(true);
+                TrackAudioSource(_bgmSecondarySource, 1f, true);
                 _activeAudio.Add(_bgmSecondarySource);
             }
             _bgmSequentialCoroutine = StartCoroutine(PlayBGMWithIntroAndLoop(audioData, effectName));
@@ -672,9 +739,9 @@ namespace LittleHeroJourney
             if (clipData?.clip == null) return false;
 
             _bgmSource.clip = clipData.clip;
-            _bgmSource.volume = clipData.volume;
             _bgmSource.spatialBlend = audioData.spatialBlend;
             _bgmSource.loop = true;
+            TrackAudioSource(_bgmSource, clipData.volume, true);
             _bgmSource.Play();
             return true;
         }
@@ -702,9 +769,9 @@ namespace LittleHeroJourney
 
             _bgmSecondarySource.Stop();
             _bgmSecondarySource.clip = loopClipData.clip;
-            _bgmSecondarySource.volume = loopClipData.volume;
             _bgmSecondarySource.spatialBlend = audioData.spatialBlend;
             _bgmSecondarySource.loop = true;
+            TrackAudioSource(_bgmSecondarySource, loopClipData.volume, true);
             _bgmSecondarySource.PlayScheduled(startDsp);
 
             StartCoroutine(FinishPrimaryAfterSeamlessSwitch(switchDsp));
@@ -734,9 +801,9 @@ namespace LittleHeroJourney
             if (clipData?.clip == null) return false;
 
             _bgmSource.clip = clipData.clip;
-            _bgmSource.volume = clipData.volume;
             _bgmSource.spatialBlend = audioData.spatialBlend;
             _bgmSource.loop = true;
+            TrackAudioSource(_bgmSource, clipData.volume, true);
             _bgmSource.Play();
             return true;
         }
@@ -851,9 +918,9 @@ namespace LittleHeroJourney
         {
             if (_bgmSource == null || clipData?.clip == null) return 0f;
             _bgmSource.clip = clipData.clip;
-            _bgmSource.volume = clipData.volume;
             _bgmSource.spatialBlend = audioData.spatialBlend;
             _bgmSource.loop = loop;
+            TrackAudioSource(_bgmSource, clipData.volume, true);
             _bgmSource.Play();
             return clipData.clip.length;
         }
@@ -871,11 +938,11 @@ namespace LittleHeroJourney
                 if (src == null) continue;
 
                 src.clip = clipData.clip;
-                src.volume = clipData.volume;
                 src.loop = false;
                 src.spatialBlend = spatialBlend;
                 src.transform.position = position;
                 src.gameObject.SetActive(true);
+                TrackAudioSource(src, clipData.volume, true);
                 src.Play();
                 _activeAudio.Add(src);
                 _bgmBlendSources.Add(src);
@@ -931,6 +998,7 @@ namespace LittleHeroJourney
             audioSource.gameObject.SetActive(false);
             audioSource.transform.SetParent(_poolContainer);
             _activeAudio.Remove(audioSource);
+            UntrackAudioSource(audioSource);
 
             if (!_audioPool.ContainsKey(effectName))
                 _audioPool[effectName] = new Queue<AudioSource>();

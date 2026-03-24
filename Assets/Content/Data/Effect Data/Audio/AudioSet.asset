@@ -28,7 +28,7 @@ MonoBehaviour:
       cycleDelay: 0
   - effectName: MainmenuBGM
     audioClips:
-    - clip: {fileID: 8300000, guid: 5e8f571febbcd9948ac10528cd6e6c3f, type: 3}
+    - clip: {fileID: 8300000, guid: e01c81bb3dd9b494195ac61697c17021, type: 3}
       volume: 1
     playType: 0
     spatialBlend: 0
@@ -37,7 +37,7 @@ MonoBehaviour:
     useLoopSection: 1
     loopSection:
       clips:
-      - clip: {fileID: 8300000, guid: 54ce4b7c154385a4e9a30004f5afa5a5, type: 3}
+      - clip: {fileID: 8300000, guid: 1004226802d7c90488bde014480aac01, type: 3}
         volume: 1
       playType: 0
       cycleDelay: 0
