@@ -13,14 +13,6 @@ MonoBehaviour:
   m_Name: AudioSet
   m_EditorClassIdentifier: 
   audioEffects:
-  - effectName: MainMenuBGM
-    audioClips:
-    - clip: {fileID: 8300000, guid: 5e8f571febbcd9948ac10528cd6e6c3f, type: 3}
-      volume: 0.5
-    playType: 0
-    spatialBlend: 0
-    poolSize: 0
-    loop: 1
   - effectName: MonsterBite
     audioClips:
     - clip: {fileID: 8300000, guid: cdf01d3bbb3fd1f48a886e830898bc58, type: 3}
@@ -29,3 +21,53 @@ MonoBehaviour:
     spatialBlend: 0
     poolSize: 0
     loop: 0
+    useLoopSection: 0
+    loopSection:
+      clips: []
+      playType: 2
+      cycleDelay: 0
+  - effectName: MainmenuBGM
+    audioClips:
+    - clip: {fileID: 8300000, guid: 5e8f571febbcd9948ac10528cd6e6c3f, type: 3}
+      volume: 1
+    playType: 0
+    spatialBlend: 0
+    poolSize: 0
+    loop: 1
+    useLoopSection: 1
+    loopSection:
+      clips:
+      - clip: {fileID: 8300000, guid: 54ce4b7c154385a4e9a30004f5afa5a5, type: 3}
+        volume: 1
+      playType: 0
+      cycleDelay: 0
+  - effectName: BattleBGM
+    audioClips:
+    - clip: {fileID: 8300000, guid: dd6548f17c063b04283fec532ed263a1, type: 3}
+      volume: 1
+    playType: 0
+    spatialBlend: 0
+    poolSize: 0
+    loop: 1
+    useLoopSection: 1
+    loopSection:
+      clips:
+      - clip: {fileID: 8300000, guid: f02ac12ba2e830a438a44a603223891a, type: 3}
+        volume: 1
+      playType: 0
+      cycleDelay: 0
+  - effectName: StoryBGM
+    audioClips:
+    - clip: {fileID: 8300000, guid: 4502d7a72a77075459c5cd52eaeb42cf, type: 3}
+      volume: 1
+    playType: 0
+    spatialBlend: 0
+    poolSize: 0
+    loop: 1
+    useLoopSection: 1
+    loopSection:
+      clips:
+      - clip: {fileID: 8300000, guid: a413d38cd5db97d4f8acb36555b7b17d, type: 3}
+        volume: 1
+      playType: 0
+      cycleDelay: 0

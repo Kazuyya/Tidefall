@@ -77,9 +77,14 @@ namespace LittleHeroJourney
         private Dictionary<string, Trail> _trailRegistry = new Dictionary<string, Trail>();
 
         private AudioSource _bgmSource;
+        private AudioSource _bgmSecondarySource;
         private string _bgmEffectName;
         private Coroutine _bgmSequentialCoroutine;
         private Coroutine _bgmFadeCoroutine;
+        private readonly List<AudioSource> _bgmBlendSources = new List<AudioSource>();
+        private int _bgmFirstPlaySequentialIndex;
+        private int _bgmLoopSequentialIndex;
+        private const double BgmSeamlessPreRollSeconds = 0.2d;
 
         #endregion
 
@@ -425,12 +430,10 @@ namespace LittleHeroJourney
                 return;
             }
 
-            if (audioData.playType == AudioPlayType.Blend)
-                PlayAudioBlend(audioData, position);
-            else if (audioData.playType == AudioPlayType.Random)
-                PlayAudioRandom(audioData, position);
-            else
-                PlayAudioSequential(audioData, position);
+            if (audioData.playType == AudioPlayType.Blend) PlayAudioBlend(audioData, position);
+            else if (audioData.playType == AudioPlayType.Random) PlayAudioRandom(audioData, position);
+            else if (audioData.playType == AudioPlayType.Sequential) PlayAudioSequential(audioData, position);
+            else PlayAudioSingle(audioData, position);
         }
 
         /// <summary>
@@ -517,6 +520,30 @@ namespace LittleHeroJourney
             StartCoroutine(PlaySequentialClipsThenReturn(audioData, audioSource));
         }
 
+        private void PlayAudioSingle(AudioEffectData audioData, Vector3 position)
+        {
+            AudioClipData clipData = audioData.GetClip(0);
+            if (clipData?.clip == null)
+            {
+                if (showDebugLog)
+                    Debug.LogWarning($"[{GetType().Name}] No valid first clip for single audio '{audioData.effectName}'!");
+                return;
+            }
+
+            AudioSource audioSource = GetAudioFromPool(audioData.effectName);
+            if (audioSource == null) return;
+
+            audioSource.clip = clipData.clip;
+            audioSource.volume = clipData.volume;
+            audioSource.loop = false;
+            audioSource.transform.position = position;
+            audioSource.gameObject.SetActive(true);
+            audioSource.Play();
+
+            _activeAudio.Add(audioSource);
+            StartCoroutine(ReturnAudioToPoolAfterDuration(audioSource, audioData.effectName, clipData.clip.length));
+        }
+
         private IEnumerator PlaySequentialClipsThenReturn(AudioEffectData audioData, AudioSource audioSource)
         {
             int count = audioData.ClipCount;
@@ -548,60 +575,175 @@ namespace LittleHeroJourney
 
             _bgmSource = GetAudioFromPool(effectName);
             if (_bgmSource == null) return;
+            _bgmSecondarySource = GetAudioFromPool(effectName);
 
             _bgmEffectName = effectName;
+            _bgmFirstPlaySequentialIndex = 0;
+            _bgmLoopSequentialIndex = 0;
             _bgmSource.transform.position = Vector3.zero;
             _bgmSource.spatialBlend = audioData.spatialBlend;
             _bgmSource.gameObject.SetActive(true);
             _activeAudio.Add(_bgmSource);
-
-            if (audioData.ClipCount == 1)
+            if (_bgmSecondarySource != null)
             {
-                AudioClipData clipData = audioData.GetClip(0);
-                _bgmSource.clip = clipData.clip;
-                _bgmSource.volume = clipData.volume;
-                _bgmSource.loop = audioData.loop;
-                _bgmSource.Play();
-                if (showDebugLog) Debug.Log($"[{GetType().Name}] BGM playing '{effectName}' (single clip, loop={audioData.loop})");
+                _bgmSecondarySource.transform.position = Vector3.zero;
+                _bgmSecondarySource.spatialBlend = audioData.spatialBlend;
+                _bgmSecondarySource.gameObject.SetActive(true);
+                _activeAudio.Add(_bgmSecondarySource);
             }
-            else if (audioData.playType == AudioPlayType.Sequential && audioData.loop)
-            {
-                _bgmSource.loop = false;
-                _bgmSequentialCoroutine = StartCoroutine(BGMSequentialLoop(audioData));
-                if (showDebugLog) Debug.Log($"[{GetType().Name}] BGM playing '{effectName}' (sequential loop)");
-            }
-            else
-            {
-                AudioClipData clipData = audioData.GetClip(0);
-                _bgmSource.clip = clipData.clip;
-                _bgmSource.volume = clipData.volume;
-                _bgmSource.loop = audioData.loop;
-                _bgmSource.Play();
-                if (showDebugLog) Debug.Log($"[{GetType().Name}] BGM playing '{effectName}'");
-            }
+            _bgmSequentialCoroutine = StartCoroutine(PlayBGMWithIntroAndLoop(audioData, effectName));
         }
 
-        private IEnumerator BGMSequentialLoop(AudioEffectData audioData)
+        private IEnumerator PlayBGMWithIntroAndLoop(AudioEffectData audioData, string effectName)
         {
-            int count = audioData.ClipCount;
-            int index = 0;
-            while (_bgmSource != null && _bgmSource.gameObject.activeInHierarchy)
+            if (_bgmSource == null) yield break;
+
+            float introDuration = PlayFirstSection(audioData, effectName, Vector3.zero);
+
+            if (audioData.loop && audioData.UseLoopSection && audioData.LoopSection != null && audioData.LoopSection.IsValid)
             {
-                AudioClipData clipData = audioData.GetClipSequential(index);
-                if (clipData?.clip != null)
+                if (TryScheduleSeamlessSingleIntroToSingleLoop(audioData))
                 {
-                    _bgmSource.clip = clipData.clip;
-                    _bgmSource.volume = clipData.volume;
-                    _bgmSource.Play();
-                    yield return new WaitForSeconds(clipData.clip.length + 0.05f);
+                    _bgmSequentialCoroutine = null;
+                    yield break;
                 }
-                index = (index + 1) % count;
             }
+
+            if (introDuration > 0f)
+                yield return WaitForBGMSectionEnd(introDuration);
+
+            if (audioData.loop && audioData.UseLoopSection && audioData.LoopSection != null && audioData.LoopSection.IsValid)
+            {
+                if (TryStartContinuousLoopSection(audioData))
+                {
+                    _bgmSequentialCoroutine = null;
+                    yield break;
+                }
+
+                while (_bgmSource != null && _bgmSource.gameObject.activeInHierarchy)
+                {
+                    float cycleDuration = PlayLoopSectionCycle(audioData, effectName, Vector3.zero);
+                    if (cycleDuration <= 0f) break;
+                    yield return WaitForBGMSectionEnd(cycleDuration);
+                    if (audioData.LoopSection.cycleDelay > 0f)
+                        yield return new WaitForSeconds(audioData.LoopSection.cycleDelay);
+                }
+            }
+            else if (audioData.loop)
+            {
+                if (TryStartContinuousLegacyLoop(audioData))
+                {
+                    _bgmSequentialCoroutine = null;
+                    yield break;
+                }
+
+                while (_bgmSource != null && _bgmSource.gameObject.activeInHierarchy)
+                {
+                    float cycleDuration = PlayFirstSection(audioData, effectName, Vector3.zero);
+                    if (cycleDuration <= 0f) break;
+                    yield return WaitForBGMSectionEnd(cycleDuration);
+                }
+            }
+
             _bgmSequentialCoroutine = null;
+        }
+
+        private IEnumerator WaitForBGMSectionEnd(float fallbackDuration)
+        {
+            if (_bgmSource != null && _bgmSource.clip != null && _bgmSource.isPlaying)
+            {
+                while (_bgmSource != null && _bgmSource.isPlaying)
+                    yield return null;
+                yield break;
+            }
+
+            if (fallbackDuration > 0f)
+                yield return new WaitForSeconds(fallbackDuration);
+        }
+
+        private bool TryStartContinuousLoopSection(AudioEffectData audioData)
+        {
+            var loop = audioData.LoopSection;
+            if (_bgmSource == null || loop == null) return false;
+            if (loop.cycleDelay > 0f) return false;
+            if (loop.playType != AudioPlayType.Single) return false;
+
+            AudioClipData clipData = loop.GetClip(0);
+            if (clipData?.clip == null) return false;
+
+            _bgmSource.clip = clipData.clip;
+            _bgmSource.volume = clipData.volume;
+            _bgmSource.spatialBlend = audioData.spatialBlend;
+            _bgmSource.loop = true;
+            _bgmSource.Play();
+            return true;
+        }
+
+        private bool TryScheduleSeamlessSingleIntroToSingleLoop(AudioEffectData audioData)
+        {
+            if (_bgmSource == null || _bgmSecondarySource == null) return false;
+            if (!audioData.loop || !audioData.UseLoopSection) return false;
+            if (audioData.playType != AudioPlayType.Single) return false;
+            var loop = audioData.LoopSection;
+            if (loop == null || !loop.IsValid) return false;
+            if (loop.playType != AudioPlayType.Single || loop.cycleDelay > 0f) return false;
+            if (_bgmSource.clip == null || !_bgmSource.isPlaying) return false;
+
+            AudioClipData loopClipData = loop.GetClip(0);
+            if (loopClipData?.clip == null) return false;
+
+            int freq = _bgmSource.clip.frequency > 0 ? _bgmSource.clip.frequency : 44100;
+            double remaining = (_bgmSource.clip.samples - _bgmSource.timeSamples) / (double)freq;
+            double now = AudioSettings.dspTime;
+            double switchDsp = now + remaining;
+            double startDsp = switchDsp - BgmSeamlessPreRollSeconds;
+            if (startDsp < now)
+                startDsp = now;
+
+            _bgmSecondarySource.Stop();
+            _bgmSecondarySource.clip = loopClipData.clip;
+            _bgmSecondarySource.volume = loopClipData.volume;
+            _bgmSecondarySource.spatialBlend = audioData.spatialBlend;
+            _bgmSecondarySource.loop = true;
+            _bgmSecondarySource.PlayScheduled(startDsp);
+
+            StartCoroutine(FinishPrimaryAfterSeamlessSwitch(switchDsp));
+            if (showDebugLog) Debug.Log($"[{GetType().Name}] Scheduled seamless intro->loop (pre-roll {BgmSeamlessPreRollSeconds:0.000}s).");
+            return true;
+        }
+
+        private IEnumerator FinishPrimaryAfterSeamlessSwitch(double switchDspTime)
+        {
+            while (AudioSettings.dspTime < switchDspTime && _bgmSource != null)
+                yield return null;
+
+            if (_bgmSource != null)
+                _bgmSource.Stop();
+
+            var oldPrimary = _bgmSource;
+            _bgmSource = _bgmSecondarySource;
+            _bgmSecondarySource = oldPrimary;
+        }
+
+        private bool TryStartContinuousLegacyLoop(AudioEffectData audioData)
+        {
+            if (_bgmSource == null) return false;
+            if (audioData.playType != AudioPlayType.Single) return false;
+
+            AudioClipData clipData = audioData.GetClip(0);
+            if (clipData?.clip == null) return false;
+
+            _bgmSource.clip = clipData.clip;
+            _bgmSource.volume = clipData.volume;
+            _bgmSource.spatialBlend = audioData.spatialBlend;
+            _bgmSource.loop = true;
+            _bgmSource.Play();
+            return true;
         }
 
         public void StopBGM()
         {
+            string bgmEffect = _bgmEffectName;
             if (_bgmFadeCoroutine != null)
             {
                 StopCoroutine(_bgmFadeCoroutine);
@@ -612,13 +754,25 @@ namespace LittleHeroJourney
                 StopCoroutine(_bgmSequentialCoroutine);
                 _bgmSequentialCoroutine = null;
             }
-            if (_bgmSource != null && !string.IsNullOrEmpty(_bgmEffectName))
+            if (_bgmSource != null && !string.IsNullOrEmpty(bgmEffect))
             {
-                ReturnAudioToPool(_bgmEffectName, _bgmSource);
+                ReturnAudioToPool(bgmEffect, _bgmSource);
                 _bgmSource = null;
-                _bgmEffectName = null;
-                if (showDebugLog) Debug.Log($"[{GetType().Name}] BGM stopped");
             }
+            if (_bgmSecondarySource != null && !string.IsNullOrEmpty(bgmEffect))
+            {
+                ReturnAudioToPool(bgmEffect, _bgmSecondarySource);
+                _bgmSecondarySource = null;
+            }
+            for (int i = 0; i < _bgmBlendSources.Count; i++)
+            {
+                var src = _bgmBlendSources[i];
+                if (!string.IsNullOrEmpty(bgmEffect) && src != null && _activeAudio.Contains(src))
+                    ReturnAudioToPool(bgmEffect, _bgmBlendSources[i]);
+            }
+            _bgmBlendSources.Clear();
+            _bgmEffectName = null;
+            if (showDebugLog) Debug.Log($"[{GetType().Name}] BGM stopped");
         }
 
         public void FadeOutBGM(float duration)
@@ -640,6 +794,97 @@ namespace LittleHeroJourney
             }
             _bgmFadeCoroutine = null;
             StopBGM();
+        }
+
+        private float PlayFirstSection(AudioEffectData audioData, string effectName, Vector3 position)
+        {
+            if (audioData == null || audioData.ClipCount == 0) return 0f;
+            switch (audioData.playType)
+            {
+                case AudioPlayType.Single:
+                {
+                    var clipData = audioData.GetClip(0);
+                    return PlaySingleOnBGMSource(clipData, audioData, false);
+                }
+                case AudioPlayType.Blend:
+                    return PlayClipListBlend(audioData.AudioClips, effectName, position, audioData.spatialBlend, true);
+                case AudioPlayType.Sequential:
+                {
+                    var clipData = audioData.GetClipSequential(_bgmFirstPlaySequentialIndex++);
+                    return PlaySingleOnBGMSource(clipData, audioData, false);
+                }
+                default:
+                {
+                    var clipData = audioData.GetRandomClip();
+                    return PlaySingleOnBGMSource(clipData, audioData, false);
+                }
+            }
+        }
+
+        private float PlayLoopSectionCycle(AudioEffectData audioData, string effectName, Vector3 position)
+        {
+            var loop = audioData.LoopSection;
+            if (loop == null || !loop.IsValid) return 0f;
+            switch (loop.playType)
+            {
+                case AudioPlayType.Single:
+                {
+                    var clipData = loop.GetClip(0);
+                    return PlaySingleOnBGMSource(clipData, audioData, false);
+                }
+                case AudioPlayType.Blend:
+                    return PlayClipListBlend(loop.Clips, effectName, position, audioData.spatialBlend, true);
+                case AudioPlayType.Sequential:
+                {
+                    var clipData = loop.GetClipSequential(_bgmLoopSequentialIndex++);
+                    return PlaySingleOnBGMSource(clipData, audioData, false);
+                }
+                default:
+                {
+                    var clipData = loop.GetRandomClip();
+                    return PlaySingleOnBGMSource(clipData, audioData, false);
+                }
+            }
+        }
+
+        private float PlaySingleOnBGMSource(AudioClipData clipData, AudioEffectData audioData, bool loop)
+        {
+            if (_bgmSource == null || clipData?.clip == null) return 0f;
+            _bgmSource.clip = clipData.clip;
+            _bgmSource.volume = clipData.volume;
+            _bgmSource.spatialBlend = audioData.spatialBlend;
+            _bgmSource.loop = loop;
+            _bgmSource.Play();
+            return clipData.clip.length;
+        }
+
+        private float PlayClipListBlend(IReadOnlyList<AudioClipData> clips, string effectName, Vector3 position, float spatialBlend, bool autoReturn)
+        {
+            if (clips == null || clips.Count == 0) return 0f;
+            float maxDuration = 0f;
+            for (int i = 0; i < clips.Count; i++)
+            {
+                var clipData = clips[i];
+                if (clipData?.clip == null) continue;
+
+                AudioSource src = GetAudioFromPool(effectName);
+                if (src == null) continue;
+
+                src.clip = clipData.clip;
+                src.volume = clipData.volume;
+                src.loop = false;
+                src.spatialBlend = spatialBlend;
+                src.transform.position = position;
+                src.gameObject.SetActive(true);
+                src.Play();
+                _activeAudio.Add(src);
+                _bgmBlendSources.Add(src);
+
+                if (clipData.clip.length > maxDuration) maxDuration = clipData.clip.length;
+                if (autoReturn)
+                    StartCoroutine(ReturnAudioToPoolAfterDuration(src, effectName, clipData.clip.length));
+            }
+            return maxDuration;
         }
 
         private AudioSource GetAudioFromPool(string effectName)

@@ -1678,7 +1678,7 @@ MonoBehaviour:
 --- !u!1001 &157437843824486226
 PrefabInstance:
   m_ObjectHideFlags: 0
-  serializedVersion: 2
+    serializedVersion: 2
   m_Modification:
     serializedVersion: 3
     m_TransformParent: {fileID: 4436449667409300309}
