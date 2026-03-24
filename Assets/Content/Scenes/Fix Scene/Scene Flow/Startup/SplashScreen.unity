@@ -1223,6 +1223,10 @@ MonoBehaviour:
   journeySelectorCanvasId: 
   autoPlayNextJourney: 1
   autoAdvanceDelay: 1.5
+  storyBgmEffectId: StoryBGM
+  battleBgmEffectId: BattleBGM
+  bgmFadeOutDuration: 0.35
+  bgmSwitchDelay: 0.35
   showDebugLog: 1
 --- !u!114 &209297274
 MonoBehaviour:

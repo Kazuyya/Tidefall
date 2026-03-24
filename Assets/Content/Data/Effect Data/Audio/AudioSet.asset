@@ -52,6 +52,21 @@ MonoBehaviour:
       clips: []
       playType: 2
       cycleDelay: 0
+  - effectName: Dagger
+    audioClips:
+    - clip: {fileID: 8300000, guid: 91f15de0f92682a4dac3da9d3dd3eb1d, type: 3}
+      volume: 1
+    - clip: {fileID: 8300000, guid: 7c253e5c4d4ab974ba6851d27e61ece0, type: 3}
+      volume: 1
+    playType: 2
+    spatialBlend: 0
+    poolSize: 0
+    loop: 0
+    useLoopSection: 0
+    loopSection:
+      clips: []
+      playType: 2
+      cycleDelay: 0
   - effectName: MainmenuBGM
     audioClips:
     - clip: {fileID: 8300000, guid: e01c81bb3dd9b494195ac61697c17021, type: 3}

@@ -31,7 +31,13 @@ MonoBehaviour:
   resetComboOnAnimationEnd: 1
   particleEffects: []
   vfxEffects: []
-  audioEffects: []
+  audioEffects:
+  - effectName: Dagger
+    triggerTime: 0.3
+    playbackChannel: 0
+  - effectName: Dagger
+    triggerTime: 0.3
+    playbackChannel: 0
   trailEffects:
   - effectName: Sword1_R
     triggerWindow: {x: 0.45, y: 0.6}

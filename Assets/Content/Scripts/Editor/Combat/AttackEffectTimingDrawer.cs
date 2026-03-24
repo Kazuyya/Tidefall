@@ -52,7 +52,7 @@ namespace LittleHeroJourney
     {
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
         {
-            return EditorGUIUtility.singleLineHeight * 6 + EditorGUIUtility.standardVerticalSpacing * 5;
+            return EditorGUIUtility.singleLineHeight * 3 + EditorGUIUtility.standardVerticalSpacing * 2;
         }
 
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
@@ -71,21 +71,9 @@ namespace LittleHeroJourney
             SerializedProperty timingProp = property.FindPropertyRelative("triggerTime");
             timingProp.floatValue = EditorGUI.Slider(row2, "Trigger At:", timingProp.floatValue, 0f, 1f);
 
-            // Row 3: Position Offset
+            // Row 3: Playback Channel
             Rect row3 = new Rect(position.x, position.y + (lineHeight + spacing) * 2, position.width, lineHeight);
-            EditorGUI.PropertyField(row3, property.FindPropertyRelative("positionOffset"), new GUIContent("Position Offset"));
-
-            // Row 4: Rotation (euler)
-            Rect row4 = new Rect(position.x, position.y + (lineHeight + spacing) * 3, position.width, lineHeight);
-            EditorGUI.PropertyField(row4, property.FindPropertyRelative("rotationEuler"), new GUIContent("Rotation (Euler)"));
-
-            // Row 5: Scale
-            Rect row5 = new Rect(position.x, position.y + (lineHeight + spacing) * 4, position.width, lineHeight);
-            EditorGUI.PropertyField(row5, property.FindPropertyRelative("scale"), new GUIContent("Scale"));
-
-            // Row 6: Follow Character
-            Rect row6 = new Rect(position.x, position.y + (lineHeight + spacing) * 5, position.width, lineHeight);
-            EditorGUI.PropertyField(row6, property.FindPropertyRelative("followCharacter"), new GUIContent("Follow Character"));
+            EditorGUI.PropertyField(row3, property.FindPropertyRelative("playbackChannel"), new GUIContent("Play As"));
 
             EditorGUI.EndProperty();
         }

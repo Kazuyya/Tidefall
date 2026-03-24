@@ -268,7 +268,10 @@ namespace LittleHeroJourney
                 {
                     var e = audioList[i];
                     if (!e.IsValid || audioTriggered[i] || normalizedTime < e.triggerTime) continue;
-                    manager?.PlayAudio(e.effectName, pos + transform.rotation * e.positionOffset);
+                    if (e.playbackChannel == AudioPlaybackChannel.Bgm)
+                        manager?.PlayBGM(e.effectName);
+                    else
+                        manager?.PlayAudio(e.effectName, pos);
                     audioTriggered[i] = true;
                 }
 

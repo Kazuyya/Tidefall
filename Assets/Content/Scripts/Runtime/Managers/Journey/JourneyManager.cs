@@ -22,6 +22,12 @@ namespace LittleHeroJourney
         [Tooltip("Delay (seconds) after end story / combat finished before loading next journey.")]
         [SerializeField] private float autoAdvanceDelay = 1.5f;
 
+        [Header("Journey Audio")]
+        [SerializeField] private string storyBgmEffectId = "StoryBGM";
+        [SerializeField] private string battleBgmEffectId = "BattleBGM";
+        [SerializeField] private float bgmFadeOutDuration = 0.35f;
+        [SerializeField] private float bgmSwitchDelay = 0.35f;
+
         [Header("Debug")]
         [SerializeField] private bool showDebugLog = false;
 
@@ -47,6 +53,7 @@ namespace LittleHeroJourney
         private Action _storyLastStepCompletedHandler;
         private Action _playerReadyForEncounterHandler;
         private Action _combatFinishedHandler;
+        private Action _gameplayResetHandler;
         private Action<string> _canvasOpenCompleteHandler;
         private Action<string> _loadingFinishedHandler;
         private StorySequenceDisplay _currentStoryDisplay;
@@ -59,6 +66,8 @@ namespace LittleHeroJourney
         private bool _playerReadyForEncounter;
         private bool _lastStepCompleted;
         private StoryEncounterSpawner _pendingEncounterSpawner;
+        private Coroutine _bgmSwitchRoutine;
+        private string _currentJourneyBgmId = string.Empty;
 
         private void Awake()
         {
@@ -81,6 +90,8 @@ namespace LittleHeroJourney
             GameEventSystem.SubscribeAction("PlayerReadyForEncounter", _playerReadyForEncounterHandler);
             _combatFinishedHandler = OnCombatFinished;
             GameEventSystem.SubscribeAction("CombatFinished", _combatFinishedHandler);
+            _gameplayResetHandler = OnGameplayReset;
+            GameEventSystem.SubscribeAction("GameplayReset", _gameplayResetHandler);
             _canvasOpenCompleteHandler = OnCanvasOpenCompleteByPayload;
             GameEventSystem.SubscribeActionWithPayload("CanvasOpenComplete", _canvasOpenCompleteHandler);
             _loadingFinishedHandler = OnLoadingFinished;
@@ -141,10 +152,13 @@ namespace LittleHeroJourney
                 GameEventSystem.UnsubscribeAction("PlayerReadyForEncounter", _playerReadyForEncounterHandler);
             if (_combatFinishedHandler != null)
                 GameEventSystem.UnsubscribeAction("CombatFinished", _combatFinishedHandler);
+            if (_gameplayResetHandler != null)
+                GameEventSystem.UnsubscribeAction("GameplayReset", _gameplayResetHandler);
             if (_canvasOpenCompleteHandler != null)
                 GameEventSystem.UnsubscribeActionWithPayload("CanvasOpenComplete", _canvasOpenCompleteHandler);
             if (_loadingFinishedHandler != null)
                 GameEventSystem.UnsubscribeActionWithPayload("LoadingFinished", _loadingFinishedHandler);
+            StopBgmSwitchRoutine();
         }
 
         private void Start()
@@ -207,6 +221,7 @@ namespace LittleHeroJourney
             _isStartStoryPlaying = true;
             _pendingStartStorySequence = sequence;
             _startStoryCanvasOpened = false;
+            SwitchToStoryBgm();
             if (LoadingManager.Instance != null && LoadingManager.Instance.IsLoading)
             {
                 LoadingManager.Instance.DelayCloseUntilSignaled();
@@ -288,6 +303,7 @@ namespace LittleHeroJourney
                 }
                 _pendingEndStorySequence = endStory;
                 _isEndStoryPlaying = true;
+                SwitchToStoryBgm();
                 GameManager.Instance.CanvasManager.SwitchCanvas(storyCanvasId);
                 if (showDebugLog) Debug.Log("[JourneyManager] Combat finished -> switching to story canvas (fade/in). After open complete, display will be set up and end story played.");
             }
@@ -369,10 +385,21 @@ namespace LittleHeroJourney
 
             if (target != null)
             {
+                SwitchToBattleBgm();
                 target.StartEncounter();
                 GameEventSystem.Publish(new UIActionEvent("EncounterStarted"));
                 if (showDebugLog) Debug.Log("[JourneyManager] Both conditions met: reset done, StorySequenceCompleted published, encounter started (enemies after CD).");
             }
+        }
+
+        private void OnGameplayReset()
+        {
+            // Start-story -> encounter flow also triggers GameplayReset. Keep BGM switch smooth there.
+            if (_isStartStoryPlaying)
+                return;
+
+            // Battle reset/retry should also reset current journey BGM.
+            StopJourneyBgmImmediate();
         }
 
         public StoryEncounterSpawner GetStartEncounterSpawner()
@@ -407,6 +434,7 @@ namespace LittleHeroJourney
         {
             int completedStage = currentLevelNumber;
             CompleteLevel(completedStage);
+            StopJourneyBgmImmediate();
 
             if (!autoPlayNextJourney)
             {
@@ -442,6 +470,59 @@ namespace LittleHeroJourney
             }
 
             LoadStage(nextStage);
+        }
+
+        private void SwitchToStoryBgm()
+        {
+            SwitchJourneyBgm(storyBgmEffectId);
+        }
+
+        private void SwitchToBattleBgm()
+        {
+            SwitchJourneyBgm(battleBgmEffectId);
+        }
+
+        private void SwitchJourneyBgm(string targetEffectId)
+        {
+            if (string.IsNullOrEmpty(targetEffectId)) return;
+            if (string.Equals(_currentJourneyBgmId, targetEffectId, StringComparison.Ordinal)) return;
+
+            StopBgmSwitchRoutine();
+            _bgmSwitchRoutine = StartCoroutine(SwitchJourneyBgmRoutine(targetEffectId));
+        }
+
+        private IEnumerator SwitchJourneyBgmRoutine(string targetEffectId)
+        {
+            var fx = CharacterEffectManager.Instance;
+            if (fx == null) yield break;
+
+            bool hasCurrent = !string.IsNullOrEmpty(_currentJourneyBgmId);
+            if (hasCurrent)
+            {
+                fx.FadeOutBGM(Mathf.Max(0f, bgmFadeOutDuration));
+                float wait = Mathf.Max(0f, bgmSwitchDelay);
+                if (wait > 0f)
+                    yield return new WaitForSeconds(wait);
+            }
+
+            fx.PlayBGM(targetEffectId);
+            _currentJourneyBgmId = targetEffectId;
+            _bgmSwitchRoutine = null;
+        }
+
+        private void StopJourneyBgmImmediate()
+        {
+            StopBgmSwitchRoutine();
+            if (CharacterEffectManager.Instance != null)
+                CharacterEffectManager.Instance.StopBGM();
+            _currentJourneyBgmId = string.Empty;
+        }
+
+        private void StopBgmSwitchRoutine()
+        {
+            if (_bgmSwitchRoutine == null) return;
+            StopCoroutine(_bgmSwitchRoutine);
+            _bgmSwitchRoutine = null;
         }
 
         private void SetLevelUnlocked(int stageNumber, bool unlocked)

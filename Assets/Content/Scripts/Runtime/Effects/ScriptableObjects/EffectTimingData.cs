@@ -2,6 +2,12 @@ using UnityEngine;
 
 namespace LittleHeroJourney
 {
+    public enum AudioPlaybackChannel
+    {
+        Sfx = 0,
+        Bgm = 1
+    }
+
     /// <summary>
     /// VFX effect timing - references name from VFXSetSO
     /// </summary>
@@ -42,18 +48,9 @@ namespace LittleHeroJourney
         [Range(0f, 1f)]
         [Tooltip("When to trigger this effect (normalized time 0-1)")]
         public float triggerTime = 0.5f;
-
-        [Tooltip("Position offset from character (x, y, z)")]
-        public Vector3 positionOffset = Vector3.zero;
-
-        [Tooltip("Rotation in euler angles (degrees). Used for 3D audio orientation if supported.")]
-        public Vector3 rotationEuler = Vector3.zero;
-
-        [Tooltip("Scale (1,1,1). Audio typically ignores scale.")]
-        public Vector3 scale = Vector3.one;
-
-        [Tooltip("If true, effect follows character. If false, stays at spawn position")]
-        public bool followCharacter = false;
+        
+        [Tooltip("Where this audio should be routed. Default: SFX")]
+        public AudioPlaybackChannel playbackChannel = AudioPlaybackChannel.Sfx;
 
         public bool IsValid => !string.IsNullOrEmpty(effectName) && triggerTime >= 0f && triggerTime <= 1f;
     }

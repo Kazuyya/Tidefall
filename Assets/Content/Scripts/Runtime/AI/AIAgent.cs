@@ -481,7 +481,12 @@ namespace LittleHeroJourney
             foreach (var audio in spawnEffectsSO.AudioEffects)
             {
                 if (audio.IsValid)
-                    manager.PlayAudio(audio.effectName, transform.position);
+                {
+                    if (audio.playbackChannel == AudioPlaybackChannel.Bgm)
+                        manager.PlayBGM(audio.effectName);
+                    else
+                        manager.PlayAudio(audio.effectName, transform.position);
+                }
             }
 
             // Play Particle effects

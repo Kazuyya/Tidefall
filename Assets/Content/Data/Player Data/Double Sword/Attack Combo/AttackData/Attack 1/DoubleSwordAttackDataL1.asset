@@ -23,12 +23,22 @@ MonoBehaviour:
     colliderTriggerWindow: {x: 0.6, y: 0.9}
   attackDamageData: {fileID: 11400000, guid: 63d48121266deb24182c4bed83f48799, type: 2}
   inputWindow: {x: 0.5, y: 0.8}
-  interruptibleWindow: {x: 0, y: 1}
-  movementDisableWindow: {x: 0.2, y: 0.8}
+  interruptibleWindows:
+  - {x: 0, y: 1}
+  movementDisableWindows:
+  - {x: 0.2, y: 0.8}
+  _legacyInterruptibleWindow: {x: 0, y: 1}
+  _legacyMovementDisableWindow: {x: 0.2, y: 0.8}
   resetComboOnAnimationEnd: 1
   particleEffects: []
   vfxEffects: []
-  audioEffects: []
+  audioEffects:
+  - effectName: Dagger
+    triggerTime: 0
+    playbackChannel: 0
+  - effectName: Dagger
+    triggerTime: 0.3
+    playbackChannel: 0
   trailEffects:
   - effectName: Sword1_R
     triggerWindow: {x: 0.2, y: 0.5}

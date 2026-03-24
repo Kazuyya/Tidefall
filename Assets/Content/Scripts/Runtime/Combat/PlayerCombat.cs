@@ -26,7 +26,7 @@ namespace LittleHeroJourney
         [HideInInspector] public Weapon currentWeapon;
         protected List<Weapon> _currentAttackWeapons = new List<Weapon>();
         protected Dictionary<Weapon, Vector2> _weaponTimingMap = new Dictionary<Weapon, Vector2>();
-        protected List<object> _triggeredEffects = new List<object>();
+        protected HashSet<string> _triggeredEffects = new HashSet<string>();
         protected HashSet<string> _triggeredTrailStarts = new HashSet<string>();
         protected HashSet<string> _triggeredTrailStops = new HashSet<string>();
         protected bool _isAttackFinishing;
@@ -570,26 +570,41 @@ namespace LittleHeroJourney
             Transform effectParent = transform;
             var manager = CharacterEffectManager.Instance;
             if (currentAttack.particleEffects != null)
-                foreach (var e in currentAttack.particleEffects)
-                    if (e.IsValid && normalizedTime >= e.triggerTime && !_triggeredEffects.Contains(e.effectName))
+                for (int i = 0; i < currentAttack.particleEffects.Count; i++)
+                {
+                    var e = currentAttack.particleEffects[i];
+                    string triggerKey = $"particle:{i}";
+                    if (e.IsValid && normalizedTime >= e.triggerTime && !_triggeredEffects.Contains(triggerKey))
                     {
                         manager?.PlayParticle(e.effectName, pos, (effectParent != null ? effectParent.rotation : Quaternion.identity) * Quaternion.Euler(e.rotationEuler), e.positionOffset, e.scale, effectParent, e.followCharacter, e.rotationEuler);
-                        _triggeredEffects.Add(e.effectName);
+                        _triggeredEffects.Add(triggerKey);
                     }
+                }
             if (currentAttack.vfxEffects != null)
-                foreach (var e in currentAttack.vfxEffects)
-                    if (e.IsValid && normalizedTime >= e.triggerTime && !_triggeredEffects.Contains(e.effectName))
+                for (int i = 0; i < currentAttack.vfxEffects.Count; i++)
+                {
+                    var e = currentAttack.vfxEffects[i];
+                    string triggerKey = $"vfx:{i}";
+                    if (e.IsValid && normalizedTime >= e.triggerTime && !_triggeredEffects.Contains(triggerKey))
                     {
                         manager?.PlayVFX(e.effectName, pos, (effectParent != null ? effectParent.rotation : Quaternion.identity) * Quaternion.Euler(e.rotationEuler), e.positionOffset, e.scale, effectParent, e.followCharacter, e.rotationEuler);
-                        _triggeredEffects.Add(e.effectName);
+                        _triggeredEffects.Add(triggerKey);
                     }
+                }
             if (currentAttack.audioEffects != null)
-                foreach (var e in currentAttack.audioEffects)
-                    if (e.IsValid && normalizedTime >= e.triggerTime && !_triggeredEffects.Contains(e.effectName))
+                for (int i = 0; i < currentAttack.audioEffects.Count; i++)
+                {
+                    var e = currentAttack.audioEffects[i];
+                    string triggerKey = $"audio:{i}";
+                    if (e.IsValid && normalizedTime >= e.triggerTime && !_triggeredEffects.Contains(triggerKey))
                     {
-                        manager?.PlayAudio(e.effectName, pos + (effectParent != null ? effectParent.rotation * e.positionOffset : e.positionOffset));
-                        _triggeredEffects.Add(e.effectName);
+                        if (e.playbackChannel == AudioPlaybackChannel.Bgm)
+                            manager?.PlayBGM(e.effectName);
+                        else
+                            manager?.PlayAudio(e.effectName, pos);
+                        _triggeredEffects.Add(triggerKey);
                     }
+                }
             if (currentAttack.trailEffects != null && manager != null)
             {
                 // Snapshot trails that were already started before this frame. We must never trigger
