@@ -1626,6 +1626,7 @@ GameObject:
   - component: {fileID: 8661433931268985360}
   - component: {fileID: 159983932275203265}
   - component: {fileID: 5755461589732236501}
+  - component: {fileID: 5075990468440486133}
   m_Layer: 3
   m_Name: Player
   m_TagString: Player
@@ -1911,6 +1912,27 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   showDebugLog: 0
+--- !u!114 &5075990468440486133
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1032941358914461017}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b45ca91774ecde14099824416308eb9f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  waterLayers:
+    serializedVersion: 2
+    m_Bits: 16
+  trueWaterSurfaceOffset: -0.7
+  deepThreshold: 0.4
+  bodyCheckOffset: {x: 0, y: 1, z: 0}
+  bodyCheckRadius: 0.5
+  bodyCheckHeight: 2
+  showGizmos: 1
 --- !u!1 &1106735231500242117
 GameObject:
   m_ObjectHideFlags: 0
@@ -1951,6 +1973,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5235426450315105873}
+  - component: {fileID: 7965828450950743276}
   m_Layer: 0
   m_Name: foot_l
   m_TagString: Untagged
@@ -1974,6 +1997,44 @@ Transform:
   - {fileID: 3806202230501512662}
   m_Father: {fileID: 2657865957003634062}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7965828450950743276
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1147669319995139593}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6adbfdcb9cf29cc499a76fb6cf6e5276, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  groundLayers:
+    serializedVersion: 2
+    m_Bits: 512
+  globalSettings:
+    minSpeed: 0.2
+    groundRayLength: 0.35
+    emitInterval: 0.1
+  particleEffectId: FX_Footstep
+  particleUseCustomSettings: 0
+  particleCustom:
+    minSpeed: 0.2
+    groundRayLength: 0.1
+    emitInterval: 0.06
+  vfxEffectId: 
+  vfxUseCustomSettings: 0
+  vfxCustom:
+    minSpeed: 0.2
+    groundRayLength: 0.1
+    emitInterval: 0.06
+  audioEffectId: FootstepsGround
+  audioUseCustomSettings: 1
+  audioCustom:
+    minSpeed: 0.2
+    groundRayLength: 0.2
+    emitInterval: 0.15
+  showGizmos: 1
 --- !u!1 &1149650130247136847
 GameObject:
   m_ObjectHideFlags: 0
@@ -7730,6 +7791,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2995248630512867279}
+  - component: {fileID: 2424761403173223210}
   m_Layer: 0
   m_Name: foot_r
   m_TagString: Untagged
@@ -7753,6 +7815,44 @@ Transform:
   - {fileID: 3917655042677860394}
   m_Father: {fileID: 1312047395501468349}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2424761403173223210
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5194153476065441982}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6adbfdcb9cf29cc499a76fb6cf6e5276, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  groundLayers:
+    serializedVersion: 2
+    m_Bits: 512
+  globalSettings:
+    minSpeed: 0.2
+    groundRayLength: 0.35
+    emitInterval: 0.1
+  particleEffectId: FX_Footstep
+  particleUseCustomSettings: 0
+  particleCustom:
+    minSpeed: 0.2
+    groundRayLength: 0.1
+    emitInterval: 0.06
+  vfxEffectId: 
+  vfxUseCustomSettings: 0
+  vfxCustom:
+    minSpeed: 0.2
+    groundRayLength: 0.1
+    emitInterval: 0.06
+  audioEffectId: FootstepsGround
+  audioUseCustomSettings: 1
+  audioCustom:
+    minSpeed: 0.2
+    groundRayLength: 0.2
+    emitInterval: 0.15
+  showGizmos: 1
 --- !u!1 &5206425853677586889
 GameObject:
   m_ObjectHideFlags: 0

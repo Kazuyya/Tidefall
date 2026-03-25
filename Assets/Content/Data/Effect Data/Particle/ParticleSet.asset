@@ -25,3 +25,6 @@ MonoBehaviour:
   - effectName: FX_SwordStab_01
     particlePrefab: {fileID: 7976660186629903092, guid: b471ad1663b11434ea3b48ad1122c020, type: 3}
     poolSize: 0
+  - effectName: FX_Footstep
+    particlePrefab: {fileID: 9137166449192970543, guid: 42a769c98ed56544caf4407acbeeb4ff, type: 3}
+    poolSize: 0

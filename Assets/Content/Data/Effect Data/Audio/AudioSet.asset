@@ -52,21 +52,6 @@ MonoBehaviour:
       clips: []
       playType: 2
       cycleDelay: 0
-  - effectName: Dagger
-    audioClips:
-    - clip: {fileID: 8300000, guid: 91f15de0f92682a4dac3da9d3dd3eb1d, type: 3}
-      volume: 1
-    - clip: {fileID: 8300000, guid: 7c253e5c4d4ab974ba6851d27e61ece0, type: 3}
-      volume: 1
-    playType: 2
-    spatialBlend: 0
-    poolSize: 0
-    loop: 0
-    useLoopSection: 0
-    loopSection:
-      clips: []
-      playType: 2
-      cycleDelay: 0
   - effectName: MainmenuBGM
     audioClips:
     - clip: {fileID: 8300000, guid: e01c81bb3dd9b494195ac61697c17021, type: 3}
@@ -111,4 +96,57 @@ MonoBehaviour:
       - clip: {fileID: 8300000, guid: 585db457c49bbc34da59729e6fbcf878, type: 3}
         volume: 1
       playType: 0
+      cycleDelay: 0
+  - effectName: Dagger
+    audioClips:
+    - clip: {fileID: 8300000, guid: 91f15de0f92682a4dac3da9d3dd3eb1d, type: 3}
+      volume: 0.5
+    - clip: {fileID: 8300000, guid: 7c253e5c4d4ab974ba6851d27e61ece0, type: 3}
+      volume: 0.5
+    playType: 2
+    spatialBlend: 0
+    poolSize: 0
+    loop: 0
+    useLoopSection: 0
+    loopSection:
+      clips: []
+      playType: 2
+      cycleDelay: 0
+  - effectName: DaggerSpin
+    audioClips:
+    - clip: {fileID: 8300000, guid: e3d5d597174a5d74a87f1ada292d8d58, type: 3}
+      volume: 0.5
+    playType: 0
+    spatialBlend: 0
+    poolSize: 0
+    loop: 0
+    useLoopSection: 0
+    loopSection:
+      clips: []
+      playType: 2
+      cycleDelay: 0
+  - effectName: FootstepsGround
+    audioClips:
+    - clip: {fileID: 8300000, guid: cff7bc3f1a6e65c449747d8bdba323ea, type: 3}
+      volume: 0.3
+    - clip: {fileID: 8300000, guid: a6f78c215b6e46848878ccb7ebd78362, type: 3}
+      volume: 0.3
+    - clip: {fileID: 8300000, guid: 0116b430b51b3464088e44cd7fff3375, type: 3}
+      volume: 0.3
+    - clip: {fileID: 8300000, guid: d7f4c3ee183351145823f4af95061d8f, type: 3}
+      volume: 0.3
+    - clip: {fileID: 8300000, guid: 20c94602f66f9854e81a29b105c7942b, type: 3}
+      volume: 0.3
+    - clip: {fileID: 8300000, guid: 43e0f6bee05ff5746a14d33f830dfe36, type: 3}
+      volume: 0.3
+    - clip: {fileID: 8300000, guid: 3fe64960ff316f348b6001b779a563be, type: 3}
+      volume: 0.3
+    playType: 2
+    spatialBlend: 0
+    poolSize: 0
+    loop: 0
+    useLoopSection: 0
+    loopSection:
+      clips: []
+      playType: 2
       cycleDelay: 0
