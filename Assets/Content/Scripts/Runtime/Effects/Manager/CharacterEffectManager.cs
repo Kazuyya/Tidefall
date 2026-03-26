@@ -91,6 +91,7 @@ namespace LittleHeroJourney
         #endregion
 
         #region Lifecycle
+        private readonly List<Transform> _followToRemove = new List<Transform>();
 
         private void Awake()
         {
@@ -136,19 +137,19 @@ namespace LittleHeroJourney
         {
             if (_followTransforms.Count == 0) return;
             Vector3 poolScale = _poolContainer != null ? _poolContainer.lossyScale : Vector3.one;
-            var toRemove = new List<Transform>();
+            _followToRemove.Clear();
             foreach (var kv in _followTransforms)
             {
                 Transform t = kv.Key;
                 if (t == null || !t.gameObject.activeInHierarchy)
                 {
-                    toRemove.Add(t);
+                    _followToRemove.Add(t);
                     continue;
                 }
                 FollowData d = kv.Value;
                 if (d.Parent == null)
                 {
-                    toRemove.Add(t);
+                    _followToRemove.Add(t);
                     continue;
                 }
                 t.position = d.Parent.position + d.Parent.rotation * d.PosOffset;
@@ -158,8 +159,8 @@ namespace LittleHeroJourney
                 float sz = (poolScale.z > 0.0001f) ? (d.Scale.z * d.Parent.lossyScale.z / poolScale.z) : d.Scale.z;
                 t.localScale = new Vector3(sx, sy, sz);
             }
-            for (int i = 0; i < toRemove.Count; i++)
-                _followTransforms.Remove(toRemove[i]);
+            for (int i = 0; i < _followToRemove.Count; i++)
+                _followTransforms.Remove(_followToRemove[i]);
         }
 
         #endregion

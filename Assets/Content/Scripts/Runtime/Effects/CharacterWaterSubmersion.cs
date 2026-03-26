@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace LittleHeroJourney
@@ -9,6 +11,7 @@ namespace LittleHeroJourney
         Deep = 2,
     }
 
+    [DefaultExecutionOrder(-100)]
     public class CharacterWaterSubmersion : MonoBehaviour
     {
         [Header("Water")]
@@ -38,11 +41,96 @@ namespace LittleHeroJourney
 
         public float CurrentDepth { get; private set; }
 
+        public float TrueWaterSurfaceWorldY { get; private set; }
+
+        public event Action<bool> SubmergedStateChanged;
+
         private Transform _root;
+
+        private bool _wasSubmerged;
+
+        // Deep-water emitters coordination:
+        // If one character has multiple CharacterMovementEffect instances (e.g., left/right feet),
+        // only ONE of them is allowed to emit deep-water effects.
+        private readonly List<CharacterMovementEffect> _movementEffectEmitters = new List<CharacterMovementEffect>();
+        private CharacterMovementEffect _deepMasterEmitter;
+        private bool _deepMasterReady;
+        private int _deepMasterRecalcFrame = -1;
+
+        public void RegisterMovementEffect(CharacterMovementEffect effect)
+        {
+            if (effect == null)
+                return;
+
+            if (_movementEffectEmitters.Contains(effect))
+                return;
+
+            _movementEffectEmitters.Add(effect);
+            RecalculateDeepMaster();
+        }
+
+        public void UnregisterMovementEffect(CharacterMovementEffect effect)
+        {
+            if (effect == null)
+                return;
+
+            if (_movementEffectEmitters.Remove(effect))
+                RecalculateDeepMaster();
+        }
+
+        public bool DeepMasterReady => _deepMasterReady;
+
+        public bool CanEmitDeep(CharacterMovementEffect effect)
+        {
+            if (!_deepMasterReady)
+                return false;
+
+            // Prevent a frame where deep-master is still being recalculated due to registration order.
+            if (Time.frameCount == _deepMasterRecalcFrame)
+                return false;
+
+            return effect != null && effect == _deepMasterEmitter;
+        }
+
+        private void RecalculateDeepMaster()
+        {
+            _movementEffectEmitters.RemoveAll(e => e == null);
+
+            if (_movementEffectEmitters.Count == 0)
+            {
+                _deepMasterEmitter = null;
+                _deepMasterReady = false;
+                _deepMasterRecalcFrame = Time.frameCount;
+                return;
+            }
+
+            int minId = int.MaxValue;
+            CharacterMovementEffect minEmitter = null;
+            for (int i = 0; i < _movementEffectEmitters.Count; i++)
+            {
+                var e = _movementEffectEmitters[i];
+                if (e == null) continue;
+                int id = e.GetInstanceID();
+                if (id < minId)
+                {
+                    minId = id;
+                    minEmitter = e;
+                }
+            }
+
+            _deepMasterEmitter = minEmitter;
+            _deepMasterReady = _deepMasterEmitter != null;
+            _deepMasterRecalcFrame = Time.frameCount;
+        }
 
         private void Awake()
         {
             _root = transform.root;
+        }
+
+        public Vector3 GetBodyCheckCenterWorld()
+        {
+            return GetBodyCheckWorldCenter();
         }
 
         private void LateUpdate()
@@ -53,6 +141,8 @@ namespace LittleHeroJourney
                 WaterKind = null;
                 SubmersionLevel = WaterSubmersionLevel.None;
                 CurrentDepth = 0f;
+                TrueWaterSurfaceWorldY = 0f;
+                RaiseSubmergedChanged(false);
                 return;
             }
 
@@ -62,8 +152,12 @@ namespace LittleHeroJourney
                 WaterKind = null;
                 SubmersionLevel = WaterSubmersionLevel.None;
                 CurrentDepth = 0f;
+                TrueWaterSurfaceWorldY = 0f;
+                RaiseSubmergedChanged(false);
                 return;
             }
+
+            TrueWaterSurfaceWorldY = surfaceY;
 
             WaterKind = WaterVolume.ResolveKind(hit.collider);
 
@@ -74,6 +168,7 @@ namespace LittleHeroJourney
             if (!IsSubmerged)
             {
                 SubmersionLevel = WaterSubmersionLevel.None;
+                RaiseSubmergedChanged(false);
                 return;
             }
 
@@ -81,6 +176,16 @@ namespace LittleHeroJourney
             SubmersionLevel = CurrentDepth < threshold
                 ? WaterSubmersionLevel.Shallow
                 : WaterSubmersionLevel.Deep;
+
+            RaiseSubmergedChanged(true);
+        }
+
+        private void RaiseSubmergedChanged(bool submerged)
+        {
+            if (_wasSubmerged == submerged)
+                return;
+            _wasSubmerged = submerged;
+            SubmergedStateChanged?.Invoke(submerged);
         }
 
         private static float BodyCheckHalfHeight(float height)

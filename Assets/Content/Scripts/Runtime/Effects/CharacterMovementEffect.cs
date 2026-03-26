@@ -50,6 +50,50 @@ namespace LittleHeroJourney
 
         [SerializeField] private bool showGizmos = true;
 
+        [Header("Water tuning (submerged)")]
+        [SerializeField] private MovementEffectChannelSettings waterGlobalSettings = new MovementEffectChannelSettings
+        {
+            minSpeed = 0.2f,
+            groundRayLength = 0.35f,
+            emitInterval = 0.06f,
+        };
+
+        [SerializeField] private bool waterParticleUseCustomSettings;
+        [SerializeField] private MovementEffectChannelSettings waterParticleCustom = new MovementEffectChannelSettings
+        {
+            minSpeed = 0.2f,
+            groundRayLength = 0.35f,
+            emitInterval = 0.06f,
+        };
+
+        [SerializeField] private bool waterVfxUseCustomSettings;
+        [SerializeField] private MovementEffectChannelSettings waterVfxCustom = new MovementEffectChannelSettings
+        {
+            minSpeed = 0.2f,
+            groundRayLength = 0.0f,
+            emitInterval = 0.06f,
+        };
+
+        [SerializeField] private bool waterAudioUseCustomSettings;
+        [SerializeField] private MovementEffectChannelSettings waterAudioCustom = new MovementEffectChannelSettings
+        {
+            minSpeed = 0.2f,
+            groundRayLength = 0.35f,
+            emitInterval = 0.06f,
+        };
+
+        [Header("Water movement (submerged)")]
+        [SerializeField] private WaterMovementEffectIds waterNormalShallow;
+        [SerializeField] private WaterMovementEffectIds waterMurkyShallow;
+        [SerializeField] private WaterMovementEffectIds waterNormalDeep;
+        [SerializeField] private WaterMovementEffectIds waterMurkyDeep;
+
+        [Tooltip("World Y added to true water surface for all water effects (particle/audio/VFX).")]
+        [SerializeField] private float waterSurfaceEffectOffset = 0.08f;
+
+        [Tooltip("Jika true: saat Shallow, spawn particle/VFX/audio mengikuti tinggi permukaan air + offset. Jika false: Y pakai posisi CharacterMovementEffect itu sendiri (tanpa offset).")]
+        [SerializeField] private bool shallowUseSurfaceY = true;
+
         private NavMeshAgent _agent;
         private KinematicCharacterMotor _motor;
         private CharacterWaterSubmersion _waterSubmersion;
@@ -57,6 +101,11 @@ namespace LittleHeroJourney
         private float _emitTimerParticle;
         private float _emitTimerVfx;
         private float _emitTimerAudio;
+        private static RaycastHit[] _rayHits = new RaycastHit[8];
+        private bool _wasBelowWaterSurface;
+        private float _deepMovedSinceLastParticle;
+        private float _deepMovedSinceLastVfx;
+        private float _deepMovedSinceLastAudio;
 
         private void Awake()
         {
@@ -66,6 +115,39 @@ namespace LittleHeroJourney
 
             var p = transform.position;
             _prevHorizontalPos = new Vector3(p.x, 0f, p.z);
+        }
+
+        private void OnEnable()
+        {
+            if (_waterSubmersion == null)
+                _waterSubmersion = GetComponentInParent<CharacterWaterSubmersion>();
+
+            if (_waterSubmersion != null)
+            {
+                _waterSubmersion.SubmergedStateChanged += HandleSubmergedStateChanged;
+                _waterSubmersion.RegisterMovementEffect(this);
+            }
+        }
+
+        private void OnDisable()
+        {
+            if (_waterSubmersion != null)
+            {
+                _waterSubmersion.SubmergedStateChanged -= HandleSubmergedStateChanged;
+                _waterSubmersion.UnregisterMovementEffect(this);
+            }
+        }
+
+        private void HandleSubmergedStateChanged(bool submerged)
+        {
+            // Reset timers to avoid "carry-over" emits right after entering/exiting water.
+            _emitTimerParticle = 0f;
+            _emitTimerVfx = 0f;
+            _emitTimerAudio = 0f;
+            _deepMovedSinceLastParticle = 0f;
+            _deepMovedSinceLastVfx = 0f;
+            _deepMovedSinceLastAudio = 0f;
+            _wasBelowWaterSurface = false;
         }
 
         private void LateUpdate()
@@ -78,22 +160,49 @@ namespace LittleHeroJourney
 
             if (_waterSubmersion != null && _waterSubmersion.IsSubmerged)
             {
-                _emitTimerParticle = 0f;
-                _emitTimerVfx = 0f;
-                _emitTimerAudio = 0f;
+                if (!HasWaterEffectsConfigured())
+                {
+                    _emitTimerParticle = 0f;
+                    _emitTimerVfx = 0f;
+                    _emitTimerAudio = 0f;
+                    return;
+                }
+
+                ProcessWaterMovementEffects(speedSq);
                 return;
             }
 
-            bool playParticle = false;
-            if (HasAnyId(particleEffectId))
+            float maxRay = 0f;
+            bool needParticle = HasAnyId(particleEffectId);
+            bool needVfx = HasAnyId(vfxEffectId);
+            bool needAudio = HasAnyId(audioEffectId);
+            MovementEffectChannelSettings tuneP = GetParticleTune();
+            MovementEffectChannelSettings tuneV = GetVfxTune();
+            MovementEffectChannelSettings tuneA = GetAudioTune();
+            if (needParticle) maxRay = Mathf.Max(maxRay, tuneP.groundRayLength);
+            if (needVfx) maxRay = Mathf.Max(maxRay, tuneV.groundRayLength);
+            if (needAudio) maxRay = Mathf.Max(maxRay, tuneA.groundRayLength);
+            bool groundedHit = false;
+            float hitDistance = 0f;
+            if (maxRay > 0f)
             {
-                MovementEffectChannelSettings t = GetParticleTune();
-                if (speedSq >= t.minSpeed * t.minSpeed && IsGrounded(t.groundRayLength))
+                Vector3 origin = transform.position + Vector3.up * 0.05f;
+                int mask = groundLayers.value != 0 ? groundLayers.value : Physics.DefaultRaycastLayers;
+                groundedHit = TryFootRayHitGroundNonAlloc(origin, Mathf.Max(0.05f, maxRay), mask, out RaycastHit h);
+                if (groundedHit) hitDistance = h.distance;
+            }
+            bool motorOk = GetMotorOrAgentGroundOk(_motor, _agent);
+            bool gateP = false;
+            if (needParticle)
+            {
+                bool speedOk = speedSq >= tuneP.minSpeed * tuneP.minSpeed;
+                bool groundOk = groundedHit && motorOk && hitDistance <= Mathf.Max(0.05f, tuneP.groundRayLength);
+                if (speedOk && groundOk)
                 {
                     _emitTimerParticle += Time.deltaTime;
-                    if (_emitTimerParticle >= t.emitInterval)
+                    if (_emitTimerParticle >= tuneP.emitInterval)
                     {
-                        playParticle = true;
+                        gateP = true;
                         _emitTimerParticle = 0f;
                     }
                 }
@@ -102,17 +211,17 @@ namespace LittleHeroJourney
                     _emitTimerParticle = 0f;
                 }
             }
-
-            bool playVfx = false;
-            if (HasAnyId(vfxEffectId))
+            bool gateV = false;
+            if (needVfx)
             {
-                MovementEffectChannelSettings t = GetVfxTune();
-                if (speedSq >= t.minSpeed * t.minSpeed && IsGrounded(t.groundRayLength))
+                bool speedOk = speedSq >= tuneV.minSpeed * tuneV.minSpeed;
+                bool groundOk = groundedHit && motorOk && hitDistance <= Mathf.Max(0.05f, tuneV.groundRayLength);
+                if (speedOk && groundOk)
                 {
                     _emitTimerVfx += Time.deltaTime;
-                    if (_emitTimerVfx >= t.emitInterval)
+                    if (_emitTimerVfx >= tuneV.emitInterval)
                     {
-                        playVfx = true;
+                        gateV = true;
                         _emitTimerVfx = 0f;
                     }
                 }
@@ -121,17 +230,17 @@ namespace LittleHeroJourney
                     _emitTimerVfx = 0f;
                 }
             }
-
-            bool playAudio = false;
-            if (HasAnyId(audioEffectId))
+            bool gateA = false;
+            if (needAudio)
             {
-                MovementEffectChannelSettings t = GetAudioTune();
-                if (speedSq >= t.minSpeed * t.minSpeed && IsGrounded(t.groundRayLength))
+                bool speedOk = speedSq >= tuneA.minSpeed * tuneA.minSpeed;
+                bool groundOk = groundedHit && motorOk && hitDistance <= Mathf.Max(0.05f, tuneA.groundRayLength);
+                if (speedOk && groundOk)
                 {
                     _emitTimerAudio += Time.deltaTime;
-                    if (_emitTimerAudio >= t.emitInterval)
+                    if (_emitTimerAudio >= tuneA.emitInterval)
                     {
-                        playAudio = true;
+                        gateA = true;
                         _emitTimerAudio = 0f;
                     }
                 }
@@ -141,10 +250,10 @@ namespace LittleHeroJourney
                 }
             }
 
-            if (!playParticle && !playVfx && !playAudio)
+            if (!gateP && !gateV && !gateA)
                 return;
 
-            PlayEffects(playParticle, playVfx, playAudio);
+            PlayEffects(gateP, gateV, gateA);
         }
 
         private MovementEffectChannelSettings GetParticleTune() =>
@@ -159,7 +268,210 @@ namespace LittleHeroJourney
         private static bool HasAnyId(string id) => !string.IsNullOrEmpty(id);
 
         private bool HasAnyEffectId() =>
-            HasAnyId(particleEffectId) || HasAnyId(vfxEffectId) || HasAnyId(audioEffectId);
+            HasAnyId(particleEffectId) ||
+            HasAnyId(vfxEffectId) ||
+            HasAnyId(audioEffectId) ||
+            HasWaterEffectsConfigured();
+
+        private bool HasWaterEffectsConfigured() =>
+            waterNormalShallow.HasAny() ||
+            waterMurkyShallow.HasAny() ||
+            waterNormalDeep.HasAny() ||
+            waterMurkyDeep.HasAny();
+
+        private WaterMovementEffectIds ResolveWaterEffectIds()
+        {
+            WaterVolumeKind kind = _waterSubmersion != null && _waterSubmersion.WaterKind.HasValue
+                ? _waterSubmersion.WaterKind.Value
+                : WaterVolumeKind.Normal;
+
+            bool shallow = _waterSubmersion != null &&
+                _waterSubmersion.SubmersionLevel == WaterSubmersionLevel.Shallow;
+
+            if (shallow)
+                return kind == WaterVolumeKind.Murky ? waterMurkyShallow : waterNormalShallow;
+
+            return kind == WaterVolumeKind.Murky ? waterMurkyDeep : waterNormalDeep;
+        }
+
+        private void ProcessWaterMovementEffects(float speedSq)
+        {
+            bool shallow = _waterSubmersion != null &&
+                _waterSubmersion.SubmersionLevel == WaterSubmersionLevel.Shallow;
+
+            // If character has multiple emitters, only ONE is allowed to emit in deep water.
+            if (!shallow && _waterSubmersion != null && !_waterSubmersion.CanEmitDeep(this))
+            {
+                _emitTimerParticle = 0f;
+                _emitTimerVfx = 0f;
+                _emitTimerAudio = 0f;
+                _deepMovedSinceLastParticle = 0f;
+                _deepMovedSinceLastVfx = 0f;
+                _deepMovedSinceLastAudio = 0f;
+                return;
+            }
+
+            WaterMovementEffectIds ids = ResolveWaterEffectIds();
+            MovementEffectChannelSettings particleTune = GetWaterParticleTune();
+            MovementEffectChannelSettings vfxTune = GetWaterVfxTune();
+            MovementEffectChannelSettings audioTune = GetWaterAudioTune();
+
+            bool playParticle = false;
+            bool playVfx = false;
+            bool playAudio = false;
+
+            float waterSurfaceY = _waterSubmersion.TrueWaterSurfaceWorldY;
+            if (shallow)
+            {
+                bool belowNow = transform.position.y <= waterSurfaceY + 0.01f;
+                bool crossing = belowNow && !_wasBelowWaterSurface;
+                _wasBelowWaterSurface = belowNow;
+
+                if (crossing)
+                {
+                    if (HasAnyId(ids.particleEffectId) && speedSq >= particleTune.minSpeed * particleTune.minSpeed)
+                        playParticle = true;
+                    if (HasAnyId(ids.vfxEffectId) && speedSq >= vfxTune.minSpeed * vfxTune.minSpeed)
+                        playVfx = true;
+                    if (HasAnyId(ids.audioEffectId) && speedSq >= audioTune.minSpeed * audioTune.minSpeed)
+                        playAudio = true;
+                }
+            }
+            else
+            {
+                float dist = GetHorizontalVelocity().magnitude * Time.deltaTime;
+                if (HasAnyId(ids.particleEffectId))
+                {
+                    float threshold = Mathf.Max(0.01f, particleTune.minSpeed * Mathf.Max(0.01f, particleTune.emitInterval));
+                    if (speedSq >= particleTune.minSpeed * particleTune.minSpeed)
+                    {
+                        _deepMovedSinceLastParticle += dist;
+                        if (_deepMovedSinceLastParticle >= threshold)
+                        {
+                            playParticle = true;
+                            _deepMovedSinceLastParticle = 0f;
+                        }
+                    }
+                    else _deepMovedSinceLastParticle = 0f;
+                }
+                if (HasAnyId(ids.vfxEffectId))
+                {
+                    float threshold = Mathf.Max(0.01f, vfxTune.minSpeed * Mathf.Max(0.01f, vfxTune.emitInterval));
+                    if (speedSq >= vfxTune.minSpeed * vfxTune.minSpeed)
+                    {
+                        _deepMovedSinceLastVfx += dist;
+                        if (_deepMovedSinceLastVfx >= threshold)
+                        {
+                            playVfx = true;
+                            _deepMovedSinceLastVfx = 0f;
+                        }
+                    }
+                    else _deepMovedSinceLastVfx = 0f;
+                }
+                if (HasAnyId(ids.audioEffectId))
+                {
+                    float threshold = Mathf.Max(0.01f, audioTune.minSpeed * Mathf.Max(0.01f, audioTune.emitInterval));
+                    if (speedSq >= audioTune.minSpeed * audioTune.minSpeed)
+                    {
+                        _deepMovedSinceLastAudio += dist;
+                        if (_deepMovedSinceLastAudio >= threshold)
+                        {
+                            playAudio = true;
+                            _deepMovedSinceLastAudio = 0f;
+                        }
+                    }
+                    else _deepMovedSinceLastAudio = 0f;
+                }
+            }
+
+            if (!playParticle && !playVfx && !playAudio)
+                return;
+
+            if (CharacterEffectManager.Instance == null)
+                return;
+
+            PlayWaterEffects(playParticle, playVfx, playAudio, ids, shallow, waterSurfaceY, transform.rotation);
+        }
+
+        private MovementEffectChannelSettings GetWaterParticleTune() =>
+            waterParticleUseCustomSettings ? waterParticleCustom : waterGlobalSettings;
+
+        private MovementEffectChannelSettings GetWaterVfxTune() =>
+            waterVfxUseCustomSettings ? waterVfxCustom : waterGlobalSettings;
+
+        private MovementEffectChannelSettings GetWaterAudioTune() =>
+            waterAudioUseCustomSettings ? waterAudioCustom : waterGlobalSettings;
+
+        private void PlayWaterEffects(
+            bool playParticle,
+            bool playVfx,
+            bool playAudio,
+            WaterMovementEffectIds ids,
+            bool shallow,
+            float surfaceY,
+            Quaternion rot)
+        {
+            CharacterEffectManager mgr = CharacterEffectManager.Instance;
+            if (mgr == null)
+                return;
+
+            float deepY = surfaceY + waterSurfaceEffectOffset;
+            float shallowY = shallowUseSurfaceY ? deepY : transform.position.y;
+
+            float yParticleAudio = shallow ? shallowY : deepY;
+            float yVfx = shallow ? shallowY : deepY;
+
+            Vector3 deepAnchor = _waterSubmersion.GetBodyCheckCenterWorld();
+
+            Vector3 shallowAnchorParticleAudio = new Vector3(transform.position.x, yParticleAudio, transform.position.z);
+            Vector3 shallowAnchorVfx = new Vector3(transform.position.x, yVfx, transform.position.z);
+
+            void PlayParticleOne()
+            {
+                if (!playParticle || !HasAnyId(ids.particleEffectId))
+                    return;
+
+                if (shallow)
+                {
+                    mgr.PlayParticle(ids.particleEffectId, shallowAnchorParticleAudio, rot);
+                    return;
+                }
+
+                mgr.PlayParticle(ids.particleEffectId, new Vector3(deepAnchor.x, yParticleAudio, deepAnchor.z), rot);
+            }
+
+            void PlayVfxOne()
+            {
+                if (!playVfx || !HasAnyId(ids.vfxEffectId))
+                    return;
+
+                if (shallow)
+                {
+                    mgr.PlayVFX(ids.vfxEffectId, shallowAnchorVfx, rot);
+                    return;
+                }
+
+                mgr.PlayVFX(ids.vfxEffectId, new Vector3(deepAnchor.x, yVfx, deepAnchor.z), rot);
+            }
+
+            void PlayAudioOne()
+            {
+                if (!playAudio || !HasAnyId(ids.audioEffectId))
+                    return;
+
+                if (shallow)
+                {
+                    mgr.PlayAudio(ids.audioEffectId, shallowAnchorParticleAudio);
+                    return;
+                }
+
+                mgr.PlayAudio(ids.audioEffectId, new Vector3(deepAnchor.x, yParticleAudio, deepAnchor.z));
+            }
+
+            PlayParticleOne();
+            PlayVfxOne();
+            PlayAudioOne();
+        }
 
         private void PlayEffects(bool playParticle, bool playVfx, bool playAudio)
         {
@@ -208,7 +520,7 @@ namespace LittleHeroJourney
             Vector3 origin = transform.position + Vector3.up * 0.05f;
             int mask = groundLayers.value != 0 ? groundLayers.value : Physics.DefaultRaycastLayers;
             float maxDist = Mathf.Max(0.05f, rayLength);
-            if (!TryFootRayHitGround(origin, maxDist, mask, out _))
+            if (!TryFootRayHitGroundNonAlloc(origin, maxDist, mask, out _))
                 return false;
 
             if (_motor != null)
@@ -220,28 +532,50 @@ namespace LittleHeroJourney
             return true;
         }
 
-        private bool TryFootRayHitGround(Vector3 origin, float maxDist, int layerMask, out RaycastHit groundHit)
+        private bool IsGroundedForWaterShallow(float rayLength)
+        {
+            Vector3 origin = transform.position + Vector3.up * 0.05f;
+            int mask = groundLayers.value != 0 ? groundLayers.value : Physics.DefaultRaycastLayers;
+            float effective =
+                rayLength > 1e-4f ? rayLength : globalSettings.groundRayLength;
+            float maxDist = Mathf.Max(0.05f, effective);
+            return TryFootRayHitGroundNonAlloc(origin, maxDist, mask, out _);
+        }
+
+        private bool TryFootRayHitGroundNonAlloc(Vector3 origin, float maxDist, int layerMask, out RaycastHit groundHit)
         {
             groundHit = default;
-            RaycastHit[] hits = Physics.RaycastAll(origin, Vector3.down, maxDist, layerMask, QueryTriggerInteraction.Ignore);
-            if (hits == null || hits.Length == 0)
+            int count = Physics.RaycastNonAlloc(origin, Vector3.down, _rayHits, maxDist, layerMask, QueryTriggerInteraction.Ignore);
+            if (count <= 0)
                 return false;
 
-            System.Array.Sort(hits, (a, b) => a.distance.CompareTo(b.distance));
             Transform root = transform.root;
 
-            for (int i = 0; i < hits.Length; i++)
+            float best = float.MaxValue;
+            int bestIndex = -1;
+            for (int i = 0; i < count; i++)
             {
-                Collider c = hits[i].collider;
+                Collider c = _rayHits[i].collider;
                 if (c == null) continue;
                 if (c.transform == root || c.transform.IsChildOf(root))
                     continue;
-
-                groundHit = hits[i];
-                return true;
+                float d = _rayHits[i].distance;
+                if (d < best)
+                {
+                    best = d;
+                    bestIndex = i;
+                }
             }
 
-            return false;
+            if (bestIndex >= 0)
+            {
+                groundHit = _rayHits[bestIndex];
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
         private void OnDrawGizmos()
@@ -256,7 +590,7 @@ namespace LittleHeroJourney
             var agent = GetComponentInParent<NavMeshAgent>();
 
             float globalDist = Mathf.Max(0.05f, globalSettings.groundRayLength);
-            bool footGlobal = TryFootRayHitGround(origin, globalDist, mask, out RaycastHit hitGlobal);
+            bool footGlobal = TryFootRayHitGroundNonAlloc(origin, globalDist, mask, out RaycastHit hitGlobal);
             bool motorOk = GetMotorOrAgentGroundOk(motor, agent);
             bool groundedGlobal = footGlobal && motorOk;
 
@@ -277,7 +611,7 @@ namespace LittleHeroJourney
             {
                 MovementEffectChannelSettings t = GetParticleTune();
                 float maxDist = Mathf.Max(0.05f, t.groundRayLength);
-                bool footRayOk = TryFootRayHitGround(origin, maxDist, mask, out RaycastHit groundHitPv);
+                bool footRayOk = TryFootRayHitGroundNonAlloc(origin, maxDist, mask, out RaycastHit groundHitPv);
                 bool motorOrAgentOk = GetMotorOrAgentGroundOk(motor, agent);
                 bool groundedGate = footRayOk && motorOrAgentOk;
 
@@ -302,7 +636,7 @@ namespace LittleHeroJourney
                 Vector3 originV = origin + new Vector3(0.03f, 0f, 0f);
                 MovementEffectChannelSettings t = GetVfxTune();
                 float maxDist = Mathf.Max(0.05f, t.groundRayLength);
-                bool footRayOk = TryFootRayHitGround(originV, maxDist, mask, out RaycastHit groundHitV);
+                bool footRayOk = TryFootRayHitGroundNonAlloc(originV, maxDist, mask, out RaycastHit groundHitV);
                 bool motorOrAgentOk = GetMotorOrAgentGroundOk(motor, agent);
                 bool groundedGate = footRayOk && motorOrAgentOk;
 
@@ -327,7 +661,7 @@ namespace LittleHeroJourney
                 Vector3 originA = origin + new Vector3(0.06f, 0f, 0f);
                 MovementEffectChannelSettings t = GetAudioTune();
                 float maxDist = Mathf.Max(0.05f, t.groundRayLength);
-                bool footRayOkA = TryFootRayHitGround(originA, maxDist, mask, out RaycastHit groundHitA);
+                bool footRayOkA = TryFootRayHitGroundNonAlloc(originA, maxDist, mask, out RaycastHit groundHitA);
                 bool motorOrAgentOkA = GetMotorOrAgentGroundOk(motor, agent);
                 bool groundedGateA = footRayOkA && motorOrAgentOkA;
 

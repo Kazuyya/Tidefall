@@ -431,21 +431,7 @@ namespace LittleHeroJourney
 
         private IEnumerator CloseCurrentCanvasesRoutine()
         {
-            var manager = GameManager.Instance != null ? GameManager.Instance.CanvasManager : null;
-            if (manager != null)
-            {
-                yield return manager.CloseAllCanvasesRoutine();
-                yield break;
-            }
-
-            var canvases = FindObjectsOfType<GameCanvas>(true);
-            for (int i = 0; i < canvases.Length; i++)
-            {
-                var canvas = canvases[i];
-                if (canvas == null) continue;
-                if (!canvas.gameObject.activeInHierarchy) continue;
-                yield return canvas.CloseForTransitionRoutine();
-            }
+            yield return Helper.CloseAllActiveCanvasesRoutine();
         }
 
         private void PrepareTargetSceneCanvases(string loadedSceneName)

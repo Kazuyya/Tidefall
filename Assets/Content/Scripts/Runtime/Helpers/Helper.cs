@@ -2,11 +2,13 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
 using DG.Tweening;
+using LittleHeroJourney.UI;
 
 namespace LittleHeroJourney
 {
     public static class Helper
     {
+        private static readonly System.Collections.Generic.Dictionary<int, System.Collections.Generic.HashSet<string>> _animParamNamesCache = new System.Collections.Generic.Dictionary<int, System.Collections.Generic.HashSet<string>>();
         #region Combat / Stats
 
         public static float ApplyPercentReduction(float value, float stat, float minResult = 0f)
@@ -335,8 +337,15 @@ namespace LittleHeroJourney
         {
             if (animator == null || string.IsNullOrEmpty(parameterName))
                 return false;
-
-            return animator.parameters.Any(p => p.name == parameterName);
+            int id = animator.GetInstanceID();
+            if (!_animParamNamesCache.TryGetValue(id, out var set))
+            {
+                var ps = animator.parameters;
+                set = new System.Collections.Generic.HashSet<string>();
+                for (int i = 0; i < ps.Length; i++) set.Add(ps[i].name);
+                _animParamNamesCache[id] = set;
+            }
+            return set.Contains(parameterName);
         }
 
         /// <summary>
@@ -481,5 +490,23 @@ namespace LittleHeroJourney
         }
 
         #endregion
+
+        public static System.Collections.IEnumerator CloseAllActiveCanvasesRoutine()
+        {
+            var manager = GameManager.Instance != null ? GameManager.Instance.CanvasManager : null;
+            if (manager != null)
+            {
+                yield return manager.CloseAllCanvasesRoutine();
+                yield break;
+            }
+            var canvases = UnityEngine.Object.FindObjectsOfType<GameCanvas>(true);
+            for (int i = 0; i < canvases.Length; i++)
+            {
+                var canvas = canvases[i];
+                if (canvas == null) continue;
+                if (!canvas.gameObject.activeInHierarchy) continue;
+                yield return canvas.CloseForTransitionRoutine();
+            }
+        }
     }
 }

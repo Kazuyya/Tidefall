@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using KinematicCharacterController;
-using UnityEngine.InputSystem;
 using Terresquall;
 #pragma warning disable CS0618
 
@@ -47,8 +46,6 @@ namespace LittleHeroJourney
         [Header("Dash Settings")]
         public DashSettingsSO dashSettings;
 
-        [Tooltip("Move + Dash actions. Joystick (virtualJoystickId) used for move when present.")]
-        public InputActionAsset inputActionAsset;
         public Camera playerCamera;
         [Tooltip("ID for VirtualJoystick (mobile). Move = joystick priority, then Input Action.")]
         public int virtualJoystickId;
@@ -91,7 +88,7 @@ namespace LittleHeroJourney
         public StoryEncounterSpawner CurrentEncounterSpawner => _currentEncounterSpawner;
         
         [Header("Encounter Settings")]
-        [SerializeField] private float boundaryClampOffset = 0.5f;
+        [SerializeField] private float boundaryClampOffset;
         [SerializeField] private bool showEncounterBoundaryLog = false;
         [Header("Debug")]
         [SerializeField] private bool showDebugLog = false;
@@ -107,9 +104,6 @@ namespace LittleHeroJourney
         private float _dashMaxDistance;
         private Vector3 _dashTargetPosition;
         private float _currentDashSpeed = 0f;
-
-        private InputAction moveAction;
-        private InputAction dashAction;
 
         // Knockback
         private Coroutine _knockbackCoroutine;
@@ -211,7 +205,6 @@ namespace LittleHeroJourney
 
             TransitionToState(PlayerState.Default);
             Motor.CharacterController = this;
-            SetupInputActions();
             SetupAnimator();
             // Try bind camera immediately if already available
             HandleCameraReady();
@@ -244,28 +237,10 @@ namespace LittleHeroJourney
 
         private void OnDestroy()
         {
-            if (moveAction != null) moveAction.Disable();
-            if (dashAction != null) dashAction.Disable();
-            if (inputActionAsset != null) inputActionAsset.Disable();
-
             if (_health != null)
             {
                 _health.OnDeath -= HandleDeath;
             }
-        }
-
-        private void SetupInputActions()
-        {
-            if (inputActionAsset == null)
-            {
-                if (showDebugLog) Debug.LogWarning($"[{GetType().Name}] InputActionAsset is not assigned!");
-                return;
-            }
-            moveAction = inputActionAsset.FindAction("Move");
-            dashAction = inputActionAsset.FindAction("Dash");
-            if (moveAction != null) moveAction.Enable();
-            if (dashAction != null) dashAction.Enable();
-            inputActionAsset.Enable();
         }
 
         private void SetupAnimator()
@@ -363,7 +338,7 @@ namespace LittleHeroJourney
 
         private void HandleMovementInput()
         {
-            Vector2 moveInput = _ignorePlayerMovementInput ? Vector2.zero : GetCombinedMoveInput();
+            Vector2 moveInput = _ignorePlayerMovementInput ? Vector2.zero : GetJoystickInput();
 
             Quaternion cameraRotation = playerCamera != null ? playerCamera.transform.rotation : Quaternion.identity;
 
@@ -381,16 +356,6 @@ namespace LittleHeroJourney
         private void HandleDashInput()
         {
             if (_dashCooldownTimer > 0f) _dashCooldownTimer -= Time.deltaTime;
-            if (dashAction != null && dashAction.triggered) TriggerDash();
-        }
-
-        private Vector2 GetCombinedMoveInput()
-        {
-            Vector2 joystick = GetJoystickInput();
-            if (joystick.sqrMagnitude > 0.01f) return joystick;
-            Vector2 fromActions = GetMoveFromInputActions();
-            if (fromActions.sqrMagnitude > 0.01f) return fromActions;
-            return Vector2.zero;
         }
 
         private Vector2 GetJoystickInput()
@@ -398,12 +363,6 @@ namespace LittleHeroJourney
             if (VirtualJoystick.CountActiveInstances() == 0) return Vector2.zero;
             VirtualJoystick j = VirtualJoystick.GetInstance(virtualJoystickId);
             return (j != null && j.isActiveAndEnabled) ? j.GetAxis() : Vector2.zero;
-        }
-
-        private Vector2 GetMoveFromInputActions()
-        {
-            if (moveAction == null) return Vector2.zero;
-            return moveAction.ReadValue<Vector2>();
         }
 
         private void HandleDashRequest()

@@ -93,11 +93,6 @@ namespace LittleHeroJourney
             }
         }
 
-        protected override void SetupInputActions()
-        {
-            // AI doesn't need input actions
-        }
-
         // Override UpdateComboWindowState for AI - simplified logic, no timing window needed
         protected override void UpdateComboWindowState()
         {
@@ -147,7 +142,7 @@ namespace LittleHeroJourney
         {
             if (currentSequence == null)
             {
-                Debug.Log($"[{GetType().Name}] Combo decision: STOP (no sequence) ");
+                if (ShowDebugLog) Debug.Log($"[{GetType().Name}] Combo decision: STOP (no sequence) ");
                 return false;
             }
 
@@ -159,19 +154,19 @@ namespace LittleHeroJourney
             {
                 if (!currentSequence.allowComboLoop)
                 {
-                    Debug.Log($"[{GetType().Name}] Combo decision: STOP | last attack {currentIdx}, allowComboLoop=false");
+                    if (ShowDebugLog) Debug.Log($"[{GetType().Name}] Combo decision: STOP | last attack {currentIdx}, allowComboLoop=false");
                     return false;
                 }
 
                 if (currentSequence.maxComboLoops > 0 && _currentLoopCount >= currentSequence.maxComboLoops)
                 {
-                    Debug.Log($"[{GetType().Name}] Combo decision: STOP | last attack {currentIdx}, max loops reached ({_currentLoopCount}/{currentSequence.maxComboLoops})");
+                    if (ShowDebugLog) Debug.Log($"[{GetType().Name}] Combo decision: STOP | last attack {currentIdx}, max loops reached ({_currentLoopCount}/{currentSequence.maxComboLoops})");
                     return false;
                 }
 
                 if (currentAttackData == null)
                 {
-                    Debug.Log($"[{GetType().Name}] Combo decision: STOP | last attack {currentIdx}, no attack data");
+                    if (ShowDebugLog) Debug.Log($"[{GetType().Name}] Combo decision: STOP | last attack {currentIdx}, no attack data");
                     return false;
                 }
 
@@ -182,11 +177,11 @@ namespace LittleHeroJourney
                 if (shouldContinue)
                 {
                     _currentLoopCount++;
-                    Debug.Log($"[{GetType().Name}] Combo decision: CONTINUE -> LOOP to attack 0 | last attack {currentIdx}, chance={continueChance * 100:F0}%, roll={roll:F2}, loops={_currentLoopCount}");
+                    if (ShowDebugLog) Debug.Log($"[{GetType().Name}] Combo decision: CONTINUE -> LOOP to attack 0 | last attack {currentIdx}, chance={continueChance * 100:F0}%, roll={roll:F2}, loops={_currentLoopCount}");
                 }
                 else
                 {
-                    Debug.Log($"[{GetType().Name}] Combo decision: STOP | last attack {currentIdx}, chance={continueChance * 100:F0}%, roll={roll:F2} (failed)");
+                    if (ShowDebugLog) Debug.Log($"[{GetType().Name}] Combo decision: STOP | last attack {currentIdx}, chance={continueChance * 100:F0}%, roll={roll:F2} (failed)");
                 }
 
                 return shouldContinue;
@@ -194,7 +189,7 @@ namespace LittleHeroJourney
 
             if (currentAttackData == null)
             {
-                Debug.Log($"[{GetType().Name}] Combo decision: STOP | attack {currentIdx}, no attack data");
+                if (ShowDebugLog) Debug.Log($"[{GetType().Name}] Combo decision: STOP | attack {currentIdx}, no attack data");
                 return false;
             }
 
@@ -203,9 +198,9 @@ namespace LittleHeroJourney
             bool cont = r < chance;
 
             if (cont)
-                Debug.Log($"[{GetType().Name}] Combo decision: CONTINUE -> attack {currentIdx + 1} | from {currentIdx}, chance={chance * 100:F0}%, roll={r:F2}");
+                if (ShowDebugLog) Debug.Log($"[{GetType().Name}] Combo decision: CONTINUE -> attack {currentIdx + 1} | from {currentIdx}, chance={chance * 100:F0}%, roll={r:F2}");
             else
-                Debug.Log($"[{GetType().Name}] Combo decision: STOP | at attack {currentIdx}, chance={chance * 100:F0}%, roll={r:F2} (failed)");
+                if (ShowDebugLog) Debug.Log($"[{GetType().Name}] Combo decision: STOP | at attack {currentIdx}, chance={chance * 100:F0}%, roll={r:F2} (failed)");
 
             return cont;
         }
@@ -237,7 +232,7 @@ namespace LittleHeroJourney
 
             if (attackJustFinished)
             {
-                Debug.Log($"[{GetType().Name}] ⚡ Attack finished detected (AI) - IsAttacking={IsAttacking}, wasInAttack={_aiWasInAttackStateLastFrame}, nowInAttack={currentStateIsAttack}");
+                if (ShowDebugLog) Debug.Log($"[{GetType().Name}] ⚡ Attack finished detected (AI) - IsAttacking={IsAttacking}, wasInAttack={_aiWasInAttackStateLastFrame}, nowInAttack={currentStateIsAttack}");
                 // Attack finished - handle with AI decision system BEFORE base class resets
                 // Clear buffered input to prevent base class from handling
                 // Queue automatically clears on finish, no need to manually set
@@ -308,12 +303,12 @@ namespace LittleHeroJourney
                 if (currentAttackIndex >= currentSequence.SequenceLength - 1)
                 {
                     currentAttackIndex = 0;
-                    Debug.Log($"[{GetType().Name}] Combo result: LOOP -> attack 0 (loop #{_currentLoopCount})");
+                    if (ShowDebugLog) Debug.Log($"[{GetType().Name}] Combo result: LOOP -> attack 0 (loop #{_currentLoopCount})");
                 }
                 else
                 {
                     currentAttackIndex++;
-                    Debug.Log($"[{GetType().Name}] Combo result: NEXT -> attack {currentAttackIndex}");
+                    if (ShowDebugLog) Debug.Log($"[{GetType().Name}] Combo result: NEXT -> attack {currentAttackIndex}");
                 }
 
                 AttackDataSO nextAttack = currentSequence.GetAttackAtIndex(currentAttackIndex);
@@ -324,14 +319,14 @@ namespace LittleHeroJourney
                 else
                 {
                     _currentLoopCount = 0;
-                    Debug.Log($"[{GetType().Name}] Combo result: STOP (no next attack data) -> reset");
+                    if (ShowDebugLog) Debug.Log($"[{GetType().Name}] Combo result: STOP (no next attack data) -> reset");
                     ResetCombo();
                 }
             }
             else
             {
                 _currentLoopCount = 0;
-                Debug.Log($"[{GetType().Name}] Combo result: STOP -> reset");
+                if (ShowDebugLog) Debug.Log($"[{GetType().Name}] Combo result: STOP -> reset");
                 ResetCombo();
             }
         }

@@ -20,7 +20,7 @@ namespace LittleHeroJourney
         public float knockbackDuration = 0.3f;
 
         [Header("Encounter Settings")]
-        [SerializeField] private float boundaryClampOffset = 0.5f;
+        [SerializeField] private float boundaryClampOffset;
 
         [Header("Debug")]
         [SerializeField] private bool showDebugLog;

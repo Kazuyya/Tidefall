@@ -20,7 +20,7 @@ namespace LittleHeroJourney.UI
 
     public class LoadingUIController : MonoBehaviour
     {
-        [SerializeField] private bool showDebugLog = false;
+        [SerializeField] private bool showDebugLog;
         [SerializeField] private LoadingDisplayMode displayMode = LoadingDisplayMode.ProgressBar;
         [SerializeField] private OverrideSelectionMode selectionMode = OverrideSelectionMode.Random;
 

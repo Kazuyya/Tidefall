@@ -28,3 +28,6 @@ MonoBehaviour:
   - effectName: FX_Footstep
     particlePrefab: {fileID: 9137166449192970543, guid: 42a769c98ed56544caf4407acbeeb4ff, type: 3}
     poolSize: 0
+  - effectName: FX_FootstepMud
+    particlePrefab: {fileID: 3974252078915500056, guid: 1dc75966ce9a6c64aa1c5c64ad5b7db4, type: 3}
+    poolSize: 0

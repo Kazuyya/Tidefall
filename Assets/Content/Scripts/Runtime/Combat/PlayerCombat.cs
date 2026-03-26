@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 namespace LittleHeroJourney
 {
@@ -29,6 +28,7 @@ namespace LittleHeroJourney
         protected HashSet<string> _triggeredEffects = new HashSet<string>();
         protected HashSet<string> _triggeredTrailStarts = new HashSet<string>();
         protected HashSet<string> _triggeredTrailStops = new HashSet<string>();
+        private HashSet<string> _trailsStartedThisFrame = new HashSet<string>();
         protected bool _isAttackFinishing;
 
         [Header("Attack State")]
@@ -60,7 +60,6 @@ namespace LittleHeroJourney
         }
 
         private bool _stateTransitionInProgress = false;
-        private InputAction attackAction;
 
         protected ComboSequenceSO currentSequence;
         protected int currentAttackIndex = 0;
@@ -105,14 +104,9 @@ namespace LittleHeroJourney
                 }
             }
 
-            if (attackAction != null) attackAction.Disable();
-            
             DisableHitboxes();
         }
 
-        /// <summary>
-        /// Virtual method to get animator - can be overridden by subclasses (like AICombat)
-        /// </summary>
         protected virtual Animator GetCombatAnimator()
         {
             return Helper.GetAndCacheAnimator(this, searchInChildren: true, ignoreLayerName: "");
@@ -150,29 +144,6 @@ namespace LittleHeroJourney
                 currentWeapon = availableWeapons[0].weaponComponent;
             }
 
-            SetupInputActions();
-        }
-
-        protected virtual void SetupInputActions()
-        {
-             if (_movementController == null || _movementController.inputActionAsset == null)
-             {
-                 return;
-             }
- 
-             try
-             {
-                 attackAction = _movementController.inputActionAsset.FindAction("Attack");
- 
-                 if (attackAction != null)
-                 {
-                     attackAction.Enable();
-                 }
-             }
-            catch (System.Exception e)
-            {
-                if (ShowDebugLog) Debug.LogWarning($"[{GetType().Name}] Failed to setup attack input action: {e.Message}");
-            }
         }
 
         protected virtual void OnWeaponHitEnemy(Collider enemy)
@@ -197,8 +168,6 @@ namespace LittleHeroJourney
 
         void Update()
         {
-            if (attackAction != null && attackAction.triggered)
-                TriggerAttack();
             UpdateComboWindowState();
             UpdateAttackState();
             UpdateTimers();
@@ -234,9 +203,6 @@ namespace LittleHeroJourney
                 }
                 return;
             }
-
-            // FIX: Last attack still has combo window to trigger new combo/loop
-            // No longer skip combo window for last attack
 
             AnimatorStateInfo stateInfo = _animator.GetCurrentAnimatorStateInfo(0);
             float normalizedTime = stateInfo.normalizedTime % 1.0f;
@@ -412,6 +378,7 @@ namespace LittleHeroJourney
 
         private void UpdateAttackProgress()
         {
+            _trailsStartedThisFrame.Clear();
             float normalizedTime;
             bool animatorInAttack;
 
@@ -607,10 +574,6 @@ namespace LittleHeroJourney
                 }
             if (currentAttack.trailEffects != null && manager != null)
             {
-                // Snapshot trails that were already started before this frame. We must never trigger
-                // stop in the same frame we trigger start (causes "snap" when window is early).
-                var alreadyStartedThisAttack = new System.Collections.Generic.HashSet<string>(_triggeredTrailStarts);
-
                 foreach (var e in currentAttack.trailEffects)
                 {
                     if (!e.IsValid) continue;
@@ -626,10 +589,11 @@ namespace LittleHeroJourney
                     {
                         manager.PlayTrailStart(e.effectName, e.stopMode, e.frozenTrailLifetime);
                         _triggeredTrailStarts.Add(e.effectName);
+                        _trailsStartedThisFrame.Add(e.effectName);
                     }
 
                     // Only stop if we had already started in a previous frame (not this frame).
-                    if (normalizedTime >= windowEnd && !_triggeredTrailStops.Contains(e.effectName) && alreadyStartedThisAttack.Contains(e.effectName))
+                    if (normalizedTime >= windowEnd && !_triggeredTrailStops.Contains(e.effectName) && !_trailsStartedThisFrame.Contains(e.effectName) && _triggeredTrailStarts.Contains(e.effectName))
                     {
                         manager.PlayTrailStop(e.effectName);
                         _triggeredTrailStops.Add(e.effectName);
@@ -736,7 +700,7 @@ namespace LittleHeroJourney
                 string[] commonTriggers = { "Attack1", "Attack2", "Attack3", "Attack4", "Attack5" };
                 foreach (string trigger in commonTriggers)
                 {
-                    if (_animator.parameters.Any(p => p.name == trigger))
+                    if (Helper.HasAnimatorParameter(_animator, trigger))
                     {
                         _animator.ResetTrigger(trigger);
                     }

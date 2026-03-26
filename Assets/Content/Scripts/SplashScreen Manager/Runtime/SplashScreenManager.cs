@@ -34,7 +34,7 @@ namespace LittleHeroJourney
     public class SplashScreenManager : MonoBehaviour
     {
         [SerializeField] private List<SplashCanvasStep> sequence = new List<SplashCanvasStep>();
-        [SerializeField] private bool showDebugLog = false;
+        [SerializeField] private bool showDebugLog;
 
         private Sequence _seq;
         private bool _sequenceCompleted;

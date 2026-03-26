@@ -16,7 +16,7 @@ MonoBehaviour:
   - effectName: MonsterBite
     audioClips:
     - clip: {fileID: 8300000, guid: cdf01d3bbb3fd1f48a886e830898bc58, type: 3}
-      volume: 1
+      volume: 0.5
     playType: 0
     spatialBlend: 0
     poolSize: 0
@@ -140,6 +140,25 @@ MonoBehaviour:
     - clip: {fileID: 8300000, guid: 43e0f6bee05ff5746a14d33f830dfe36, type: 3}
       volume: 0.3
     - clip: {fileID: 8300000, guid: 3fe64960ff316f348b6001b779a563be, type: 3}
+      volume: 0.3
+    playType: 2
+    spatialBlend: 0
+    poolSize: 0
+    loop: 0
+    useLoopSection: 0
+    loopSection:
+      clips: []
+      playType: 2
+      cycleDelay: 0
+  - effectName: FootstepsWatSplash
+    audioClips:
+    - clip: {fileID: 8300000, guid: ddc5b23d14c06584d9a36c4490e073e3, type: 3}
+      volume: 0.3
+    - clip: {fileID: 8300000, guid: 98c10b1c7f70f7f45bca5d154b3a2545, type: 3}
+      volume: 0.3
+    - clip: {fileID: 8300000, guid: 29a3381b94609384cb94cef11e7572ce, type: 3}
+      volume: 0.3
+    - clip: {fileID: 8300000, guid: e9039e7bebafec441873511beae65c08, type: 3}
       volume: 0.3
     playType: 2
     spatialBlend: 0

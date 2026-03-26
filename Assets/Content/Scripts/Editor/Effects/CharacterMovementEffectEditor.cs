@@ -50,6 +50,43 @@ namespace LittleHeroJourney.EditorTools
             EditorGUILayout.EndVertical();
 
             EditorGUILayout.Space(10f);
+            EditorGUILayout.LabelField("Water movement (submerged)", EditorStyles.boldLabel);
+            EditorGUILayout.BeginVertical(EditorStyles.helpBox);
+            EditorGUILayout.HelpBox(
+                "When CharacterWaterSubmersion reports submerged, land foot effects are skipped. " +
+                "Fill the sets below for Normal vs Murky water. Shallow = one spawn per CharacterMovementEffect at its transform (left/right emitters). " +
+                "Deep = one spawn at body-check center (only one of the emitters is allowed to fire). " +
+                "Speed and emit interval use Water tuning settings (no ground ray check in water). Shallow Y follows water surface if enabled.",
+                MessageType.None);
+
+            EditorGUILayout.Space(8f);
+            EditorGUILayout.LabelField("Water tuning", EditorStyles.boldLabel);
+            EditorGUILayout.BeginVertical(EditorStyles.helpBox);
+            DrawGlobalTune(serializedObject.FindProperty("waterGlobalSettings"));
+
+            DrawWaterTuneChannel("Particle", "waterParticleUseCustomSettings", "waterParticleCustom");
+            DrawWaterTuneChannel("VFX", "waterVfxUseCustomSettings", "waterVfxCustom");
+            DrawWaterTuneChannel("Audio", "waterAudioUseCustomSettings", "waterAudioCustom");
+            EditorGUILayout.EndVertical();
+
+            DrawWaterIdsBlock("Normal · Shallow", "waterNormalShallow");
+            EditorGUILayout.Space(6f);
+            DrawWaterIdsBlock("Murky · Shallow", "waterMurkyShallow");
+            EditorGUILayout.Space(6f);
+            DrawWaterIdsBlock("Normal · Deep", "waterNormalDeep");
+            EditorGUILayout.Space(6f);
+            DrawWaterIdsBlock("Murky · Deep", "waterMurkyDeep");
+            EditorGUILayout.Space(8f);
+            EditorGUILayout.PropertyField(
+                serializedObject.FindProperty("waterSurfaceEffectOffset"),
+                new GUIContent("Surface offset (all water FX)", "Added to true water surface Y for particle/audio/VFX."));
+
+            EditorGUILayout.PropertyField(
+                serializedObject.FindProperty("shallowUseSurfaceY"),
+                new GUIContent("Shallow follows surface Y", "If true: shallow Y uses water surface + offset. If false: shallow Y uses the emitter transform Y directly."));
+            EditorGUILayout.EndVertical();
+
+            EditorGUILayout.Space(10f);
             EditorGUILayout.LabelField("Debug", EditorStyles.boldLabel);
             EditorGUILayout.BeginVertical(EditorStyles.helpBox);
             EditorGUILayout.PropertyField(
@@ -68,6 +105,37 @@ namespace LittleHeroJourney.EditorTools
             EditorGUILayout.PropertyField(tune.FindPropertyRelative("minSpeed"), new GUIContent("Speed"));
             EditorGUILayout.PropertyField(tune.FindPropertyRelative("emitInterval"), new GUIContent("Interval"));
             EditorGUILayout.PropertyField(tune.FindPropertyRelative("groundRayLength"), new GUIContent("Ray"));
+        }
+
+        private void DrawWaterIdsBlock(string title, string propertyName)
+        {
+            EditorGUILayout.LabelField(title, EditorStyles.boldLabel);
+            SerializedProperty block = serializedObject.FindProperty(propertyName);
+            if (block == null)
+                return;
+
+            EditorGUILayout.PropertyField(block.FindPropertyRelative("particleEffectId"), new GUIContent("Particle ID"));
+            EditorGUILayout.PropertyField(block.FindPropertyRelative("vfxEffectId"), new GUIContent("VFX ID"));
+            EditorGUILayout.PropertyField(block.FindPropertyRelative("audioEffectId"), new GUIContent("Audio ID"));
+        }
+
+        private void DrawWaterTuneChannel(string title, string useCustomPropertyName, string customPropertyName)
+        {
+            EditorGUILayout.Space(6f);
+            EditorGUILayout.LabelField(title, EditorStyles.boldLabel);
+
+            SerializedProperty useCustom = serializedObject.FindProperty(useCustomPropertyName);
+            SerializedProperty custom = serializedObject.FindProperty(customPropertyName);
+            if (useCustom == null || custom == null)
+                return;
+
+            EditorGUILayout.PropertyField(useCustom, new GUIContent("Use Custom Settings"));
+            if (!useCustom.boolValue)
+                return;
+
+            EditorGUILayout.BeginVertical(EditorStyles.helpBox);
+            DrawGlobalTune(custom);
+            EditorGUILayout.EndVertical();
         }
 
         private void DrawChannelBlock(
