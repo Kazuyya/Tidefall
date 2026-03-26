@@ -39,6 +39,8 @@ namespace LittleHeroJourney
         private void Awake()
         {
             _instance = this;
+            if (GameManager.Instance != null && !GameManager.Instance.showDebugLog)
+                showDebugLog = false;
         }
 
         public void DelayCloseUntilSignaled()

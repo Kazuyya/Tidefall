@@ -81,7 +81,7 @@ MonoBehaviour:
   - stepId: ...?
     canSkipStep: 1
     backgroundType: 1
-    backgroundImage: {fileID: 21300000, guid: e9964e6e33f6d5144a16cd40879f28c0, type: 3}
+    backgroundImage: {fileID: 21300000, guid: 454d48482f9eb194dae9998e69075a91, type: 3}
     backgroundColor: {r: 1, g: 1, b: 1, a: 1}
     contentType: 1
     narrativeText: 
@@ -97,7 +97,7 @@ MonoBehaviour:
   - stepId: "...everyone\u2026 is dead?"
     canSkipStep: 1
     backgroundType: 1
-    backgroundImage: {fileID: 21300000, guid: e9964e6e33f6d5144a16cd40879f28c0, type: 3}
+    backgroundImage: {fileID: 21300000, guid: 09ebcfbb336935b478bc858a9cf97e02, type: 3}
     backgroundColor: {r: 1, g: 1, b: 1, a: 1}
     contentType: 1
     narrativeText: 

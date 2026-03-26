@@ -10,6 +10,8 @@ namespace LittleHeroJourney
         [SerializeField] private string sceneId = "";
         [SerializeField] private string journeyTitle = "";
         [TextArea(2, 4)] [SerializeField] private string description = "";
+        [SerializeField] private Sprite selectorCardImage;
+        [SerializeField] private Sprite selectorDetailImage;
         [SerializeField] private StorySequenceSO startStorySequence;
         [SerializeField] private StorySequenceSO endStorySequence;
         [Header("Encounter")]
@@ -20,6 +22,8 @@ namespace LittleHeroJourney
         public string SceneId => sceneId ?? "";
         public string JourneyTitle => string.IsNullOrEmpty(journeyTitle) ? $"Journey {journeyId}" : journeyTitle;
         public string Description => description ?? "";
+        public Sprite SelectorCardImage => selectorCardImage;
+        public Sprite SelectorDetailImage => selectorDetailImage;
         public StorySequenceSO StartStorySequence => startStorySequence;
         public StorySequenceSO EndStorySequence => endStorySequence;
         public string StartEncounterId => startEncounterId ?? "";

@@ -11,13 +11,11 @@ namespace LittleHeroJourney
     public class GameplayManager : MonoBehaviour, ISceneLoadProgress
     {
         #region Fields
-        [Header("Runtime References")]
+        private Camera mainCamera;
         [Tooltip("Leave empty to auto-find from active scene.")]
-        [SerializeField] private Camera mainCamera;
-        [Tooltip("Leave empty to auto-find from active scene.")]
-        [SerializeField] private CinemachineFreeLook currentCamera;
+        private CinemachineFreeLook currentCamera;
         [Tooltip("Leave empty to auto-find from active scene (refreshed again after encounter start).")]
-        [SerializeField] private PlayerMovementController playerController;
+        private PlayerMovementController playerController;
 
         [Header("Settings")]
         [Tooltip("Delay before starting gameplay after loading screen is gone")]

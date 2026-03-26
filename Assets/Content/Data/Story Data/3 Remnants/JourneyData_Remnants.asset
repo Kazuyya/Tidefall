@@ -15,8 +15,10 @@ MonoBehaviour:
   journeyId: Remnants
   sceneName: Assets/Content/Scenes/Fix Scene/Gameplay/Map.unity
   sceneId: Level
-  journeyTitle: 
-  description: 
+  journeyTitle: Forsaken Village
+  description: A village left behind, filled with the remains of human bones.
+  selectorCardImage: {fileID: 21300000, guid: df005cbb7a7c08b44aa135e8e974ab0a, type: 3}
+  selectorDetailImage: {fileID: 21300000, guid: 07f216bdca5fa7d4e8565a03ce9a76f3, type: 3}
   startStorySequence: {fileID: 11400000, guid: ce903b82e4b24414591cdf32a62cdc8f, type: 2}
   endStorySequence: {fileID: 11400000, guid: e1e392788113b684bab17161feb41e69, type: 2}
   startEncounterId: Remnants

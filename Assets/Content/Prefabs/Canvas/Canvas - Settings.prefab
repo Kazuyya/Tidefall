@@ -5851,13 +5851,21 @@ PrefabInstance:
       propertyPath: m_Name
       value: Button Close Settings
       objectReference: {fileID: 0}
+    - target: {fileID: 4280828955180183433, guid: 254ce7b529fb7dd4b9c50539a5a5d4aa, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: -20
+      objectReference: {fileID: 0}
+    - target: {fileID: 4280828955180183433, guid: 254ce7b529fb7dd4b9c50539a5a5d4aa, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: -20
+      objectReference: {fileID: 0}
     - target: {fileID: 4345652878483246106, guid: 254ce7b529fb7dd4b9c50539a5a5d4aa, type: 3}
       propertyPath: m_text
       value: back
       objectReference: {fileID: 0}
     - target: {fileID: 4345652878483246106, guid: 254ce7b529fb7dd4b9c50539a5a5d4aa, type: 3}
       propertyPath: m_fontSize
-      value: 23.9
+      value: 39.85
       objectReference: {fileID: 0}
     - target: {fileID: 6553095999449452347, guid: 254ce7b529fb7dd4b9c50539a5a5d4aa, type: 3}
       propertyPath: m_Pivot.x
@@ -5953,7 +5961,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6885738587363170605, guid: 254ce7b529fb7dd4b9c50539a5a5d4aa, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_StringArgument
-      value: CloseSettings
+      value: Back
       objectReference: {fileID: 0}
     - target: {fileID: 7014602724335557432, guid: 254ce7b529fb7dd4b9c50539a5a5d4aa, type: 3}
       propertyPath: clickSfxId

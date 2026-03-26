@@ -15,8 +15,10 @@ MonoBehaviour:
   journeyId: Unknow
   sceneName: Assets/Content/Scenes/Fix Scene/Gameplay/Map.unity
   sceneId: Level
-  journeyTitle: 
-  description: 
+  journeyTitle: Whispering Woods
+  description: A silent forest covered in thick fog after a mysterious event.
+  selectorCardImage: {fileID: 21300000, guid: b8955d3e4896f1d49bb6de9f4f0a15c1, type: 3}
+  selectorDetailImage: {fileID: 21300000, guid: 5a01ab1534827b04785880d87f4962a6, type: 3}
   startStorySequence: {fileID: 11400000, guid: e90b2278a929602489fda8290fbb54a9, type: 2}
   endStorySequence: {fileID: 11400000, guid: 7abadbc834eb3ff45b90fed899ce0c03, type: 2}
   startEncounterId: Unknow

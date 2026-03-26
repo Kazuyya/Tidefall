@@ -31,12 +31,15 @@ namespace LittleHeroJourney
         [Header("UIActionEvent: open canvas by id")]
         [Tooltip("E.g. Settings. If event ActionId matches one of these, open that canvas. Empty = do not handle event.")]
         [SerializeField] private List<string> canvasActionIds = new List<string>();
+        [Header("UIActionEvent: back action id")]
+        [SerializeField] private string backActionId = "Back";
 
         private Dictionary<string, Action> _canvasActionHandlers = new Dictionary<string, Action>();
         private Action<string> _canvasOpenStartHandler;
         private Action<string> _canvasOpenCompleteHandler;
         private Action<string> _canvasCloseStartHandler;
         private Action<string> _canvasCloseCompleteHandler;
+        private Action _backActionHandler;
 
         #endregion
 
@@ -61,6 +64,11 @@ namespace LittleHeroJourney
                 _canvasActionHandlers[capturedId] = handler;
                 GameEventSystem.SubscribeAction(capturedId, handler);
             }
+            if (!string.IsNullOrEmpty(backActionId))
+            {
+                _backActionHandler = ReturnToPreviousCanvas;
+                GameEventSystem.SubscribeAction(backActionId, _backActionHandler);
+            }
         }
 
         private void OnDisable()
@@ -72,6 +80,11 @@ namespace LittleHeroJourney
             foreach (var kv in _canvasActionHandlers)
                 GameEventSystem.UnsubscribeAction(kv.Key, kv.Value);
             _canvasActionHandlers.Clear();
+            if (_backActionHandler != null && !string.IsNullOrEmpty(backActionId))
+            {
+                GameEventSystem.UnsubscribeAction(backActionId, _backActionHandler);
+                _backActionHandler = null;
+            }
         }
 
         #endregion
