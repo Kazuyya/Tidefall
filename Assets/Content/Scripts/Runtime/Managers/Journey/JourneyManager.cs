@@ -27,6 +27,8 @@ namespace LittleHeroJourney
         [SerializeField] private string battleBgmEffectId = "BattleBGM";
         [SerializeField] private float bgmFadeOutDuration = 0.35f;
         [SerializeField] private float bgmSwitchDelay = 0.35f;
+        [Header("Loading Hold")]
+        [SerializeField] private float loadingHoldAfterStoryOpen = 1f;
 
         [Header("Debug")]
         [SerializeField] private bool showDebugLog = false;
@@ -319,9 +321,7 @@ namespace LittleHeroJourney
             {
                 _startStoryCanvasOpened = true;
                 if (LoadingManager.Instance != null && LoadingManager.Instance.IsLoading)
-                {
-                    LoadingManager.Instance.SignalCloseAllowed();
-                }
+                    StartCoroutine(HoldThenSignalCloseAllowedRoutine());
             }
 
             if (_pendingEndStorySequence == null) return;
@@ -342,6 +342,14 @@ namespace LittleHeroJourney
             _currentStoryDisplay = display;
             _pendingEndStorySequence = null;
             if (showDebugLog) Debug.Log("[JourneyManager] Story canvas open complete -> display pool set up, end story sequence playing. Save when sequence completes.");
+        }
+
+        private IEnumerator HoldThenSignalCloseAllowedRoutine()
+        {
+            float hold = Mathf.Max(0f, loadingHoldAfterStoryOpen);
+            if (hold > 0f) yield return new WaitForSeconds(hold);
+            if (LoadingManager.Instance != null && LoadingManager.Instance.IsLoading)
+                LoadingManager.Instance.SignalCloseAllowed();
         }
 
         private void OnLoadingFinished(string loadedSceneName)

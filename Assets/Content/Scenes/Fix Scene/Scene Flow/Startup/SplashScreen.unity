@@ -1227,6 +1227,7 @@ MonoBehaviour:
   battleBgmEffectId: BattleBGM
   bgmFadeOutDuration: 0.35
   bgmSwitchDelay: 0.35
+  loadingHoldAfterStoryOpen: 1
   showDebugLog: 1
 --- !u!114 &209297274
 MonoBehaviour:

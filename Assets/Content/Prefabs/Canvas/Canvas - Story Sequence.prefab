@@ -131,8 +131,8 @@ MonoBehaviour:
   targetIsSelf: 0
   targetGO: {fileID: 210877928644304591}
   tweenTargetIsTargetGO: 1
-  delay: 0.5
-  duration: 1
+  delay: 0
+  duration: 0.5
   easeType: 6
   easeCurve:
     serializedVersion: 2
@@ -831,7 +831,7 @@ MonoBehaviour:
   targetIsSelf: 0
   targetGO: {fileID: 210877928644304591}
   tweenTargetIsTargetGO: 1
-  delay: 0.5
+  delay: 0
   duration: 1
   easeType: 6
   easeCurve:
