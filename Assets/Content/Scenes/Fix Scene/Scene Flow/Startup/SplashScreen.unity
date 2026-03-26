@@ -2870,18 +2870,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 3270096901928858262, guid: 963daa379ebbd7e4494236aee62600f9, type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3278814104622319621, guid: 963daa379ebbd7e4494236aee62600f9, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3553454597983240053, guid: 963daa379ebbd7e4494236aee62600f9, type: 3}
-      propertyPath: m_Alpha
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 3890048432182136517, guid: 963daa379ebbd7e4494236aee62600f9, type: 3}
       propertyPath: m_Name
       value: Canvas - Story Sequence
@@ -2889,14 +2877,6 @@ PrefabInstance:
     - target: {fileID: 3890048432182136517, guid: 963daa379ebbd7e4494236aee62600f9, type: 3}
       propertyPath: m_IsActive
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4614310517312320432, guid: 963daa379ebbd7e4494236aee62600f9, type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4857490655792133055, guid: 963daa379ebbd7e4494236aee62600f9, type: 3}
-      propertyPath: m_Color.a
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

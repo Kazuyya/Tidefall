@@ -325,17 +325,91 @@ namespace LittleHeroJourney
             {
                 bool belowNow = transform.position.y <= waterSurfaceY + 0.01f;
                 bool crossing = belowNow && !_wasBelowWaterSurface;
-                _wasBelowWaterSurface = belowNow;
+                float dt = Time.deltaTime;
 
-                if (crossing)
+                if (belowNow)
                 {
-                    if (HasAnyId(ids.particleEffectId) && speedSq >= particleTune.minSpeed * particleTune.minSpeed)
-                        playParticle = true;
-                    if (HasAnyId(ids.vfxEffectId) && speedSq >= vfxTune.minSpeed * vfxTune.minSpeed)
-                        playVfx = true;
-                    if (HasAnyId(ids.audioEffectId) && speedSq >= audioTune.minSpeed * audioTune.minSpeed)
-                        playAudio = true;
+                    if (HasAnyId(ids.particleEffectId))
+                    {
+                        bool moving = speedSq >= particleTune.minSpeed * particleTune.minSpeed;
+                        if (moving)
+                        {
+                            _emitTimerParticle += dt;
+                            if (_emitTimerParticle >= particleTune.emitInterval)
+                            {
+                                playParticle = true;
+                                _emitTimerParticle = 0f;
+                            }
+                        }
+                        else
+                        {
+                            _emitTimerParticle = 0f;
+                        }
+                    }
+
+                    if (HasAnyId(ids.vfxEffectId))
+                    {
+                        bool moving = speedSq >= vfxTune.minSpeed * vfxTune.minSpeed;
+                        if (moving)
+                        {
+                            _emitTimerVfx += dt;
+                            if (_emitTimerVfx >= vfxTune.emitInterval)
+                            {
+                                playVfx = true;
+                                _emitTimerVfx = 0f;
+                            }
+                        }
+                        else
+                        {
+                            _emitTimerVfx = 0f;
+                        }
+                    }
+
+                    if (HasAnyId(ids.audioEffectId))
+                    {
+                        bool moving = speedSq >= audioTune.minSpeed * audioTune.minSpeed;
+                        if (moving)
+                        {
+                            _emitTimerAudio += dt;
+                            if (_emitTimerAudio >= audioTune.emitInterval)
+                            {
+                                playAudio = true;
+                                _emitTimerAudio = 0f;
+                            }
+                        }
+                        else
+                        {
+                            _emitTimerAudio = 0f;
+                        }
+                    }
+
+                    if (crossing)
+                    {
+                        if (HasAnyId(ids.particleEffectId) && speedSq >= particleTune.minSpeed * particleTune.minSpeed)
+                        {
+                            playParticle = true;
+                            _emitTimerParticle = 0f;
+                        }
+                        if (HasAnyId(ids.vfxEffectId) && speedSq >= vfxTune.minSpeed * vfxTune.minSpeed)
+                        {
+                            playVfx = true;
+                            _emitTimerVfx = 0f;
+                        }
+                        if (HasAnyId(ids.audioEffectId) && speedSq >= audioTune.minSpeed * audioTune.minSpeed)
+                        {
+                            playAudio = true;
+                            _emitTimerAudio = 0f;
+                        }
+                    }
                 }
+                else
+                {
+                    _emitTimerParticle = 0f;
+                    _emitTimerVfx = 0f;
+                    _emitTimerAudio = 0f;
+                }
+
+                _wasBelowWaterSurface = belowNow;
             }
             else
             {
