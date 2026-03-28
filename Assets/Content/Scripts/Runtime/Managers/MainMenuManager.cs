@@ -56,9 +56,11 @@ namespace LittleHeroJourney
 
         private void RefreshMenuUI()
         {
-            bool hasProgressBeyondJourney1 = JourneyManager.Instance != null &&
-                                             JourneyManager.HasAnySave() &&
-                                             JourneyManager.Instance.GetFirstUncompletedStageNumber() > 1;
+            int totalJourneys = JourneyManager.Instance != null ? JourneyManager.Instance.GetTotalLevels() : 0;
+            int firstUncompleted = JourneyManager.Instance != null ? JourneyManager.Instance.GetFirstUncompletedStageNumber() : 1;
+            bool hasAnySave = JourneyManager.HasAnySave();
+            bool hasProgressBeyondJourney1 = JourneyManager.Instance != null && hasAnySave && firstUncompleted > 1;
+            bool allJourneysCompleted = JourneyManager.Instance != null && hasAnySave && totalJourneys > 0 && firstUncompleted > totalJourneys;
 
             if (primaryButton != null)
             {
@@ -73,13 +75,13 @@ namespace LittleHeroJourney
             }
 
             if (continueButtonRoot != null)
-                continueButtonRoot.SetActive(hasProgressBeyondJourney1);
+                continueButtonRoot.SetActive(hasProgressBeyondJourney1 && !allJourneysCompleted);
 
             if (primaryButtonLabel != null)
                 primaryButtonLabel.text = hasProgressBeyondJourney1 ? "journeys" : "start";
 
             if (showDebugLog)
-                Debug.Log($"[{GetType().Name}] RefreshMenuUI: showContinue={hasProgressBeyondJourney1}, primaryLabel={(primaryButtonLabel != null ? primaryButtonLabel.text : "<null>")}");
+                Debug.Log($"[{GetType().Name}] RefreshMenuUI: showContinue={(hasProgressBeyondJourney1 && !allJourneysCompleted)}, allCompleted={allJourneysCompleted}, primaryLabel={(primaryButtonLabel != null ? primaryButtonLabel.text : "<null>")}");
         }
 
         private void OnStartJourney()

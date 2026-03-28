@@ -20,6 +20,8 @@ namespace LittleHeroJourney
         [Header("Settings")]
         [Tooltip("Delay before starting gameplay after loading screen is gone")]
         [SerializeField] private float startDelay = 0.5f;
+        [Tooltip("Delay before reloading stage when player dies (lets death feedback read better).")]
+        [SerializeField] private float deathReloadDelay = 2f;
         [Tooltip("Delay after binding camera to player before signalling player ready (lets Cinemachine settle when story is skipped).")]
         [SerializeField] private float cameraSettleDelay = 0.8f;
         [Tooltip("Layer name of a child under player to use as Cinemachine Follow/LookAt (e.g. LookAtPlayer). If none found, uses player root.")]
@@ -200,6 +202,8 @@ namespace LittleHeroJourney
         private void OnEncounterStartedEvent()
         {
             FindReferences();
+            if (JourneyManager.Instance != null)
+                JourneyManager.Instance.EnsureBattleBgm();
             if (showDebugLog) Debug.Log("[GameplayManager] Refreshed references after EncounterStarted.");
         }
 
@@ -427,10 +431,28 @@ namespace LittleHeroJourney
         public void TriggerGameOver()
         {
             if (isLevelEnded) return;
-            if (showDebugLog) Debug.Log("[GameplayManager] Player Died -> Trigger Game Over");
+            if (showDebugLog) Debug.Log("[GameplayManager] Player Died -> Reload stage (skip start story) via Loading.");
             isLevelEnded = true;
             SetInputActive(false);
-            GameEventSystem.Publish(new UIActionEvent("GameOver"));
+            StartCoroutine(DeathReloadRoutine());
+        }
+
+        private IEnumerator DeathReloadRoutine()
+        {
+            if (GameManager.Instance?.CanvasManager != null && !string.IsNullOrEmpty(gameplayCanvasId))
+                GameManager.Instance.CanvasManager.SwitchCanvas(gameplayCanvasId);
+
+            float delay = Mathf.Max(0f, deathReloadDelay);
+            if (delay > 0f)
+                yield return new WaitForSeconds(delay);
+
+            if (GameManager.Instance != null)
+            {
+                GameManager.Instance.SetTimeScale(1f);
+                GameManager.Instance.ResetGameState();
+            }
+            if (JourneyManager.Instance != null)
+                JourneyManager.Instance.RequestHardRetryCurrentStage();
         }
 
         public void TriggerLevelWin()
@@ -527,6 +549,8 @@ namespace LittleHeroJourney
             GameEventSystem.Publish(new UIActionEvent("RetryTransitionOutComplete"));
             if (_retrySpawner != null)
             {
+                if (JourneyManager.Instance != null)
+                    JourneyManager.Instance.EnsureBattleBgm();
                 _retrySpawner.StartEncounter();
                 GameEventSystem.Publish(new UIActionEvent("EncounterStarted"));
             }
@@ -572,6 +596,8 @@ namespace LittleHeroJourney
             if (GameManager.Instance?.CanvasManager != null && !string.IsNullOrEmpty(gameplayCanvasId))
                 GameManager.Instance.CanvasManager.SwitchCanvas(gameplayCanvasId);
             GameEventSystem.Publish(new UIActionEvent("RetryTransitionOutComplete"));
+            if (JourneyManager.Instance != null)
+                JourneyManager.Instance.EnsureBattleBgm();
             spawner.StartEncounter();
             GameEventSystem.Publish(new UIActionEvent("EncounterStarted"));
             SetInputActive(true);
@@ -598,6 +624,13 @@ namespace LittleHeroJourney
         public void SetInputActive(bool active)
         {
             isInputActive = active;
+        }
+
+        public void ShowGameplayCanvasAndEnableInput()
+        {
+            if (GameManager.Instance?.CanvasManager != null && !string.IsNullOrEmpty(gameplayCanvasId))
+                GameManager.Instance.CanvasManager.SwitchCanvas(gameplayCanvasId);
+            SetInputActive(true);
         }
 
         private void HandlePlayerDeath()

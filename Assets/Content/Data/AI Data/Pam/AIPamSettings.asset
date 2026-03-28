@@ -14,10 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MoveSpeed: 3
   RotationSpeed: 200
-  StoppingDistance: 1.2
+  StoppingDistance: 2
   DetectionRange: 16
   AggroRange: 6
-  AttackRange: 1.2
+  AttackRange: 2
   TargetLayers:
     serializedVersion: 2
     m_Bits: 8

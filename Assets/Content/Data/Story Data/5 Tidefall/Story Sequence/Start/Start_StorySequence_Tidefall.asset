@@ -1,0 +1,336 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5519bc30cdf3bbd4ca0e9f53ea1b1da7, type: 3}
+  m_Name: Start_StorySequence_Tidefall
+  m_EditorClassIdentifier: 
+  sequenceId: Tidefall Start
+  steps:
+  - stepId: '#5 Tidefall'
+    canSkipStep: 0
+    backgroundType: 0
+    backgroundImage: {fileID: 0}
+    backgroundColor: {r: 0, g: 0, b: 0, a: 1}
+    contentType: 0
+    narrativeText: '#5 Tidefall'
+    speakerName: 
+    dialogueLine: 
+    textInEffect: 2
+    textOutEffect: 1
+    delayAfterTextComplete: 3
+    backgroundInEffect: 0
+    backgroundOutEffect: 0
+    backgroundFadeInDuration: 0
+    backgroundFadeOutDuration: 0
+  - stepId: My mind felt unstable.
+    canSkipStep: 1
+    backgroundType: 0
+    backgroundImage: {fileID: 0}
+    backgroundColor: {r: 0, g: 0, b: 0, a: 1}
+    contentType: 0
+    narrativeText: My mind felt unstable.
+    speakerName: 
+    dialogueLine: 
+    textInEffect: 1
+    textOutEffect: 1
+    delayAfterTextComplete: 3
+    backgroundInEffect: 0
+    backgroundOutEffect: 0
+    backgroundFadeInDuration: 0
+    backgroundFadeOutDuration: 0
+  - stepId: "Something felt wrong\u2026 but I didn't know what."
+    canSkipStep: 1
+    backgroundType: 0
+    backgroundImage: {fileID: 0}
+    backgroundColor: {r: 0, g: 0, b: 0, a: 1}
+    contentType: 0
+    narrativeText: "Something felt wrong\u2026\nbut I didn't know what."
+    speakerName: 
+    dialogueLine: 
+    textInEffect: 1
+    textOutEffect: 1
+    delayAfterTextComplete: 3
+    backgroundInEffect: 0
+    backgroundOutEffect: 0
+    backgroundFadeInDuration: 0.2
+    backgroundFadeOutDuration: 0
+  - stepId: ...
+    canSkipStep: 1
+    backgroundType: 0
+    backgroundImage: {fileID: 0}
+    backgroundColor: {r: 0, g: 0, b: 0, a: 1}
+    contentType: 0
+    narrativeText: ...
+    speakerName: 
+    dialogueLine: 
+    textInEffect: 1
+    textOutEffect: 1
+    delayAfterTextComplete: 3
+    backgroundInEffect: 0
+    backgroundOutEffect: 0
+    backgroundFadeInDuration: 0.2
+    backgroundFadeOutDuration: 0
+  - stepId: "The deeper I went\u2026"
+    canSkipStep: 1
+    backgroundType: 0
+    backgroundImage: {fileID: 0}
+    backgroundColor: {r: 0, g: 0, b: 0, a: 1}
+    contentType: 0
+    narrativeText: "The deeper I went\u2026"
+    speakerName: 
+    dialogueLine: 
+    textInEffect: 1
+    textOutEffect: 1
+    delayAfterTextComplete: 3
+    backgroundInEffect: 0
+    backgroundOutEffect: 0
+    backgroundFadeInDuration: 0.2
+    backgroundFadeOutDuration: 0
+  - stepId: "The more\u2026 human bones I found."
+    canSkipStep: 1
+    backgroundType: 0
+    backgroundImage: {fileID: 0}
+    backgroundColor: {r: 0, g: 0, b: 0, a: 1}
+    contentType: 0
+    narrativeText: "The more\u2026\nhuman bones I found."
+    speakerName: 
+    dialogueLine: 
+    textInEffect: 1
+    textOutEffect: 1
+    delayAfterTextComplete: 3
+    backgroundInEffect: 0
+    backgroundOutEffect: 0
+    backgroundFadeInDuration: 0
+    backgroundFadeOutDuration: 0
+  - stepId: ...this is too many.
+    canSkipStep: 1
+    backgroundType: 0
+    backgroundImage: {fileID: 0}
+    backgroundColor: {r: 0, g: 0, b: 0, a: 1}
+    contentType: 0
+    narrativeText: ...this is too many.
+    speakerName: 
+    dialogueLine: 
+    textInEffect: 1
+    textOutEffect: 1
+    delayAfterTextComplete: 3
+    backgroundInEffect: 0
+    backgroundOutEffect: 0
+    backgroundFadeInDuration: 0.2
+    backgroundFadeOutDuration: 0
+  - stepId: ...?
+    canSkipStep: 1
+    backgroundType: 0
+    backgroundImage: {fileID: 0}
+    backgroundColor: {r: 0, g: 0, b: 0, a: 1}
+    contentType: 0
+    narrativeText: ...?
+    speakerName: 
+    dialogueLine: 
+    textInEffect: 1
+    textOutEffect: 1
+    delayAfterTextComplete: 3
+    backgroundInEffect: 0
+    backgroundOutEffect: 0
+    backgroundFadeInDuration: 0
+    backgroundFadeOutDuration: 0
+  - stepId: "A note\u2026?"
+    canSkipStep: 1
+    backgroundType: 0
+    backgroundImage: {fileID: 0}
+    backgroundColor: {r: 0, g: 0, b: 0, a: 1}
+    contentType: 0
+    narrativeText: "A note\u2026?"
+    speakerName: 
+    dialogueLine: 
+    textInEffect: 1
+    textOutEffect: 1
+    delayAfterTextComplete: 3
+    backgroundInEffect: 1
+    backgroundOutEffect: 0
+    backgroundFadeInDuration: 0.2
+    backgroundFadeOutDuration: 0
+  - stepId: "\"If you find this\u2026 then everything is already over.\""
+    canSkipStep: 1
+    backgroundType: 0
+    backgroundImage: {fileID: 0}
+    backgroundColor: {r: 0, g: 0, b: 0, a: 1}
+    contentType: 0
+    narrativeText: "\"If you find this\u2026\nthen everything is already over.\""
+    speakerName: 
+    dialogueLine: 
+    textInEffect: 1
+    textOutEffect: 1
+    delayAfterTextComplete: 3
+    backgroundInEffect: 0
+    backgroundOutEffect: 0
+    backgroundFadeInDuration: 0
+    backgroundFadeOutDuration: 0
+  - stepId: "\"The fog\u2026 brought something from the sky.\""
+    canSkipStep: 1
+    backgroundType: 0
+    backgroundImage: {fileID: 0}
+    backgroundColor: {r: 0, g: 0, b: 0, a: 1}
+    contentType: 0
+    narrativeText: "\"The fog\u2026 brought something from the sky.\""
+    speakerName: 
+    dialogueLine: 
+    textInEffect: 1
+    textOutEffect: 1
+    delayAfterTextComplete: 3
+    backgroundInEffect: 0
+    backgroundOutEffect: 0
+    backgroundFadeInDuration: 0
+    backgroundFadeOutDuration: 0
+  - stepId: "\"They do not care about your soul\u2026\""
+    canSkipStep: 1
+    backgroundType: 0
+    backgroundImage: {fileID: 0}
+    backgroundColor: {r: 0, g: 0, b: 0, a: 1}
+    contentType: 0
+    narrativeText: "\"They do not care about your soul\u2026\""
+    speakerName: 
+    dialogueLine: 
+    textInEffect: 1
+    textOutEffect: 1
+    delayAfterTextComplete: 3
+    backgroundInEffect: 0
+    backgroundOutEffect: 0
+    backgroundFadeInDuration: 0
+    backgroundFadeOutDuration: 0
+  - stepId: "\"They only want your body\u2026 or perhaps\u2026 your strength.\""
+    canSkipStep: 1
+    backgroundType: 0
+    backgroundImage: {fileID: 0}
+    backgroundColor: {r: 0, g: 0, b: 0, a: 1}
+    contentType: 0
+    narrativeText: "\"They only want your body\u2026\nor perhaps\u2026 your strength.\""
+    speakerName: 
+    dialogueLine: 
+    textInEffect: 1
+    textOutEffect: 1
+    delayAfterTextComplete: 3
+    backgroundInEffect: 0
+    backgroundOutEffect: 0
+    backgroundFadeInDuration: 0
+    backgroundFadeOutDuration: 0
+  - stepId: "\"No one can survive\u2026 in this place.\""
+    canSkipStep: 1
+    backgroundType: 0
+    backgroundImage: {fileID: 0}
+    backgroundColor: {r: 0, g: 0, b: 0, a: 1}
+    contentType: 0
+    narrativeText: "\"No one can survive\u2026\nin this place.\""
+    speakerName: 
+    dialogueLine: 
+    textInEffect: 1
+    textOutEffect: 1
+    delayAfterTextComplete: 3
+    backgroundInEffect: 0
+    backgroundOutEffect: 0
+    backgroundFadeInDuration: 0
+    backgroundFadeOutDuration: 0
+  - stepId: "\"If you are still alive\u2026\""
+    canSkipStep: 1
+    backgroundType: 0
+    backgroundImage: {fileID: 0}
+    backgroundColor: {r: 0, g: 0, b: 0, a: 1}
+    contentType: 0
+    narrativeText: "\"If you are still alive\u2026\""
+    speakerName: 
+    dialogueLine: 
+    textInEffect: 1
+    textOutEffect: 1
+    delayAfterTextComplete: 3
+    backgroundInEffect: 0
+    backgroundOutEffect: 0
+    backgroundFadeInDuration: 0
+    backgroundFadeOutDuration: 0
+  - stepId: "\"Then you\u2026 are not like the others.\""
+    canSkipStep: 1
+    backgroundType: 0
+    backgroundImage: {fileID: 0}
+    backgroundColor: {r: 0, g: 0, b: 0, a: 1}
+    contentType: 0
+    narrativeText: "\"Then you\u2026 are not like the others.\""
+    speakerName: 
+    dialogueLine: 
+    textInEffect: 1
+    textOutEffect: 1
+    delayAfterTextComplete: 3
+    backgroundInEffect: 0
+    backgroundOutEffect: 0
+    backgroundFadeInDuration: 0
+    backgroundFadeOutDuration: 0
+  - stepId: "\"Or\u2026 you just haven't realized it yet.\""
+    canSkipStep: 1
+    backgroundType: 0
+    backgroundImage: {fileID: 0}
+    backgroundColor: {r: 0, g: 0, b: 0, a: 1}
+    contentType: 0
+    narrativeText: "\"Or\u2026 you just haven't realized it yet.\""
+    speakerName: 
+    dialogueLine: 
+    textInEffect: 1
+    textOutEffect: 1
+    delayAfterTextComplete: 3
+    backgroundInEffect: 0
+    backgroundOutEffect: 0
+    backgroundFadeInDuration: 0
+    backgroundFadeOutDuration: 0
+  - stepId: "The note\u2026 was very old."
+    canSkipStep: 1
+    backgroundType: 0
+    backgroundImage: {fileID: 0}
+    backgroundColor: {r: 0, g: 0, b: 0, a: 1}
+    contentType: 0
+    narrativeText: "The note\u2026 was very old."
+    speakerName: 
+    dialogueLine: 
+    textInEffect: 1
+    textOutEffect: 1
+    delayAfterTextComplete: 3
+    backgroundInEffect: 0
+    backgroundOutEffect: 0
+    backgroundFadeInDuration: 0
+    backgroundFadeOutDuration: 0
+  - stepId: "Grrrgh\u2026"
+    canSkipStep: 1
+    backgroundType: 1
+    backgroundImage: {fileID: 21300000, guid: ae89e3d3c7e31924096a828efaad6da6, type: 3}
+    backgroundColor: {r: 1, g: 1, b: 1, a: 1}
+    contentType: 1
+    narrativeText: 
+    speakerName: 
+    dialogueLine: "Grrrgh\u2026"
+    textInEffect: 1
+    textOutEffect: 1
+    delayAfterTextComplete: 3
+    backgroundInEffect: 1
+    backgroundOutEffect: 0
+    backgroundFadeInDuration: 0.2
+    backgroundFadeOutDuration: 0
+  - stepId: ...damn.
+    canSkipStep: 1
+    backgroundType: 0
+    backgroundImage: {fileID: 0}
+    backgroundColor: {r: 0, g: 0, b: 0, a: 1}
+    contentType: 0
+    narrativeText: ...damn.
+    speakerName: 
+    dialogueLine: 
+    textInEffect: 1
+    textOutEffect: 1
+    delayAfterTextComplete: 3
+    backgroundInEffect: 1
+    backgroundOutEffect: 0
+    backgroundFadeInDuration: 0.2
+    backgroundFadeOutDuration: 0

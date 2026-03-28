@@ -1,0 +1,177 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5519bc30cdf3bbd4ca0e9f53ea1b1da7, type: 3}
+  m_Name: Start_StorySequence_Infection
+  m_EditorClassIdentifier: 
+  sequenceId: Infection Start
+  steps:
+  - stepId: '#4 infection'
+    canSkipStep: 0
+    backgroundType: 0
+    backgroundImage: {fileID: 0}
+    backgroundColor: {r: 0, g: 0, b: 0, a: 1}
+    contentType: 0
+    narrativeText: '#4 infection'
+    speakerName: 
+    dialogueLine: 
+    textInEffect: 2
+    textOutEffect: 1
+    delayAfterTextComplete: 3
+    backgroundInEffect: 0
+    backgroundOutEffect: 0
+    backgroundFadeInDuration: 0
+    backgroundFadeOutDuration: 0
+  - stepId: "I walked for a long time\u2026 without knowing where I was going."
+    canSkipStep: 1
+    backgroundType: 0
+    backgroundImage: {fileID: 0}
+    backgroundColor: {r: 0, g: 0, b: 0, a: 1}
+    contentType: 0
+    narrativeText: "I walked for a long time\u2026\nwithout knowing where I was going."
+    speakerName: 
+    dialogueLine: 
+    textInEffect: 1
+    textOutEffect: 1
+    delayAfterTextComplete: 3
+    backgroundInEffect: 0
+    backgroundOutEffect: 0
+    backgroundFadeInDuration: 0
+    backgroundFadeOutDuration: 0
+  - stepId: "Suddenly\u2026 I found myself in a place covered in snow."
+    canSkipStep: 1
+    backgroundType: 1
+    backgroundImage: {fileID: 21300000, guid: 76fdca664eb72ed4a8493763bb6cf0ca, type: 3}
+    backgroundColor: {r: 1, g: 1, b: 1, a: 1}
+    contentType: 1
+    narrativeText: 
+    speakerName: 
+    dialogueLine: "Suddenly\u2026\nI found myself in a place covered in snow."
+    textInEffect: 1
+    textOutEffect: 1
+    delayAfterTextComplete: 3
+    backgroundInEffect: 1
+    backgroundOutEffect: 0
+    backgroundFadeInDuration: 0.2
+    backgroundFadeOutDuration: 0
+  - stepId: ...
+    canSkipStep: 1
+    backgroundType: 0
+    backgroundImage: {fileID: 0}
+    backgroundColor: {r: 0, g: 0, b: 0, a: 1}
+    contentType: 0
+    narrativeText: ...
+    speakerName: 
+    dialogueLine: 
+    textInEffect: 1
+    textOutEffect: 1
+    delayAfterTextComplete: 3
+    backgroundInEffect: 1
+    backgroundOutEffect: 0
+    backgroundFadeInDuration: 0.2
+    backgroundFadeOutDuration: 0
+  - stepId: "Something caught my attention\u2026 glowing as it fell from the sky."
+    canSkipStep: 1
+    backgroundType: 1
+    backgroundImage: {fileID: 21300000, guid: 5aac4fb045bffaa4b9e19099b1af1603, type: 3}
+    backgroundColor: {r: 1, g: 1, b: 1, a: 1}
+    contentType: 1
+    narrativeText: 
+    speakerName: 
+    dialogueLine: "Something caught my attention\u2026\nglowing as it fell from the
+      sky."
+    textInEffect: 1
+    textOutEffect: 1
+    delayAfterTextComplete: 3
+    backgroundInEffect: 1
+    backgroundOutEffect: 0
+    backgroundFadeInDuration: 0.2
+    backgroundFadeOutDuration: 0
+  - stepId: "There were\u2026 so many of them."
+    canSkipStep: 1
+    backgroundType: 1
+    backgroundImage: {fileID: 21300000, guid: 5aac4fb045bffaa4b9e19099b1af1603, type: 3}
+    backgroundColor: {r: 1, g: 1, b: 1, a: 1}
+    contentType: 1
+    narrativeText: 
+    speakerName: 
+    dialogueLine: "There were\u2026 so many of them."
+    textInEffect: 1
+    textOutEffect: 1
+    delayAfterTextComplete: 3
+    backgroundInEffect: 0
+    backgroundOutEffect: 0
+    backgroundFadeInDuration: 0
+    backgroundFadeOutDuration: 0
+  - stepId: "What is that\u2026?"
+    canSkipStep: 1
+    backgroundType: 0
+    backgroundImage: {fileID: 0}
+    backgroundColor: {r: 0, g: 0, b: 0, a: 1}
+    contentType: 0
+    narrativeText: "What is that\u2026?"
+    speakerName: 
+    dialogueLine: 
+    textInEffect: 1
+    textOutEffect: 1
+    delayAfterTextComplete: 3
+    backgroundInEffect: 1
+    backgroundOutEffect: 0
+    backgroundFadeInDuration: 0.2
+    backgroundFadeOutDuration: 0
+  - stepId: ...wait.
+    canSkipStep: 1
+    backgroundType: 0
+    backgroundImage: {fileID: 0}
+    backgroundColor: {r: 0, g: 0, b: 0, a: 1}
+    contentType: 0
+    narrativeText: ...wait.
+    speakerName: 
+    dialogueLine: 
+    textInEffect: 1
+    textOutEffect: 1
+    delayAfterTextComplete: 3
+    backgroundInEffect: 0
+    backgroundOutEffect: 0
+    backgroundFadeInDuration: 0
+    backgroundFadeOutDuration: 0
+  - stepId: "That plant\u2026 it turned into a monster?!"
+    canSkipStep: 1
+    backgroundType: 1
+    backgroundImage: {fileID: 21300000, guid: d23df984ac7ce1c41be0e09c51c152b4, type: 3}
+    backgroundColor: {r: 1, g: 1, b: 1, a: 1}
+    contentType: 1
+    narrativeText: 
+    speakerName: 
+    dialogueLine: "That plant\u2026 it turned into a monster?!"
+    textInEffect: 1
+    textOutEffect: 1
+    delayAfterTextComplete: 3
+    backgroundInEffect: 1
+    backgroundOutEffect: 0
+    backgroundFadeInDuration: 0.2
+    backgroundFadeOutDuration: 0
+  - stepId: Damn it! I have to stop this!
+    canSkipStep: 1
+    backgroundType: 0
+    backgroundImage: {fileID: 0}
+    backgroundColor: {r: 0, g: 0, b: 0, a: 1}
+    contentType: 0
+    narrativeText: Damn it! I have to stop this!
+    speakerName: 
+    dialogueLine: 
+    textInEffect: 1
+    textOutEffect: 1
+    delayAfterTextComplete: 3
+    backgroundInEffect: 0
+    backgroundOutEffect: 0
+    backgroundFadeInDuration: 0
+    backgroundFadeOutDuration: 0

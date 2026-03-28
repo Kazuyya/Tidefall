@@ -21,6 +21,10 @@ namespace LittleHeroJourney
         [SerializeField] private bool autoPlayNextJourney = true;
         [Tooltip("Delay (seconds) after end story / combat finished before loading next journey.")]
         [SerializeField] private float autoAdvanceDelay = 1.5f;
+        [Header("Completion")]
+        [SerializeField] private bool returnToMainMenuWhenAllJourneysCompleted = true;
+        [Tooltip("Delay (seconds) after finishing the last journey before returning to main menu.")]
+        [SerializeField] private float returnToMainMenuDelay = 1.5f;
 
         [Header("Journey Audio")]
         [SerializeField] private string storyBgmEffectId = "StoryBGM";
@@ -65,6 +69,7 @@ namespace LittleHeroJourney
         private bool _startStoryCanvasOpened;
         private bool _isStartStoryPlaying;
         private bool _isEndStoryPlaying;
+        private bool _skipStartStoryOnce;
         private bool _playerReadyForEncounter;
         private bool _lastStepCompleted;
         private StoryEncounterSpawner _pendingEncounterSpawner;
@@ -190,7 +195,8 @@ namespace LittleHeroJourney
             if (GameManager.Instance?.SceneManager != null)
             {
                 string targetId = string.IsNullOrEmpty(journey.SceneId) ? "gameplay" : journey.SceneId;
-                GameManager.Instance.SceneManager.StartStageScene(journey.SceneName, targetId, RunStartStoryInActiveScene);
+                Action afterActivate = _skipStartStoryOnce ? RunSkipStartStoryInActiveScene : RunStartStoryInActiveScene;
+                GameManager.Instance.SceneManager.StartStageScene(journey.SceneName, targetId, afterActivate);
             }
         }
 
@@ -207,6 +213,21 @@ namespace LittleHeroJourney
             }
             if (Instance != null)
                 Instance.PlayStartStoryForStage(_pendingStoryStageNumber);
+        }
+
+        private static void RunSkipStartStoryInActiveScene()
+        {
+            var activeScene = UnityEngine.SceneManagement.SceneManager.GetActiveScene();
+            foreach (var jm in FindObjectsOfType<JourneyManager>())
+            {
+                if (jm.gameObject.scene == activeScene)
+                {
+                    jm.SkipStartStoryAndStartEncounter();
+                    return;
+                }
+            }
+            if (Instance != null)
+                Instance.SkipStartStoryAndStartEncounter();
         }
 
         public void PlayStartStoryForStage(int stageNumber)
@@ -354,6 +375,12 @@ namespace LittleHeroJourney
 
         private void OnLoadingFinished(string loadedSceneName)
         {
+            if (_skipStartStoryOnce)
+            {
+                SkipStartStoryAndStartEncounter();
+                return;
+            }
+
             if (_pendingStartStorySequence == null) return;
 
             if (!_startStoryCanvasOpened) return;
@@ -372,6 +399,38 @@ namespace LittleHeroJourney
             _currentStoryDisplay = display;
             _pendingStartStorySequence = null;
             if (showDebugLog) Debug.Log("[JourneyManager] Loading finished + story canvas open -> start story playing.");
+        }
+
+        public void SkipStartStoryAndStartEncounter()
+        {
+            _skipStartStoryOnce = false;
+            _pendingStartStorySequence = null;
+            _isStartStoryPlaying = false;
+
+            var target = GetStartEncounterSpawner();
+            if (target != null)
+            {
+                var gm = GameplayManager.Instance;
+                if (gm != null)
+                    gm.PerformGameplayReset(target);
+                if (gm != null)
+                    gm.ShowGameplayCanvasAndEnableInput();
+                SwitchToBattleBgm();
+                target.StartEncounter();
+                GameEventSystem.Publish(new UIActionEvent("EncounterStarted"));
+                if (showDebugLog) Debug.Log("[JourneyManager] Skip start story -> reset gameplay and start encounter directly.");
+            }
+            else
+            {
+                if (showDebugLog) Debug.LogWarning("[JourneyManager] Skip start story requested but no StartEncounterSpawner found.");
+            }
+        }
+
+        public void RequestHardRetryCurrentStage()
+        {
+            int stage = currentLevelNumber > 0 ? currentLevelNumber : GetFirstUncompletedStageNumber();
+            _skipStartStoryOnce = true;
+            LoadStage(stage);
         }
 
         private void CheckBothConditionsForEncounter()
@@ -444,6 +503,24 @@ namespace LittleHeroJourney
             CompleteLevel(completedStage);
             StopJourneyBgmImmediate();
 
+            int nextStage = completedStage + 1;
+            var nextJourney = GetJourneyByNumber(nextStage);
+            if (nextJourney == null)
+            {
+                if (returnToMainMenuWhenAllJourneysCompleted)
+                {
+                    if (showDebugLog) Debug.Log("[JourneyManager] Journey completed -> no next journey, returning to main menu.");
+                    StartCoroutine(ReturnToMainMenuAfterCompletionRoutine());
+                }
+                else
+                {
+                    if (hadEndStory)
+                        GameEventSystem.Publish(new UIActionEvent("EndStorySequenceCompleted"));
+                    if (showDebugLog) Debug.Log("[JourneyManager] Journey completed -> no next journey, all journeys done.");
+                }
+                return;
+            }
+
             if (!autoPlayNextJourney)
             {
                 if (hadEndStory)
@@ -452,18 +529,16 @@ namespace LittleHeroJourney
                 return;
             }
 
-            int nextStage = completedStage + 1;
-            var nextJourney = GetJourneyByNumber(nextStage);
-            if (nextJourney == null)
-            {
-                if (hadEndStory)
-                    GameEventSystem.Publish(new UIActionEvent("EndStorySequenceCompleted"));
-                if (showDebugLog) Debug.Log("[JourneyManager] Journey completed -> no next journey, all journeys done.");
-                return;
-            }
-
             if (showDebugLog) Debug.Log($"[JourneyManager] Journey {completedStage} completed -> auto advancing to journey {nextStage} after {autoAdvanceDelay}s.");
             StartCoroutine(AutoAdvanceToNextJourneyRoutine(nextStage));
+        }
+
+        private IEnumerator ReturnToMainMenuAfterCompletionRoutine()
+        {
+            float delay = Mathf.Max(0f, returnToMainMenuDelay);
+            if (delay > 0f) yield return new WaitForSeconds(delay);
+            if (GameManager.Instance != null)
+                GameManager.Instance.ExitToMainMenu();
         }
 
         private IEnumerator AutoAdvanceToNextJourneyRoutine(int nextStage)
@@ -488,6 +563,12 @@ namespace LittleHeroJourney
         private void SwitchToBattleBgm()
         {
             SwitchJourneyBgm(battleBgmEffectId);
+        }
+
+        public void EnsureBattleBgm()
+        {
+            if (string.IsNullOrEmpty(battleBgmEffectId)) return;
+            SwitchToBattleBgm();
         }
 
         private void SwitchJourneyBgm(string targetEffectId)

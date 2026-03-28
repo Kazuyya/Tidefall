@@ -30,13 +30,13 @@ MonoBehaviour:
     backgroundOutEffect: 0
     backgroundFadeInDuration: 0
     backgroundFadeOutDuration: 0
-  - stepId: "Damn\u2026 that was close."
+  - stepId: "Here\u2026 I found so many human bones."
     canSkipStep: 1
     backgroundType: 0
     backgroundImage: {fileID: 0}
     backgroundColor: {r: 0, g: 0, b: 0, a: 0}
     contentType: 0
-    narrativeText: "Damn\u2026 that was close."
+    narrativeText: "Here\u2026\nI found so many human bones."
     speakerName: 
     dialogueLine: 
     textInEffect: 1
@@ -46,13 +46,13 @@ MonoBehaviour:
     backgroundOutEffect: 0
     backgroundFadeInDuration: 0
     backgroundFadeOutDuration: 0
-  - stepId: "Did those creatures\u2026 eat all the animals?"
+  - stepId: "But back there\u2026"
     canSkipStep: 1
     backgroundType: 0
     backgroundImage: {fileID: 0}
     backgroundColor: {r: 0, g: 0, b: 0, a: 0}
     contentType: 0
-    narrativeText: "Did those creatures\u2026 eat all the animals?"
+    narrativeText: "But back there\u2026"
     speakerName: 
     dialogueLine: 
     textInEffect: 1
@@ -62,13 +62,13 @@ MonoBehaviour:
     backgroundOutEffect: 0
     backgroundFadeInDuration: 0
     backgroundFadeOutDuration: 0
-  - stepId: "Or\u2026"
+  - stepId: There were no animal bones at all.
     canSkipStep: 1
     backgroundType: 0
     backgroundImage: {fileID: 0}
     backgroundColor: {r: 0, g: 0, b: 0, a: 0}
     contentType: 0
-    narrativeText: "Or\u2026"
+    narrativeText: There were no animal bones at all.
     speakerName: 
     dialogueLine: 
     textInEffect: 1
@@ -78,13 +78,13 @@ MonoBehaviour:
     backgroundOutEffect: 0
     backgroundFadeInDuration: 0
     backgroundFadeOutDuration: 0
-  - stepId: I need to find out more.
+  - stepId: This is strange.
     canSkipStep: 1
     backgroundType: 0
     backgroundImage: {fileID: 0}
     backgroundColor: {r: 0, g: 0, b: 0, a: 0}
     contentType: 0
-    narrativeText: I need to find out more.
+    narrativeText: This is strange.
     speakerName: 
     dialogueLine: 
     textInEffect: 1

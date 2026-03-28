@@ -21,14 +21,24 @@ MonoBehaviour:
     colliderTriggerWindow: {x: 0.35, y: 0.6}
   attackDamageData: {fileID: 11400000, guid: 64eabf777a2409f4f81e8d1a18d5247a, type: 2}
   inputWindow: {x: 0.65, y: 0.8}
-  interruptibleWindow: {x: 0, y: 0.36}
-  movementDisableWindow: {x: 0.35, y: 0.6}
+  interruptibleWindows:
+  - {x: 0, y: 0.36}
+  movementDisableWindows:
+  - {x: 0.35, y: 0.6}
+  _legacyInterruptibleWindow: {x: 0, y: 0.36}
+  _legacyMovementDisableWindow: {x: 0.35, y: 0.6}
   resetComboOnAnimationEnd: 1
   particleEffects:
   - effectName: 
     triggerTime: 0
     positionOffset: {x: 0, y: 0, z: 0}
+    rotationEuler: {x: 0, y: 0, z: 0}
+    scale: {x: 1, y: 1, z: 1}
     followCharacter: 0
   vfxEffects: []
-  audioEffects: []
+  audioEffects:
+  - effectName: pamattack
+    triggerTime: 0.2
+    playbackChannel: 0
+  trailEffects: []
   aiComboContinueChance: 1

@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc0723af1b5a22b4da23110734c9ee50, type: 3}
+  m_Name: JourneyData_Tidefall
+  m_EditorClassIdentifier: 
+  journeyId: Tidefall
+  sceneName: Assets/Content/Scenes/Fix Scene/Gameplay/Map.unity
+  sceneId: Level
+  journeyTitle: Drowned Mangrove
+  description: The further he goes, the clearer it becomes that everything is already
+    over.
+  selectorCardImage: {fileID: 21300000, guid: 284e504a6457b41488e91f99265e3052, type: 3}
+  selectorDetailImage: {fileID: 21300000, guid: fc6e050a81083d4429210c62585a2e9a, type: 3}
+  startStorySequence: {fileID: 11400000, guid: 80170eb35b17e6c4b9ffb84a37e559fd, type: 2}
+  endStorySequence: {fileID: 11400000, guid: 79694cbaf752e274d99d56181e4c23e6, type: 2}
+  startEncounterId: Tidefall

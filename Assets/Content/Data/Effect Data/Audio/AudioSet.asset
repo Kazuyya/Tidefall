@@ -169,3 +169,33 @@ MonoBehaviour:
       clips: []
       playType: 2
       cycleDelay: 0
+  - effectName: pamattack
+    audioClips:
+    - clip: {fileID: 8300000, guid: e4b1f594a35478f44a910e992d83d9f6, type: 3}
+      volume: 1
+    - clip: {fileID: 8300000, guid: e2978aa3a33b69145bb0db00c209cc93, type: 3}
+      volume: 1
+    playType: 2
+    spatialBlend: 0
+    poolSize: 0
+    loop: 0
+    useLoopSection: 0
+    loopSection:
+      clips: []
+      playType: 2
+      cycleDelay: 0
+  - effectName: Hit
+    audioClips:
+    - clip: {fileID: 8300000, guid: 88d5c20f579905c4b80e121e47bc89bf, type: 3}
+      volume: 1
+    - clip: {fileID: 8300000, guid: fd1c1bc326563d947938218cc6a2fff7, type: 3}
+      volume: 1
+    playType: 2
+    spatialBlend: 0
+    poolSize: 0
+    loop: 0
+    useLoopSection: 0
+    loopSection:
+      clips: []
+      playType: 2
+      cycleDelay: 0

@@ -17,7 +17,7 @@ MonoBehaviour:
   StoppingDistance: 2
   DetectionRange: 16
   AggroRange: 6.5
-  AttackRange: 1.5
+  AttackRange: 2
   TargetLayers:
     serializedVersion: 2
     m_Bits: 8

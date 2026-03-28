@@ -1224,6 +1224,8 @@ MonoBehaviour:
   journeySelectorCanvasId: StorySelector
   autoPlayNextJourney: 1
   autoAdvanceDelay: 1.5
+  returnToMainMenuWhenAllJourneysCompleted: 1
+  returnToMainMenuDelay: 1.5
   storyBgmEffectId: StoryBGM
   battleBgmEffectId: BattleBGM
   bgmFadeOutDuration: 0.35
@@ -1243,6 +1245,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   startDelay: 0.5
+  deathReloadDelay: 2
   cameraSettleDelay: 1
   cinemachineTargetLayerName: LookAtPlayer
   gameplayCanvasId: Gameplay

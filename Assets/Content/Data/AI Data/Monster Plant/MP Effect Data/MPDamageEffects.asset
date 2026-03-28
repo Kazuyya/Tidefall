@@ -13,9 +13,14 @@ MonoBehaviour:
   m_Name: MPDamageEffects
   m_EditorClassIdentifier: 
   vfxEffects: []
-  audioEffects: []
+  audioEffects:
+  - effectName: Hit
+    triggerTime: 0
+    playbackChannel: 0
   particleEffects:
   - effectName: BloodSplat
     triggerTime: 0
     positionOffset: {x: 0, y: 0, z: 0}
+    rotationEuler: {x: 0, y: 0, z: 0}
+    scale: {x: 1, y: 1, z: 1}
     followCharacter: 0
