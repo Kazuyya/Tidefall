@@ -21,17 +21,18 @@ MonoBehaviour:
     colliderTriggerWindow: {x: 0.45, y: 0.6}
   attackDamageData: {fileID: 11400000, guid: f7da4eb64e96e2842976b928d1901a84, type: 2}
   inputWindow: {x: 0.65, y: 0.8}
-  interruptibleWindow: {x: 0, y: 0.2}
-  movementDisableWindow: {x: 0.2, y: 0.8}
+  interruptibleWindows:
+  - {x: 0, y: 0.2}
+  movementDisableWindows:
+  - {x: 0.2, y: 0.8}
+  _legacyInterruptibleWindow: {x: 0, y: 0.2}
+  _legacyMovementDisableWindow: {x: 0.2, y: 0.8}
   resetComboOnAnimationEnd: 1
   particleEffects: []
   vfxEffects: []
   audioEffects:
   - effectName: MonsterBite
     triggerTime: 0
-    positionOffset: {x: 0, y: 0, z: 0}
-    rotationEuler: {x: 0, y: 0, z: 0}
-    scale: {x: 0, y: 0, z: 0}
-    followCharacter: 1
+    playbackChannel: 0
   trailEffects: []
   aiComboContinueChance: 0.4

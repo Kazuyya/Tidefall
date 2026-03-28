@@ -21,10 +21,22 @@ MonoBehaviour:
     colliderTriggerWindow: {x: 0.45, y: 0.6}
   attackDamageData: {fileID: 11400000, guid: 20711cca98761a24c9b7ea16a0e45bbe, type: 2}
   inputWindow: {x: 0.65, y: 0.8}
-  interruptibleWindow: {x: 0, y: 0.36}
-  movementDisableWindow: {x: 0.45, y: 0.6}
+  interruptibleWindows:
+  - {x: 0, y: 0.36}
+  movementDisableWindows:
+  - {x: 0.45, y: 0.6}
+  _legacyInterruptibleWindow: {x: 0, y: 0.36}
+  _legacyMovementDisableWindow: {x: 0.45, y: 0.6}
   resetComboOnAnimationEnd: 1
   particleEffects: []
   vfxEffects: []
-  audioEffects: []
-  aiComboContinueChance: 0.35
+  audioEffects:
+  - effectName: orcattack
+    triggerTime: 0
+    playbackChannel: 0
+  trailEffects:
+  - effectName: maulorc
+    triggerWindow: {x: 0.3, y: 0.4}
+    stopMode: 0
+    frozenTrailLifetime: 1
+  aiComboContinueChance: 0.2

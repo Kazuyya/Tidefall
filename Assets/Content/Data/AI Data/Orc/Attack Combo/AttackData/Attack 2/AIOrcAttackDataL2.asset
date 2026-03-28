@@ -19,20 +19,32 @@ MonoBehaviour:
   weaponTimings:
   - weaponName: Ham2
     colliderTriggerWindow: {x: 0.18, y: 0.22}
-  - weaponName: Ham2
+  - weaponName: Ham3
     colliderTriggerWindow: {x: 0.32, y: 0.35}
-  - weaponName: Ham2
+  - weaponName: Ham4
     colliderTriggerWindow: {x: 0.43, y: 0.45}
-  - weaponName: Ham2
+  - weaponName: Ham5
     colliderTriggerWindow: {x: 0.53, y: 0.55}
-  - weaponName: Ham2
+  - weaponName: Ham6
     colliderTriggerWindow: {x: 0.63, y: 0.67}
   attackDamageData: {fileID: 11400000, guid: ad0dfd36a654ea446ae3f16b18103cf6, type: 2}
   inputWindow: {x: 0, y: 0}
-  interruptibleWindow: {x: 0, y: 0.2}
-  movementDisableWindow: {x: 0.7, y: 1}
+  interruptibleWindows:
+  - {x: 0, y: 0.2}
+  movementDisableWindows:
+  - {x: 0.7, y: 1}
+  _legacyInterruptibleWindow: {x: 0, y: 0.2}
+  _legacyMovementDisableWindow: {x: 0.7, y: 1}
   resetComboOnAnimationEnd: 1
   particleEffects: []
   vfxEffects: []
-  audioEffects: []
+  audioEffects:
+  - effectName: orcspin
+    triggerTime: 0.14
+    playbackChannel: 0
+  trailEffects:
+  - effectName: maulorc
+    triggerWindow: {x: 0.2, y: 0.65}
+    stopMode: 0
+    frozenTrailLifetime: 0
   aiComboContinueChance: 1

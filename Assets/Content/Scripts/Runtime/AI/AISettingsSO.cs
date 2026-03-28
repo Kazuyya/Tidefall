@@ -34,10 +34,22 @@ namespace LittleHeroJourney
 
         [Header("Animation Settings")]
         public string speedParameterName = "speed";
+
+        [Header("Taunt")]
         public string tauntTriggerName = "taunt";
+        public string tauntSfxEffectName = "";
+
+        [Range(0f, 1f)]
+        public float tauntSfxNormalizedTime = 0.15f;
+        public AudioPlaybackChannel tauntSfxPlaybackChannel = AudioPlaybackChannel.Sfx;
 
         [Header("Debug Settings")]
         public bool ShowDebugGizmos = true;
         public bool ShowDebugLog = false;
+
+        private void OnValidate()
+        {
+            tauntSfxNormalizedTime = Mathf.Clamp01(tauntSfxNormalizedTime);
+        }
     }
 }

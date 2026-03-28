@@ -169,21 +169,6 @@ MonoBehaviour:
       clips: []
       playType: 2
       cycleDelay: 0
-  - effectName: pamattack
-    audioClips:
-    - clip: {fileID: 8300000, guid: e4b1f594a35478f44a910e992d83d9f6, type: 3}
-      volume: 1
-    - clip: {fileID: 8300000, guid: e2978aa3a33b69145bb0db00c209cc93, type: 3}
-      volume: 1
-    playType: 2
-    spatialBlend: 0
-    poolSize: 0
-    loop: 0
-    useLoopSection: 0
-    loopSection:
-      clips: []
-      playType: 2
-      cycleDelay: 0
   - effectName: Hit
     audioClips:
     - clip: {fileID: 8300000, guid: 988f27e3516be2140945b6eb773dbd74, type: 3}
@@ -218,6 +203,64 @@ MonoBehaviour:
     audioClips:
     - clip: {fileID: 8300000, guid: 1b075760974ebb44d8796158c1a840f7, type: 3}
       volume: 0.5
+    playType: 0
+    spatialBlend: 0
+    poolSize: 0
+    loop: 0
+    useLoopSection: 0
+    loopSection:
+      clips: []
+      playType: 2
+      cycleDelay: 0
+  - effectName: pamattack
+    audioClips:
+    - clip: {fileID: 8300000, guid: e4b1f594a35478f44a910e992d83d9f6, type: 3}
+      volume: 1
+    - clip: {fileID: 8300000, guid: e2978aa3a33b69145bb0db00c209cc93, type: 3}
+      volume: 1
+    playType: 2
+    spatialBlend: 0
+    poolSize: 0
+    loop: 0
+    useLoopSection: 0
+    loopSection:
+      clips: []
+      playType: 2
+      cycleDelay: 0
+  - effectName: orcattack
+    audioClips:
+    - clip: {fileID: 8300000, guid: 9f097ffb54463a448a5196e6ae35b167, type: 3}
+      volume: 0.5
+    - clip: {fileID: 8300000, guid: 5ecaa90487db3804299a2c1015c9ea75, type: 3}
+      volume: 0.5
+    - clip: {fileID: 8300000, guid: 5737c9a24f4ff434b9481e44608a31d9, type: 3}
+      volume: 0.5
+    playType: 2
+    spatialBlend: 0
+    poolSize: 0
+    loop: 0
+    useLoopSection: 0
+    loopSection:
+      clips: []
+      playType: 2
+      cycleDelay: 0
+  - effectName: orcspin
+    audioClips:
+    - clip: {fileID: 8300000, guid: 53b7cfee0502213458d5e05135c47a24, type: 3}
+      volume: 0.9
+    playType: 0
+    spatialBlend: 0
+    poolSize: 0
+    loop: 0
+    useLoopSection: 0
+    loopSection:
+      clips: []
+      playType: 2
+      cycleDelay: 0
+  - effectName: mpimpact
+    audioClips:
+    - clip: {fileID: 8300000, guid: ba48d6e4a3fe8b74cbbb0a8a55dfbc0b, type: 3}
+      volume: 0.9
     playType: 0
     spatialBlend: 0
     poolSize: 0

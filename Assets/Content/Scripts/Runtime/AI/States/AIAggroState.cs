@@ -11,6 +11,7 @@ namespace LittleHeroJourney
         private const float PATH_UPDATE_INTERVAL = 0.3f;
         private bool _isTaunting = false;
         private float _tauntTimer = 0f;
+        private bool _tauntSfxTriggered = false;
 
         public AIAggroState(AIAgent agent) : base(agent) { }
 
@@ -21,6 +22,7 @@ namespace LittleHeroJourney
 
             _isTaunting = false;
             _tauntTimer = 0f;
+            _tauntSfxTriggered = false;
             Agent.UpdateAnimationSpeed(0f);
 
             if (!Agent.HasDoneInitialTaunt)
@@ -63,6 +65,7 @@ namespace LittleHeroJourney
             if (_isTaunting)
             {
                 _tauntTimer += deltaTime;
+                TryTriggerTauntSfx();
                 if (_tauntTimer >= Agent.Settings.TauntDuration)
                 {
                     _isTaunting = false;
@@ -146,6 +149,35 @@ namespace LittleHeroJourney
             }
 
             Agent.NavMeshAgent.SetDestination(targetPosition);
+        }
+
+        /// <summary>
+        /// Plays taunt SFX once when normalized progress along TauntDuration reaches tauntSfxNormalizedTime (0–1), like AttackData audioEffects.
+        /// </summary>
+        private void TryTriggerTauntSfx()
+        {
+            if (_tauntSfxTriggered || Agent.Settings == null) return;
+
+            string effectId = Agent.Settings.tauntSfxEffectName;
+            if (string.IsNullOrEmpty(effectId)) return;
+
+            float duration = Agent.Settings.TauntDuration;
+            float normalized =
+                duration > 0.0001f ? Mathf.Clamp01(_tauntTimer / duration) : 1f;
+            float trigger = Mathf.Clamp01(Agent.Settings.tauntSfxNormalizedTime);
+
+            if (normalized < trigger) return;
+
+            _tauntSfxTriggered = true;
+
+            CharacterEffectManager manager = CharacterEffectManager.Instance;
+            if (manager == null) return;
+
+            Vector3 pos = Agent.transform.position;
+            if (Agent.Settings.tauntSfxPlaybackChannel == AudioPlaybackChannel.Bgm)
+                manager.PlayBGM(effectId);
+            else
+                manager.PlayAudio(effectId, pos);
         }
 
         private void UpdateMovementAnimation()

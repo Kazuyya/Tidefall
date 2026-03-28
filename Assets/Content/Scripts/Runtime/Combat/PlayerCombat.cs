@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 namespace LittleHeroJourney
@@ -26,11 +25,12 @@ namespace LittleHeroJourney
         protected List<Weapon> _currentAttackWeapons = new List<Weapon>();
         protected Dictionary<Weapon, List<Vector2>> _weaponTimingMap = new Dictionary<Weapon, List<Vector2>>();
         protected HashSet<string> _triggeredEffects = new HashSet<string>();
-        protected HashSet<string> _triggeredTrailStarts = new HashSet<string>();
-        protected HashSet<string> _triggeredTrailStops = new HashSet<string>();
-        private HashSet<string> _trailsStartedThisFrame = new HashSet<string>();
+        private HashSet<int> _trailSlotsStarted = new HashSet<int>();
+        private HashSet<int> _trailSlotsStopped = new HashSet<int>();
+        private HashSet<int> _trailSlotsStartedThisFrame = new HashSet<int>();
         private HashSet<Weapon> _collidersEnabledThisFrame = new HashSet<Weapon>();
-        private Dictionary<Weapon, HashSet<int>> _colliderWindowEnabledOnce = new Dictionary<Weapon, HashSet<int>>();
+        private readonly Dictionary<Weapon, float> _weaponColliderLastNormTime = new Dictionary<Weapon, float>();
+        private AttackDataSO _attackDataForTrailSlots;
         protected bool _isAttackFinishing;
 
         [Header("Attack State")]
@@ -298,18 +298,17 @@ namespace LittleHeroJourney
 
             // Stop any trails still running from the previous attack, then clear per-attack state
             var manager = CharacterEffectManager.Instance;
-            foreach (string id in _triggeredTrailStarts)
-            {
-                if (!_triggeredTrailStops.Contains(id))
-                    manager?.PlayTrailStop(id);
-            }
+            StopIncompleteTrailSlots(_attackDataForTrailSlots, manager);
+            _trailSlotsStarted.Clear();
+            _trailSlotsStopped.Clear();
+            _attackDataForTrailSlots = null;
+
             _triggeredEffects.Clear();
-            _triggeredTrailStarts.Clear();
-            _triggeredTrailStops.Clear();
-            _colliderWindowEnabledOnce.Clear();
 
             List<Weapon> attackWeapons = new List<Weapon>();
+            HashSet<Weapon> uniqueAttackWeapons = new HashSet<Weapon>();
             _weaponTimingMap.Clear();
+            _weaponColliderLastNormTime.Clear();
 
             // CRITICAL: Disable ALL weapon colliders first to prevent double-triggers from previous attack
             foreach (var weaponEntry in availableWeapons)
@@ -338,12 +337,11 @@ namespace LittleHeroJourney
 
                         if (weaponEntry != null && weaponEntry.weaponComponent != null)
                         {
-                            attackWeapons.Add(weaponEntry.weaponComponent);
+                            if (uniqueAttackWeapons.Add(weaponEntry.weaponComponent))
+                                attackWeapons.Add(weaponEntry.weaponComponent);
                             if (!_weaponTimingMap.ContainsKey(weaponEntry.weaponComponent))
                                 _weaponTimingMap[weaponEntry.weaponComponent] = new List<Vector2>();
                             _weaponTimingMap[weaponEntry.weaponComponent].Add(weaponTiming.colliderTriggerWindow);
-                            if (!_colliderWindowEnabledOnce.ContainsKey(weaponEntry.weaponComponent))
-                                _colliderWindowEnabledOnce[weaponEntry.weaponComponent] = new HashSet<int>();
 
                             if (attackData.attackDamageData != null)
                             {
@@ -368,8 +366,6 @@ namespace LittleHeroJourney
                 {
                     attackWeapons.Add(currentWeapon);
                     _weaponTimingMap[currentWeapon] = new List<Vector2> { new Vector2(0.3f, 0.7f) };
-                    if (!_colliderWindowEnabledOnce.ContainsKey(currentWeapon))
-                        _colliderWindowEnabledOnce[currentWeapon] = new HashSet<int>();
                 }
             }
 
@@ -391,12 +387,26 @@ namespace LittleHeroJourney
             }
 
             _currentAttackWeapons = attackWeapons;
+            _attackDataForTrailSlots = attackData;
+        }
 
+        private void StopIncompleteTrailSlots(AttackDataSO attack, CharacterEffectManager manager)
+        {
+            if (attack?.trailEffects == null || manager == null) return;
+            for (int i = 0; i < attack.trailEffects.Count; i++)
+            {
+                if (_trailSlotsStarted.Contains(i) && !_trailSlotsStopped.Contains(i))
+                {
+                    var e = attack.trailEffects[i];
+                    if (e.IsValid)
+                        manager.PlayTrailStop(e.effectName);
+                }
+            }
         }
 
         private void UpdateAttackProgress()
         {
-            _trailsStartedThisFrame.Clear();
+            _trailSlotsStartedThisFrame.Clear();
             _collidersEnabledThisFrame.Clear();
             float normalizedTime;
             bool animatorInAttack;
@@ -520,6 +530,36 @@ namespace LittleHeroJourney
                 ResetCombo();
         }
 
+        private static bool IsInsideAnyWeaponWindow(float t, List<Vector2> windows, float epsilon)
+        {
+            for (int i = 0; i < windows.Count; i++)
+            {
+                Vector2 wt = windows[i];
+                float a = Mathf.Min(wt.x, wt.y);
+                float b = Mathf.Max(wt.x, wt.y);
+                if (t >= (a - epsilon) && t <= (b + epsilon))
+                    return true;
+            }
+            return false;
+        }
+
+        private static bool HitWindowSegmentLeavesAllWindows(float t0, float t1, List<Vector2> windows, float epsilon)
+        {
+            float lo = Mathf.Min(t0, t1);
+            float hi = Mathf.Max(t0, t1);
+            if (hi - lo < 1e-7f)
+                return !IsInsideAnyWeaponWindow(lo, windows, epsilon);
+
+            const int samples = 32;
+            for (int k = 0; k <= samples; k++)
+            {
+                float u = Mathf.Lerp(lo, hi, k / (float)samples);
+                if (!IsInsideAnyWeaponWindow(u, windows, epsilon))
+                    return true;
+            }
+            return false;
+        }
+
         protected void UpdateWeaponColliderTiming(float normalizedTime)
         {
             if (_currentAttackWeapons == null) return;
@@ -529,40 +569,25 @@ namespace LittleHeroJourney
                 if (weapon == null || weapon.WeaponCollider == null || !_weaponTimingMap.ContainsKey(weapon)) continue;
                 var windows = _weaponTimingMap[weapon];
                 if (windows == null || windows.Count == 0) continue;
-                if (!_colliderWindowEnabledOnce.ContainsKey(weapon))
-                    _colliderWindowEnabledOnce[weapon] = new HashSet<int>();
-                var enabledSet = _colliderWindowEnabledOnce[weapon];
 
-                bool shouldEnable = false;
-                int enableIndex = -1;
-                for (int i = 0; i < windows.Count; i++)
-                {
-                    Vector2 wt = windows[i];
-                    if (normalizedTime >= wt.x && normalizedTime <= (wt.y + EPSILON))
-                    {
-                        shouldEnable = true;
-                        enableIndex = i;
-                        break;
-                    }
-                }
-                if (!shouldEnable)
-                {
-                    for (int i = 0; i < windows.Count; i++)
-                    {
-                        Vector2 wt = windows[i];
-                        if (normalizedTime >= wt.y && !enabledSet.Contains(i))
-                        {
-                            shouldEnable = true;
-                            enableIndex = i;
-                            break;
-                        }
-                    }
-                }
+                bool nowInside = IsInsideAnyWeaponWindow(normalizedTime, windows, EPSILON);
+
+                bool lastValid = _weaponColliderLastNormTime.TryGetValue(weapon, out float lastT);
+                bool wasInside = lastValid && IsInsideAnyWeaponWindow(lastT, windows, EPSILON);
+
+                bool jumpedAcrossGap =
+                    lastValid &&
+                    wasInside &&
+                    nowInside &&
+                    HitWindowSegmentLeavesAllWindows(lastT, normalizedTime, windows, EPSILON);
+
+                bool shouldEnable = nowInside && !jumpedAcrossGap;
+
+                _weaponColliderLastNormTime[weapon] = normalizedTime;
 
                 if (shouldEnable && !weapon.WeaponCollider.enabled)
                 {
                     weapon.EnableWeaponCollider();
-                    if (enableIndex >= 0) enabledSet.Add(enableIndex);
                     _collidersEnabledThisFrame.Add(weapon);
                     if (ShowDebugLog) Debug.Log($"[weapon-collider] ENABLE {weapon.gameObject.name} t={normalizedTime:F3}");
                 }
@@ -625,29 +650,26 @@ namespace LittleHeroJourney
                 }
             if (currentAttack.trailEffects != null && manager != null)
             {
-                foreach (var e in currentAttack.trailEffects)
+                for (int i = 0; i < currentAttack.trailEffects.Count; i++)
                 {
+                    var e = currentAttack.trailEffects[i];
                     if (!e.IsValid) continue;
 
-                    float windowStart = e.triggerWindow.x;
-                    float windowEnd = e.triggerWindow.y;
+                    float windowStart = Mathf.Min(e.triggerWindow.x, e.triggerWindow.y);
+                    float windowEnd = Mathf.Max(e.triggerWindow.x, e.triggerWindow.y);
 
-                    // Only start when we're inside the window (not past it). Avoids starting then
-                    // stopping same frame when we first run late (e.g. window 0.1-0.2, first run at 0.25).
-                    // Use <= windowEnd so we can start on the last frame of the window and stop next frame.
                     bool inWindow = normalizedTime >= windowStart && normalizedTime <= windowEnd;
-                    if (inWindow && !_triggeredTrailStarts.Contains(e.effectName))
+                    if (inWindow && !_trailSlotsStarted.Contains(i))
                     {
                         manager.PlayTrailStart(e.effectName, e.stopMode, e.frozenTrailLifetime);
-                        _triggeredTrailStarts.Add(e.effectName);
-                        _trailsStartedThisFrame.Add(e.effectName);
+                        _trailSlotsStarted.Add(i);
+                        _trailSlotsStartedThisFrame.Add(i);
                     }
 
-                    // Only stop if we had already started in a previous frame (not this frame).
-                    if (normalizedTime >= windowEnd && !_triggeredTrailStops.Contains(e.effectName) && !_trailsStartedThisFrame.Contains(e.effectName) && _triggeredTrailStarts.Contains(e.effectName))
+                    if (normalizedTime >= windowEnd && !_trailSlotsStopped.Contains(i) && !_trailSlotsStartedThisFrame.Contains(i) && _trailSlotsStarted.Contains(i))
                     {
                         manager.PlayTrailStop(e.effectName);
-                        _triggeredTrailStops.Add(e.effectName);
+                        _trailSlotsStopped.Add(i);
                     }
                 }
             }
@@ -664,18 +686,14 @@ namespace LittleHeroJourney
             }
 
             _weaponTimingMap.Clear();
+            _weaponColliderLastNormTime.Clear();
             _triggeredEffects.Clear();
             var manager = CharacterEffectManager.Instance;
-            // Only stop trails that were started but never reached their stop window (e.g. attack interrupted)
-            foreach (string id in _triggeredTrailStarts)
-            {
-                if (!_triggeredTrailStops.Contains(id))
-                    manager?.PlayTrailStop(id);
-            }
-            _triggeredTrailStarts.Clear();
-            _triggeredTrailStops.Clear();
+            StopIncompleteTrailSlots(_attackDataForTrailSlots, manager);
+            _trailSlotsStarted.Clear();
+            _trailSlotsStopped.Clear();
+            _attackDataForTrailSlots = null;
             _collidersEnabledThisFrame.Clear();
-            _colliderWindowEnabledOnce.Clear();
             _inputBuffer.Clear();
 
             // Stop auto aim when combo resets
@@ -826,12 +844,13 @@ namespace LittleHeroJourney
             
             // Clear state
             _weaponTimingMap.Clear();
+            _weaponColliderLastNormTime.Clear();
             _triggeredEffects.Clear();
             var effectManager = CharacterEffectManager.Instance;
-            foreach (string id in _triggeredTrailStarts)
-                effectManager?.PlayTrailStop(id);
-            _triggeredTrailStarts.Clear();
-            _triggeredTrailStops.Clear();
+            StopIncompleteTrailSlots(_attackDataForTrailSlots, effectManager);
+            _trailSlotsStarted.Clear();
+            _trailSlotsStopped.Clear();
+            _attackDataForTrailSlots = null;
             _inputBuffer.Clear();
 
             // Stop auto aim

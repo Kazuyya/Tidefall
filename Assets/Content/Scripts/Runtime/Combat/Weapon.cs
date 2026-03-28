@@ -14,7 +14,6 @@ namespace LittleHeroJourney
         private List<string> _registeredTrailIds = new List<string>();
         private PlayerCombat playerCombat;
         private DamageDealer damageDealer;
-        private Animator _animator;
 
         [Header("Hit Detection")]
         private HashSet<Collider> hitEnemies = new HashSet<Collider>();
@@ -34,7 +33,6 @@ namespace LittleHeroJourney
             weaponCollider = GetComponent<BoxCollider>();
             playerCombat = GetComponentInParent<PlayerCombat>();
             damageDealer = GetComponent<DamageDealer>();
-            _animator = Helper.GetAndCacheAnimator(this, searchInChildren: true, showDebugLog: false, ignoreLayerName: "UI");
 
             if (weaponCollider == null)
             {
@@ -115,7 +113,6 @@ namespace LittleHeroJourney
             if (active && playerCombat != null)
             {
                 if (!playerCombat.IsAttacking) return;
-                if (_animator != null && !IsInAttackClip()) return;
             }
 
             weaponCollider.enabled = active;
@@ -146,11 +143,6 @@ namespace LittleHeroJourney
         }
 
         private bool ShowDebugLog => showDebugLog || (playerCombat != null && playerCombat.ShowDebugLog);
-        
-        private bool IsInAttackClip()
-        {
-            return Helper.IsInAttackState(_animator);
-        }
 
         #endregion
     }

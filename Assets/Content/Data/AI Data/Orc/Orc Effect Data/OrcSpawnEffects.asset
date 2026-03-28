@@ -13,10 +13,7 @@ MonoBehaviour:
   m_Name: OrcSpawnEffects
   m_EditorClassIdentifier: Assembly-CSharp:LittleHeroJourney:CharacterSpawnEffectsSO
   vfxEffects: []
-  audioEffects:
-  - effectName: OrcRoar
-    triggerTime: 0
-    playbackChannel: 0
+  audioEffects: []
   particleEffects:
   - effectName: SmokeSpawn
     triggerTime: 1

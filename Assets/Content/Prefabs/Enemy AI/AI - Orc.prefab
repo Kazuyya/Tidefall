@@ -1,5 +1,96 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &38651332863016329
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3333673957257848393}
+  - component: {fileID: 8762035840219931363}
+  - component: {fileID: 6290373513580699823}
+  - component: {fileID: 5485681569932277455}
+  - component: {fileID: 5102827504111970169}
+  m_Layer: 0
+  m_Name: aoeHammerAttack1 (4)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3333673957257848393
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 38651332863016329}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 1, z: 0}
+  m_LocalScale: {x: 4, y: 2, z: 4}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6594789522974265192}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!33 &8762035840219931363
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 38651332863016329}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!65 &6290373513580699823
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 38651332863016329}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 0
+  serializedVersion: 3
+  m_Size: {x: 1.3, y: 1, z: 1.3}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &5485681569932277455
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 38651332863016329}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 06ee1d44c9163364e9f688ff8d771527, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  showDebugLog: 0
+--- !u!114 &5102827504111970169
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 38651332863016329}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f2e36a04e596a0a4e907ba01f4ffeee7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damageData: {fileID: 0}
+  showDebugLog: 1
 --- !u!1 &191042696237459866
 GameObject:
   m_ObjectHideFlags: 0
@@ -296,6 +387,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 65927957838333708}
+  - component: {fileID: 6010955302501948959}
   m_Layer: 0
   m_Name: Weapon01
   m_TagString: Untagged
@@ -319,6 +411,30 @@ Transform:
   - {fileID: 8729309486524388469}
   m_Father: {fileID: 7480071533251230574}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6010955302501948959
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1164784135113993538}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bff4f5a8991d7fa47baed5c5ff25979f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  material: {fileID: 2100000, guid: ae721c767fcd6664ca1cf46b36bb56b7, type: 2}
+  duration: 0.5
+  corner: 1
+  loop: 0
+  points:
+  - {x: 0, y: 0, z: 1.7}
+  - {x: 0, y: 0, z: 2.3}
+  trailId: maulorc
+  startInactive: 1
+  frozenTrailLifetime: 1
+  enableTrail: 0
+  stopMode: 0
 --- !u!1 &1165800116810223935
 GameObject:
   m_ObjectHideFlags: 0
@@ -414,6 +530,97 @@ Transform:
   - {fileID: 8841601860540190897}
   m_Father: {fileID: 498522889467045030}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1466954455828212173
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5638990710610428454}
+  - component: {fileID: 8998559319689400086}
+  - component: {fileID: 2278078596433859854}
+  - component: {fileID: 1205740590368636179}
+  - component: {fileID: 5312630076918601972}
+  m_Layer: 0
+  m_Name: aoeHammerAttack1 (3)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5638990710610428454
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1466954455828212173}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 1, z: 0}
+  m_LocalScale: {x: 4, y: 2, z: 4}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6594789522974265192}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!33 &8998559319689400086
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1466954455828212173}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!65 &2278078596433859854
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1466954455828212173}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 0
+  serializedVersion: 3
+  m_Size: {x: 1.3, y: 1, z: 1.3}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &1205740590368636179
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1466954455828212173}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 06ee1d44c9163364e9f688ff8d771527, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  showDebugLog: 0
+--- !u!114 &5312630076918601972
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1466954455828212173}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f2e36a04e596a0a4e907ba01f4ffeee7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damageData: {fileID: 0}
+  showDebugLog: 1
 --- !u!1 &1683160316572331807
 GameObject:
   m_ObjectHideFlags: 0
@@ -745,6 +952,97 @@ Transform:
   - {fileID: 587255809232145230}
   m_Father: {fileID: 1888753213728683857}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2120431084420733312
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 105256199348524994}
+  - component: {fileID: 6039134128067970974}
+  - component: {fileID: 629000873303802788}
+  - component: {fileID: 1822525665653448495}
+  - component: {fileID: 1328178333834555618}
+  m_Layer: 0
+  m_Name: aoeHammerAttack1 (2)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &105256199348524994
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2120431084420733312}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 1, z: 0}
+  m_LocalScale: {x: 4, y: 2, z: 4}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6594789522974265192}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!33 &6039134128067970974
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2120431084420733312}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!65 &629000873303802788
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2120431084420733312}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 0
+  serializedVersion: 3
+  m_Size: {x: 1.3, y: 1, z: 1.3}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &1822525665653448495
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2120431084420733312}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 06ee1d44c9163364e9f688ff8d771527, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  showDebugLog: 0
+--- !u!114 &1328178333834555618
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2120431084420733312}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f2e36a04e596a0a4e907ba01f4ffeee7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damageData: {fileID: 0}
+  showDebugLog: 1
 --- !u!1 &2567541681669883218
 GameObject:
   m_ObjectHideFlags: 0
@@ -1253,6 +1551,97 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1258238434518539051}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4049349538266174879
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 527035557284422123}
+  - component: {fileID: 3315996584167236257}
+  - component: {fileID: 1091696106009521317}
+  - component: {fileID: 115389949014323060}
+  - component: {fileID: 2729805279711387053}
+  m_Layer: 0
+  m_Name: aoeHammerAttack1 (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &527035557284422123
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4049349538266174879}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 1, z: 0}
+  m_LocalScale: {x: 4, y: 2, z: 4}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6594789522974265192}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!33 &3315996584167236257
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4049349538266174879}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!65 &1091696106009521317
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4049349538266174879}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 0
+  serializedVersion: 3
+  m_Size: {x: 1.3, y: 1, z: 1.3}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &115389949014323060
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4049349538266174879}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 06ee1d44c9163364e9f688ff8d771527, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  showDebugLog: 0
+--- !u!114 &2729805279711387053
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4049349538266174879}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f2e36a04e596a0a4e907ba01f4ffeee7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damageData: {fileID: 0}
+  showDebugLog: 1
 --- !u!1 &4290922680624070298
 GameObject:
   m_ObjectHideFlags: 0
@@ -2053,6 +2442,97 @@ Transform:
   - {fileID: 9144453973760019653}
   m_Father: {fileID: 4353866351534457011}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &7489012148285997684
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4187748210106642462}
+  - component: {fileID: 3301982286548596489}
+  - component: {fileID: 5216076477213003577}
+  - component: {fileID: 3719587064262782463}
+  - component: {fileID: 2159662824466401764}
+  m_Layer: 0
+  m_Name: aoeHammerAttack1
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4187748210106642462
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7489012148285997684}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 1, z: 0}
+  m_LocalScale: {x: 4, y: 2, z: 4}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6594789522974265192}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!33 &3301982286548596489
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7489012148285997684}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!65 &5216076477213003577
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7489012148285997684}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 0
+  serializedVersion: 3
+  m_Size: {x: 1.3, y: 1, z: 1.3}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &3719587064262782463
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7489012148285997684}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 06ee1d44c9163364e9f688ff8d771527, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  showDebugLog: 0
+--- !u!114 &2159662824466401764
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7489012148285997684}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f2e36a04e596a0a4e907ba01f4ffeee7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damageData: {fileID: 0}
+  showDebugLog: 1
 --- !u!1 &7583298583340262788
 GameObject:
   m_ObjectHideFlags: 0
@@ -2477,6 +2957,11 @@ Transform:
   - {fileID: 6926117076228907237}
   - {fileID: 8166381702382753791}
   - {fileID: 5798757912859631127}
+  - {fileID: 4187748210106642462}
+  - {fileID: 527035557284422123}
+  - {fileID: 105256199348524994}
+  - {fileID: 5638990710610428454}
+  - {fileID: 3333673957257848393}
   - {fileID: 1677862403368768368}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2557,6 +3042,14 @@ MonoBehaviour:
     weaponName: Ham1
   - weaponComponent: {fileID: 1004122914205634978}
     weaponName: Ham2
+  - weaponComponent: {fileID: 3719587064262782463}
+    weaponName: Ham3
+  - weaponComponent: {fileID: 1822525665653448495}
+    weaponName: Ham4
+  - weaponComponent: {fileID: 1205740590368636179}
+    weaponName: Ham5
+  - weaponComponent: {fileID: 5485681569932277455}
+    weaponName: Ham6
   currentWeapon: {fileID: 0}
   showDebugLog: 0
 --- !u!114 &9031558655584514415

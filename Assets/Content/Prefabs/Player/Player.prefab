@@ -1826,7 +1826,7 @@ MonoBehaviour:
   faction: 1
   damageAnimationTrigger: damaged
   deathAnimationTrigger: death
-  deathEffectsSO: {fileID: 0}
+  deathEffectsSO: {fileID: 11400000, guid: 4a7751af41a2f2f42868cba51afb2c47, type: 2}
   damageEffectsSO: {fileID: 11400000, guid: 5aae7d25efe11ef43bc163cc43e6a022, type: 2}
   enableRotateToDamager: 1
   damagerRotationSpeed: 720
