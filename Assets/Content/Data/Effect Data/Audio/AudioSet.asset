@@ -270,3 +270,16 @@ MonoBehaviour:
       clips: []
       playType: 2
       cycleDelay: 0
+  - effectName: popsmoke
+    audioClips:
+    - clip: {fileID: 8300000, guid: 3bfe7801fa61b8a41bdde9f5e490307b, type: 3}
+      volume: 0.9
+    playType: 0
+    spatialBlend: 0
+    poolSize: 0
+    loop: 0
+    useLoopSection: 0
+    loopSection:
+      clips: []
+      playType: 2
+      cycleDelay: 0

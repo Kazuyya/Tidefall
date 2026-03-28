@@ -11,11 +11,10 @@ namespace LittleHeroJourney.UI
     public enum LoadingDisplayMode { ProgressBar, Spinner, ImageFade }
 
     [System.Serializable]
-    public class LoadingOverride
+    public class LoadingTitleBodyPair
     {
         public string title;
         public string body;
-        public Sprite background;
     }
 
     public class LoadingUIController : MonoBehaviour
@@ -49,7 +48,11 @@ namespace LittleHeroJourney.UI
         [SerializeField] private Image spinnerImage;
         [SerializeField] private float spinnerDuration = 1f;
         [SerializeField] private Sprite backgroundSprite;
-        [SerializeField] private List<LoadingOverride> overrides = new List<LoadingOverride>();
+
+        [Header("Content overrides")]
+        [Tooltip("Title + body are one entry (same index). Background list is picked independently.")]
+        [SerializeField] private List<LoadingTitleBodyPair> overrideTitleBody = new List<LoadingTitleBodyPair>();
+        [SerializeField] private List<Sprite> overrideBackgrounds = new List<Sprite>();
 
         [Header("Image Fade mode")]
         [SerializeField] private float fadeDuration = 0.6f;
@@ -59,7 +62,8 @@ namespace LittleHeroJourney.UI
         private Tween _spinnerTween;
         private Tween _fadeTween;
         private Sequence _sequenceRunner;
-        private static int _lastOverrideIndex = -1;
+        private static int _lastTitleBodyIndex = -1;
+        private static int _lastBackgroundIndex = -1;
 
         private void OnEnable()
         {
@@ -138,13 +142,30 @@ namespace LittleHeroJourney.UI
 
         private void ApplyOverride()
         {
-            if (overrides == null || overrides.Count == 0) return;
-            int idx = selectionMode == OverrideSelectionMode.Random ? Random.Range(0, overrides.Count) : (_lastOverrideIndex = (_lastOverrideIndex + 1) % overrides.Count);
-            var ov = overrides[idx];
-            if (ov == null) return;
-            if (titleText != null && !string.IsNullOrEmpty(ov.title)) titleText.text = ov.title;
-            if (bodyText != null && !string.IsNullOrEmpty(ov.body)) bodyText.text = ov.body;
-            if (backgroundImage != null && ov.background != null) backgroundImage.sprite = ov.background;
+            ApplyTitleBodyOverride();
+            ApplyBackgroundOverride();
+        }
+
+        private void ApplyTitleBodyOverride()
+        {
+            if (overrideTitleBody == null || overrideTitleBody.Count == 0) return;
+            int idx = selectionMode == OverrideSelectionMode.Random
+                ? Random.Range(0, overrideTitleBody.Count)
+                : (_lastTitleBodyIndex = (_lastTitleBodyIndex + 1) % overrideTitleBody.Count);
+            var pair = overrideTitleBody[idx];
+            if (pair == null) return;
+            if (titleText != null && !string.IsNullOrEmpty(pair.title)) titleText.text = pair.title;
+            if (bodyText != null && !string.IsNullOrEmpty(pair.body)) bodyText.text = pair.body;
+        }
+
+        private void ApplyBackgroundOverride()
+        {
+            if (overrideBackgrounds == null || overrideBackgrounds.Count == 0) return;
+            int idx = selectionMode == OverrideSelectionMode.Random
+                ? Random.Range(0, overrideBackgrounds.Count)
+                : (_lastBackgroundIndex = (_lastBackgroundIndex + 1) % overrideBackgrounds.Count);
+            Sprite s = overrideBackgrounds[idx];
+            if (backgroundImage != null && s != null) backgroundImage.sprite = s;
         }
 
         private void SetFadeTargetsToZero(List<DOTweenAnimation> list)

@@ -26,7 +26,8 @@ namespace LittleHeroJourney
         private SerializedProperty fadeEaseProp;
         private SerializedProperty iconFadeEnabledProp;
         private SerializedProperty backgroundSpriteProp;
-        private SerializedProperty overridesProp;
+        private SerializedProperty overrideTitleBodyProp;
+        private SerializedProperty overrideBackgroundsProp;
         private SerializedProperty openAnimationsProp;
         private SerializedProperty openPlayModeProp;
         private SerializedProperty openUseCustomDurationProp;
@@ -58,7 +59,8 @@ namespace LittleHeroJourney
             fadeEaseProp = serializedObject.FindProperty("fadeEase");
             iconFadeEnabledProp = serializedObject.FindProperty("iconFadeEnabled");
             backgroundSpriteProp = serializedObject.FindProperty("backgroundSprite");
-            overridesProp = serializedObject.FindProperty("overrides");
+            overrideTitleBodyProp = serializedObject.FindProperty("overrideTitleBody");
+            overrideBackgroundsProp = serializedObject.FindProperty("overrideBackgrounds");
             openAnimationsProp = serializedObject.FindProperty("openAnimations");
             openPlayModeProp = serializedObject.FindProperty("openPlayMode");
             openUseCustomDurationProp = serializedObject.FindProperty("openUseCustomDuration");
@@ -173,8 +175,10 @@ namespace LittleHeroJourney
             EditorGUILayout.PropertyField(backgroundSpriteProp);
 
             EditorGUILayout.Space(4);
-            EditorGUILayout.LabelField("Overrides (Title, Body, Background)", EditorStyles.boldLabel);
-            EditorGUILayout.PropertyField(overridesProp, true);
+            EditorGUILayout.LabelField("Overrides", EditorStyles.boldLabel);
+            EditorGUILayout.HelpBox("Title + Body: one list (paired per row). Background: separate list — combined randomly / independently per Selection Mode.", MessageType.None);
+            EditorGUILayout.PropertyField(overrideTitleBodyProp, new GUIContent("Title & Body"), true);
+            EditorGUILayout.PropertyField(overrideBackgroundsProp, new GUIContent("Background Sprites"), true);
 
             EditorGUILayout.Space(6);
             DrawAnimationListWithOptions(openAnimList, openPlayModeProp, openUseCustomDurationProp, openCustomDurationProp);

@@ -398,7 +398,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: a88357fd501178642bf5a3ab4f85ebd6, type: 3}
+  m_Sprite: {fileID: 21300000, guid: f9856a2113ebc99419afa4da3e0f5c9c, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1977,14 +1977,27 @@ MonoBehaviour:
   spinnerImage: {fileID: 0}
   spinnerDuration: 1
   backgroundSprite: {fileID: 0}
-  overrides:
+  overrideTitleBody:
   - title: Movement Over Attack
     body: Use dodge to evade enemy attacks and create openings for fast counters.
-    background: {fileID: 0}
-  - title: Flames of Revenge
-    body: Revenge is not only about killing your enemy, but about finding a reason
-      to keep living.
-    background: {fileID: 0}
+  - title: Patience Over Panic
+    body: "Don\u2019t rush your attacks. Wait for the right moment, then strike."
+  - title: Watch Their Patterns
+    body: Every enemy has a pattern. Learn it, and you will survive.
+  - title: "Don\u2019t Get Surrounded"
+    body: Stay moving. Being surrounded is a death sentence.
+  - title: Truth
+    body: "The truth was never hidden\u2026 you just weren\u2019t ready."
+  - title: Skyfall
+    body: "They fell from the sky\u2026 and for some reason, it will happen again."
+  - title: The Fog
+    body: "It didn\u2019t come to destroy\u2026 it came to change."
+  overrideBackgrounds:
+  - {fileID: 21300000, guid: f9856a2113ebc99419afa4da3e0f5c9c, type: 3}
+  - {fileID: 21300000, guid: be07f59028d1af84fa434a1727a45069, type: 3}
+  - {fileID: 21300000, guid: d045ffea01add44488ccaf12698af7af, type: 3}
+  - {fileID: 21300000, guid: 8b898febf8f4d1a4099f65e533ae3cef, type: 3}
+  - {fileID: 21300000, guid: 0ec9832349acc654699686e5ba205d14, type: 3}
   fadeDuration: 0.6
   fadeEase: 4
   iconFadeEnabled: 0

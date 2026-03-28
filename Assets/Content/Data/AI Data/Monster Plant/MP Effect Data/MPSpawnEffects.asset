@@ -13,7 +13,10 @@ MonoBehaviour:
   m_Name: MPSpawnEffects
   m_EditorClassIdentifier: Assembly-CSharp:LittleHeroJourney:CharacterSpawnEffectsSO
   vfxEffects: []
-  audioEffects: []
+  audioEffects:
+  - effectName: popsmoke
+    triggerTime: 1
+    playbackChannel: 0
   particleEffects:
   - effectName: SmokeSpawn
     triggerTime: 1

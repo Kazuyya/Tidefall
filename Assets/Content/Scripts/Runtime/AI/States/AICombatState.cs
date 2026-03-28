@@ -20,6 +20,7 @@ namespace LittleHeroJourney
             if (Agent.NavMeshAgent != null && Agent.NavMeshAgent.enabled && Agent.NavMeshAgent.isOnNavMesh)
             {
                 Agent.NavMeshAgent.speed = Agent.EffectiveMoveSpeed;
+                Agent.SetNavMeshRotationEnabled(false);
 
                 float distanceToTarget = Agent.Target != null ? Vector3.Distance(Agent.transform.position, Agent.Target.position) : float.MaxValue;
                 if (distanceToTarget <= Agent.Settings.AttackRange)
@@ -40,6 +41,7 @@ namespace LittleHeroJourney
         {
             base.OnStateExit(toState);
             if (Agent.NavMeshAgent != null && Agent.NavMeshAgent.enabled) Agent.NavMeshAgent.isStopped = true;
+            Agent.SetNavMeshRotationEnabled(true);
             Agent.UpdateAnimationSpeed(0f);
         }
 
@@ -60,6 +62,8 @@ namespace LittleHeroJourney
                 Agent.TransitionToState(AIStateType.Aggro);
                 return;
             }
+
+            Agent.FaceTarget();
 
             _lastPathUpdateTime += deltaTime;
             if (_lastPathUpdateTime >= PATH_UPDATE_INTERVAL)
@@ -83,7 +87,6 @@ namespace LittleHeroJourney
         private void UpdateCombatBehavior(float distanceToTarget)
         {
             if (Agent.NavMeshAgent == null || Agent.Target == null || Agent.IsDead || !Agent.NavMeshAgent.enabled) return;
-            Agent.FaceTarget();
             if (distanceToTarget <= Agent.Settings.AttackRange)
                 HandleInAttackRange();
             else

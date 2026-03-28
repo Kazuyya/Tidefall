@@ -56,6 +56,7 @@ namespace LittleHeroJourney
             {
                 Agent.NavMeshAgent.isStopped = true;
             }
+            Agent.SetNavMeshRotationEnabled(true);
         }
 
         public override void Update(float deltaTime)
@@ -78,6 +79,7 @@ namespace LittleHeroJourney
                 }
                 else
                 {
+                    Agent.SetNavMeshRotationEnabled(false);
                     Agent.FaceTarget();
                     Agent.UpdateAnimationSpeed(0f);
                     return;
@@ -96,6 +98,7 @@ namespace LittleHeroJourney
                 }
                 else
                 {
+                    Agent.SetNavMeshRotationEnabled(false);
                     Agent.FaceTarget();
                     Agent.UpdateAnimationSpeed(0f);
                     return;
@@ -184,7 +187,18 @@ namespace LittleHeroJourney
         {
             if (Agent.NavMeshAgent == null) return;
 
-            if (Agent.HasTarget && Agent.Target != null) Agent.FaceTarget();
+            if (Agent.HasTarget && Agent.Target != null)
+            {
+                float ar = Agent.Settings.AttackRange;
+                float closeSq = ar * ar * 1.69f; 
+                Vector3 d = Agent.Target.position - Agent.transform.position;
+                float distSq = d.x * d.x + d.z * d.z;
+                Agent.SetNavMeshRotationEnabled(distSq > closeSq);
+                Agent.FaceTarget();
+            }
+            else
+                Agent.SetNavMeshRotationEnabled(true);
+
             if (Agent.NavMeshAgent.enabled && Agent.NavMeshAgent.isOnNavMesh)
             {
                 Agent.UpdateMovementAnimation(1f);

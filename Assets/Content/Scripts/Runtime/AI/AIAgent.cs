@@ -380,18 +380,24 @@ namespace LittleHeroJourney
         {
             if (_target == null || _navMeshAgent == null) return;
 
-            Vector3 directionToTarget = (_target.position - transform.position).normalized;
-            directionToTarget.y = 0f;
+            Vector3 flatDelta = _target.position - transform.position;
+            flatDelta.y = 0f;
+            float distSq = flatDelta.sqrMagnitude;
+            if (distSq < 1e-8f) return;
 
-            if (directionToTarget != Vector3.zero)
-            {
-                Quaternion targetRotation = Quaternion.LookRotation(directionToTarget);
-                transform.rotation = Quaternion.RotateTowards(
-                    transform.rotation,
-                    targetRotation,
-                    Settings.RotationSpeed * Time.deltaTime
-                );
-            }
+            Vector3 directionToTarget = flatDelta / Mathf.Sqrt(distSq);
+            Quaternion targetRotation = Quaternion.LookRotation(directionToTarget);
+
+            float maxDegreesDelta = Settings.RotationSpeed * Time.deltaTime;
+            float attackR = Settings != null ? Settings.AttackRange : 2f;
+            if (distSq < attackR * attackR * 2.25f) 
+                maxDegreesDelta *= 1.65f;
+
+            transform.rotation = Quaternion.RotateTowards(
+                transform.rotation,
+                targetRotation,
+                maxDegreesDelta
+            );
         }
 
         public virtual void UpdateMovementAnimation(float speedMultiplier = 1f)

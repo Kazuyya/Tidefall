@@ -17,6 +17,9 @@ MonoBehaviour:
   - effectName: Hit
     triggerTime: 0
     playbackChannel: 0
+  - effectName: popsmoke
+    triggerTime: 1
+    playbackChannel: 0
   particleEffects:
   - effectName: SmokeDeath
     triggerTime: 1
