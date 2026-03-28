@@ -13,7 +13,10 @@ MonoBehaviour:
   m_Name: MPDeathEffects
   m_EditorClassIdentifier: Assembly-CSharp:LittleHeroJourney:CharacterDeathEffectsSO
   vfxEffects: []
-  audioEffects: []
+  audioEffects:
+  - effectName: Hit
+    triggerTime: 0
+    playbackChannel: 0
   particleEffects:
   - effectName: SmokeDeath
     triggerTime: 1

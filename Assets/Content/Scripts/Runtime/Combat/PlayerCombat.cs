@@ -24,11 +24,13 @@ namespace LittleHeroJourney
         public List<WeaponEntry> availableWeapons = new List<WeaponEntry>();
         [HideInInspector] public Weapon currentWeapon;
         protected List<Weapon> _currentAttackWeapons = new List<Weapon>();
-        protected Dictionary<Weapon, Vector2> _weaponTimingMap = new Dictionary<Weapon, Vector2>();
+        protected Dictionary<Weapon, List<Vector2>> _weaponTimingMap = new Dictionary<Weapon, List<Vector2>>();
         protected HashSet<string> _triggeredEffects = new HashSet<string>();
         protected HashSet<string> _triggeredTrailStarts = new HashSet<string>();
         protected HashSet<string> _triggeredTrailStops = new HashSet<string>();
         private HashSet<string> _trailsStartedThisFrame = new HashSet<string>();
+        private HashSet<Weapon> _collidersEnabledThisFrame = new HashSet<Weapon>();
+        private Dictionary<Weapon, HashSet<int>> _colliderWindowEnabledOnce = new Dictionary<Weapon, HashSet<int>>();
         protected bool _isAttackFinishing;
 
         [Header("Attack State")]
@@ -304,6 +306,7 @@ namespace LittleHeroJourney
             _triggeredEffects.Clear();
             _triggeredTrailStarts.Clear();
             _triggeredTrailStops.Clear();
+            _colliderWindowEnabledOnce.Clear();
 
             List<Weapon> attackWeapons = new List<Weapon>();
             _weaponTimingMap.Clear();
@@ -336,7 +339,11 @@ namespace LittleHeroJourney
                         if (weaponEntry != null && weaponEntry.weaponComponent != null)
                         {
                             attackWeapons.Add(weaponEntry.weaponComponent);
-                            _weaponTimingMap[weaponEntry.weaponComponent] = weaponTiming.colliderTriggerWindow;
+                            if (!_weaponTimingMap.ContainsKey(weaponEntry.weaponComponent))
+                                _weaponTimingMap[weaponEntry.weaponComponent] = new List<Vector2>();
+                            _weaponTimingMap[weaponEntry.weaponComponent].Add(weaponTiming.colliderTriggerWindow);
+                            if (!_colliderWindowEnabledOnce.ContainsKey(weaponEntry.weaponComponent))
+                                _colliderWindowEnabledOnce[weaponEntry.weaponComponent] = new HashSet<int>();
 
                             if (attackData.attackDamageData != null)
                             {
@@ -345,13 +352,24 @@ namespace LittleHeroJourney
                         }
                     }
                 }
+                for (int i = 0; i < attackWeapons.Count; i++)
+                {
+                    var w = attackWeapons[i];
+                    if (w != null && _weaponTimingMap.ContainsKey(w))
+                    {
+                        var list = _weaponTimingMap[w];
+                        list.Sort((a, b) => a.x.CompareTo(b.x));
+                    }
+                }
             }
             else
             {
                 if (currentWeapon != null)
                 {
                     attackWeapons.Add(currentWeapon);
-                    _weaponTimingMap[currentWeapon] = new Vector2(0.3f, 0.7f);
+                    _weaponTimingMap[currentWeapon] = new List<Vector2> { new Vector2(0.3f, 0.7f) };
+                    if (!_colliderWindowEnabledOnce.ContainsKey(currentWeapon))
+                        _colliderWindowEnabledOnce[currentWeapon] = new HashSet<int>();
                 }
             }
 
@@ -379,6 +397,7 @@ namespace LittleHeroJourney
         private void UpdateAttackProgress()
         {
             _trailsStartedThisFrame.Clear();
+            _collidersEnabledThisFrame.Clear();
             float normalizedTime;
             bool animatorInAttack;
 
@@ -508,17 +527,49 @@ namespace LittleHeroJourney
             foreach (Weapon weapon in _currentAttackWeapons)
             {
                 if (weapon == null || weapon.WeaponCollider == null || !_weaponTimingMap.ContainsKey(weapon)) continue;
-                Vector2 weaponTiming = _weaponTimingMap[weapon];
-                bool shouldColliderBeActive = normalizedTime >= weaponTiming.x && normalizedTime <= (weaponTiming.y + EPSILON);
-                if (shouldColliderBeActive && !weapon.WeaponCollider.enabled)
+                var windows = _weaponTimingMap[weapon];
+                if (windows == null || windows.Count == 0) continue;
+                if (!_colliderWindowEnabledOnce.ContainsKey(weapon))
+                    _colliderWindowEnabledOnce[weapon] = new HashSet<int>();
+                var enabledSet = _colliderWindowEnabledOnce[weapon];
+
+                bool shouldEnable = false;
+                int enableIndex = -1;
+                for (int i = 0; i < windows.Count; i++)
+                {
+                    Vector2 wt = windows[i];
+                    if (normalizedTime >= wt.x && normalizedTime <= (wt.y + EPSILON))
+                    {
+                        shouldEnable = true;
+                        enableIndex = i;
+                        break;
+                    }
+                }
+                if (!shouldEnable)
+                {
+                    for (int i = 0; i < windows.Count; i++)
+                    {
+                        Vector2 wt = windows[i];
+                        if (normalizedTime >= wt.y && !enabledSet.Contains(i))
+                        {
+                            shouldEnable = true;
+                            enableIndex = i;
+                            break;
+                        }
+                    }
+                }
+
+                if (shouldEnable && !weapon.WeaponCollider.enabled)
                 {
                     weapon.EnableWeaponCollider();
-                    if (ShowDebugLog) Debug.Log($"[weapon-collider] ENABLE {weapon.gameObject.name} t={normalizedTime:F3} window={weaponTiming.x:F3}-{weaponTiming.y:F3}");
+                    if (enableIndex >= 0) enabledSet.Add(enableIndex);
+                    _collidersEnabledThisFrame.Add(weapon);
+                    if (ShowDebugLog) Debug.Log($"[weapon-collider] ENABLE {weapon.gameObject.name} t={normalizedTime:F3}");
                 }
-                else if (!shouldColliderBeActive && weapon.WeaponCollider.enabled)
+                else if (!shouldEnable && weapon.WeaponCollider.enabled && !_collidersEnabledThisFrame.Contains(weapon))
                 {
                     weapon.DisableWeaponCollider();
-                    if (ShowDebugLog) Debug.Log($"[weapon-collider] DISABLE {weapon.gameObject.name} t={normalizedTime:F3} window={weaponTiming.x:F3}-{weaponTiming.y:F3}");
+                    if (ShowDebugLog) Debug.Log($"[weapon-collider] DISABLE {weapon.gameObject.name} t={normalizedTime:F3}");
                 }
             }
         }
@@ -623,6 +674,8 @@ namespace LittleHeroJourney
             }
             _triggeredTrailStarts.Clear();
             _triggeredTrailStops.Clear();
+            _collidersEnabledThisFrame.Clear();
+            _colliderWindowEnabledOnce.Clear();
             _inputBuffer.Clear();
 
             // Stop auto aim when combo resets

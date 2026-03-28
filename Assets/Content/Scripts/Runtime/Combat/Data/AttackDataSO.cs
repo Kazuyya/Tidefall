@@ -108,6 +108,28 @@ namespace LittleHeroJourney
             if (movementDisableWindows == null) movementDisableWindows = new List<Vector2>();
             movementDisableWindows.Add(_legacyMovementDisableWindow);
         }
+        if (weaponTimings != null)
+        {
+            for (int i = 0; i < weaponTimings.Count; i++)
+            {
+                Vector2 w = weaponTimings[i].colliderTriggerWindow;
+                float a = Mathf.Clamp01(w.x);
+                float b = Mathf.Clamp01(w.y);
+                if (a > b) { float t = a; a = b; b = t; }
+                weaponTimings[i].colliderTriggerWindow = new Vector2(a, b);
+            }
+        }
+        if (trailEffects != null)
+        {
+            for (int i = 0; i < trailEffects.Count; i++)
+            {
+                Vector2 w = trailEffects[i].triggerWindow;
+                float a = Mathf.Clamp01(w.x);
+                float b = Mathf.Clamp01(w.y);
+                if (a > b) { float t = a; a = b; b = t; }
+                trailEffects[i].triggerWindow = new Vector2(a, b);
+            }
+        }
     }
     }
 }

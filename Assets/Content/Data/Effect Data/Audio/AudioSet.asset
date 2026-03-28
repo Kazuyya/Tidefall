@@ -186,11 +186,39 @@ MonoBehaviour:
       cycleDelay: 0
   - effectName: Hit
     audioClips:
-    - clip: {fileID: 8300000, guid: 88d5c20f579905c4b80e121e47bc89bf, type: 3}
+    - clip: {fileID: 8300000, guid: 988f27e3516be2140945b6eb773dbd74, type: 3}
       volume: 1
-    - clip: {fileID: 8300000, guid: fd1c1bc326563d947938218cc6a2fff7, type: 3}
+    - clip: {fileID: 8300000, guid: 4b78ee48288562d47a16eb7aff167cf8, type: 3}
       volume: 1
     playType: 2
+    spatialBlend: 0
+    poolSize: 0
+    loop: 0
+    useLoopSection: 0
+    loopSection:
+      clips: []
+      playType: 2
+      cycleDelay: 0
+  - effectName: OrcRoar
+    audioClips:
+    - clip: {fileID: 8300000, guid: 45a9672e5357dc247b51fe087ef948ab, type: 3}
+      volume: 0.5
+    - clip: {fileID: 8300000, guid: 65c7cbb396269ba489455cb63819d500, type: 3}
+      volume: 0.5
+    playType: 2
+    spatialBlend: 0
+    poolSize: 0
+    loop: 0
+    useLoopSection: 0
+    loopSection:
+      clips: []
+      playType: 2
+      cycleDelay: 0
+  - effectName: MpRoar
+    audioClips:
+    - clip: {fileID: 8300000, guid: 1b075760974ebb44d8796158c1a840f7, type: 3}
+      volume: 0.5
+    playType: 0
     spatialBlend: 0
     poolSize: 0
     loop: 0
