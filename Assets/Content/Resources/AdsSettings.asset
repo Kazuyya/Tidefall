@@ -14,6 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   androidInterstitialUnitId: ca-app-pub-4220704367146092/6571604823
   iosInterstitialUnitId: 
+  useTestInterstitial: 0
   showDelayAfterLoadingSeconds: 2.2
+  enableDebugLogs: 1
   mainMenuSceneId: MainMenu
   gameplaySceneId: Level

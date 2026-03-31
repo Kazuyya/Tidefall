@@ -1,69 +1,204 @@
-Running Android Gradle Build Pre-Processor.
-UnityEngine.Debug:Log (object)
-GoogleMobileAds.Editor.AndroidBuildPreProcessor:ApplyBuildSettings (UnityEditor.Build.Reporting.BuildReport) (at Assets/GoogleMobileAds/Editor/AndroidBuildPreProcessor.cs:60)
-GoogleMobileAds.Editor.AndroidBuildPreProcessor:OnPreprocessBuild (UnityEditor.Build.Reporting.BuildReport) (at Assets/GoogleMobileAds/Editor/AndroidBuildPreProcessor.cs:54)
-UnityEngine.GUIUtility:ProcessEvent (int,intptr,bool&)
-
-Verified Minimum API Level is >= 23.
-UnityEngine.Debug:Log (object)
-GoogleMobileAds.Editor.AndroidBuildPreProcessor:ApplyBuildSettings (UnityEditor.Build.Reporting.BuildReport) (at Assets/GoogleMobileAds/Editor/AndroidBuildPreProcessor.cs:70)
-GoogleMobileAds.Editor.AndroidBuildPreProcessor:OnPreprocessBuild (UnityEditor.Build.Reporting.BuildReport) (at Assets/GoogleMobileAds/Editor/AndroidBuildPreProcessor.cs:54)
-UnityEngine.GUIUtility:ProcessEvent (int,intptr,bool&)
-
-Verified mainTemplate.gradle.
-UnityEngine.Debug:Log (object)
-GoogleMobileAds.Editor.AndroidBuildPreProcessor:EnsureGradleFileExists (string) (at Assets/GoogleMobileAds/Editor/AndroidBuildPreProcessor.cs:167)
-GoogleMobileAds.Editor.AndroidBuildPreProcessor:ApplyBuildSettings (UnityEditor.Build.Reporting.BuildReport) (at Assets/GoogleMobileAds/Editor/AndroidBuildPreProcessor.cs:88)
-GoogleMobileAds.Editor.AndroidBuildPreProcessor:OnPreprocessBuild (UnityEditor.Build.Reporting.BuildReport) (at Assets/GoogleMobileAds/Editor/AndroidBuildPreProcessor.cs:54)
-UnityEngine.GUIUtility:ProcessEvent (int,intptr,bool&)
-
-Verified gradleTemplate.properties.
-UnityEngine.Debug:Log (object)
-GoogleMobileAds.Editor.AndroidBuildPreProcessor:EnsureGradleFileExists (string) (at Assets/GoogleMobileAds/Editor/AndroidBuildPreProcessor.cs:167)
-GoogleMobileAds.Editor.AndroidBuildPreProcessor:ApplyBuildSettings (UnityEditor.Build.Reporting.BuildReport) (at Assets/GoogleMobileAds/Editor/AndroidBuildPreProcessor.cs:91)
-GoogleMobileAds.Editor.AndroidBuildPreProcessor:OnPreprocessBuild (UnityEditor.Build.Reporting.BuildReport) (at Assets/GoogleMobileAds/Editor/AndroidBuildPreProcessor.cs:54)
-UnityEngine.GUIUtility:ProcessEvent (int,intptr,bool&)
-
-Verified Jetifier Entry exists.
-UnityEngine.Debug:Log (object)
-GoogleMobileAds.Editor.AndroidBuildPreProcessor:ApplyBuildSettings (UnityEditor.Build.Reporting.BuildReport) (at Assets/GoogleMobileAds/Editor/AndroidBuildPreProcessor.cs:111)
-GoogleMobileAds.Editor.AndroidBuildPreProcessor:OnPreprocessBuild (UnityEditor.Build.Reporting.BuildReport) (at Assets/GoogleMobileAds/Editor/AndroidBuildPreProcessor.cs:54)
-UnityEngine.GUIUtility:ProcessEvent (int,intptr,bool&)
-
-Resolving Android Gradle dependencies.
-UnityEngine.Debug:Log (object)
-GoogleMobileAds.Editor.AndroidBuildPreProcessor:ApplyBuildSettings (UnityEditor.Build.Reporting.BuildReport) (at Assets/GoogleMobileAds/Editor/AndroidBuildPreProcessor.cs:120)
-GoogleMobileAds.Editor.AndroidBuildPreProcessor:OnPreprocessBuild (UnityEditor.Build.Reporting.BuildReport) (at Assets/GoogleMobileAds/Editor/AndroidBuildPreProcessor.cs:54)
-UnityEngine.GUIUtility:ProcessEvent (int,intptr,bool&)
-
-Android Build Pre-Processor finished.
-UnityEngine.Debug:Log (object)
-GoogleMobileAds.Editor.AndroidBuildPreProcessor:ApplyBuildSettings (UnityEditor.Build.Reporting.BuildReport) (at Assets/GoogleMobileAds/Editor/AndroidBuildPreProcessor.cs:122)
-GoogleMobileAds.Editor.AndroidBuildPreProcessor:OnPreprocessBuild (UnityEditor.Build.Reporting.BuildReport) (at Assets/GoogleMobileAds/Editor/AndroidBuildPreProcessor.cs:54)
-UnityEngine.GUIUtility:ProcessEvent (int,intptr,bool&)
-
-Installation failed with the following output:
-adb: failed to install C:\Users\Lenovo\Unity\Unity Build\Tidefall\Tidefall.apk: Failure [INSTALL_FAILED_USER_RESTRICTED: Install canceled by user]
-UnityEngine.GUIUtility:ProcessEvent (int,intptr,bool&)
-
-DeploymentOperationFailedException: Installation failed. See the Console for details.
-UnityEditor.Android.AndroidDeploymentTargetsExtension.UploadAPK (UnityEditor.Android.AndroidBuildProperties buildProperties, UnityEditor.Android.AndroidDevice device, UnityEditor.Android.AndroidDeploymentTargetsExtension+LaunchProgressTaskManager taskManager) (at /home/bokken/build/output/unity/unity/PlatformDependent/AndroidPlayer/Editor/Managed/DeploymentTargets/AndroidDeploymentTargetsExtension.cs:719)
-UnityEditor.Android.AndroidDeploymentTargetsExtension+<>c__DisplayClass15_1.<LaunchBuildOnTarget>b__3 () (at /home/bokken/build/output/unity/unity/PlatformDependent/AndroidPlayer/Editor/Managed/DeploymentTargets/AndroidDeploymentTargetsExtension.cs:542)
-UnityEditor.ProgressTaskManager.Run () (at <4b8f645257c94d1296f440a10c6f388e>:0)
-UnityEditor.Android.AndroidDeploymentTargetsExtension.LaunchBuildOnTarget (UnityEditor.DeploymentTargets.IDeploymentTargetsMainThreadContext context, UnityEditor.BuildProperties buildProperties, UnityEditor.DeploymentTargets.DeploymentTargetId targetId, UnityEditor.ProgressHandler progressHandler) (at /home/bokken/build/output/unity/unity/PlatformDependent/AndroidPlayer/Editor/Managed/DeploymentTargets/AndroidDeploymentTargetsExtension.cs:550)
-UnityEditor.DeploymentTargets.DeploymentTargetManager.LaunchBuildOnTarget (UnityEditor.BuildProperties buildProperties, UnityEditor.DeploymentTargets.DeploymentTargetId targetId, UnityEditor.ProgressHandler progressHandler) (at <4b8f645257c94d1296f440a10c6f388e>:0)
-UnityEditor.PostprocessBuildPlayer+<>c__DisplayClass22_1.<LaunchOnTargets>b__1 () (at <4b8f645257c94d1296f440a10c6f388e>:0)
-UnityEngine.GUIUtility:ProcessEvent(Int32, IntPtr, Boolean&)
-
-UnityException: Could not find any valid targets to launch on for Android
-UnityEditor.PostprocessBuildPlayer.LaunchOnTargets (UnityEditor.BuildTargetGroup targetGroup, UnityEditor.BuildTarget buildTarget, UnityEditor.Build.Reporting.BuildReport buildReport, System.Collections.Generic.List`1[T] launchTargets) (at <4b8f645257c94d1296f440a10c6f388e>:0)
-UnityEditor.Android.PostProcessAndroidPlayer.Launch (UnityEditor.BuildTarget target, System.String installPath, UnityEditor.Build.Reporting.BuildReport report) (at /home/bokken/build/output/unity/unity/PlatformDependent/AndroidPlayer/Editor/Managed/PostProcessAndroidPlayer.cs:278)
-UnityEditor.Android.AndroidBuildPostprocessor.LaunchPlayer (UnityEditor.Modules.BuildLaunchPlayerArgs args) (at /home/bokken/build/output/unity/unity/PlatformDependent/AndroidPlayer/Editor/Managed/ExtensionModule.cs:964)
-UnityEditor.PostprocessBuildPlayer.Launch (UnityEditor.BuildTargetGroup targetGroup, UnityEditor.BuildTarget buildTarget, System.String path, System.String productName, UnityEditor.BuildOptions options, UnityEditor.Build.Reporting.BuildReport buildReport) (at <4b8f645257c94d1296f440a10c6f388e>:0)
-UnityEngine.GUIUtility:ProcessEvent(Int32, IntPtr, Boolean&)
-
-UnityException: Could not find any valid targets to launch on for Android
-
-Build completed with a result of 'Succeeded' in 158 seconds (157576 ms)
-UnityEngine.GUIUtility:ProcessEvent (int,intptr,bool&)
-
+2026/03/31 11:59:55.159 10280 10336 Info Unity [AdsManager] Init start
+2026/03/31 11:59:55.159 10280 10336 Info Unity LittleHeroJourney.AdsManager:Init()
+2026/03/31 11:59:55.170 10280 10336 Info Unity [AdsManager] LoadInterstitial request unitId=ca-app-pub-3940256099942544/1033173712
+2026/03/31 11:59:55.170 10280 10336 Info Unity LittleHeroJourney.AdsManager:LoadInterstitial()
+2026/03/31 11:59:55.297 10280 10443 Info DynamiteModule Considering local module com.google.android.gms.ads.dynamite:0 and remote module com.google.android.gms.ads.dynamite:260480602
+2026/03/31 11:59:55.297 10280 10443 Info DynamiteModule Selected remote version of com.google.android.gms.ads.dynamite, version >= 260480602
+2026/03/31 11:59:55.308 10280 10447 Info DynamiteModule Considering local module com.google.android.gms.ads.dynamite:0 and remote module com.google.android.gms.ads.dynamite:260480602
+2026/03/31 11:59:55.308 10280 10447 Info DynamiteModule Selected remote version of com.google.android.gms.ads.dynamite, version >= 260480602
+2026/03/31 11:59:55.335 10280 10336 Info Unity [AdShowOnMenuReturn] OnEnable
+2026/03/31 11:59:55.522 10280 10447 Info Ads Use RequestConfiguration.Builder().setTestDeviceIds(Arrays.asList("3F972CA8089213622BD386FC386AD808")) to get test ads on this device.
+2026/03/31 11:59:55.535 10280 10443 Info DynamiteModule Considering local module com.google.android.gms.ads.dynamite:0 and remote module com.google.android.gms.ads.dynamite:260480602
+2026/03/31 11:59:55.535 10280 10443 Info DynamiteModule Selected remote version of com.google.android.gms.ads.dynamite, version >= 260480602
+2026/03/31 11:59:55.828 10280 10479 Warn Ads The Google Mobile Ads SDK will not integrate with Firebase. Admob/Firebase integration requires the latest Firebase SDK jar, but Firebase SDK is either missing or out of date
+2026/03/31 11:59:55.867 10280 10447 Warn ServiceBindIntentUtils Dynamic lookup for intent failed for action: com.google.android.gms.ads.service.CACHE
+2026/03/31 11:59:56.025 10280 10566 Warn ServiceBindIntentUtils Dynamic lookup for intent failed for action: com.google.android.gms.ads.service.START
+2026/03/31 11:59:59.528 10280 10336 Info Unity [LoadingManager] LoadSceneSequence: Starting for scene 'Assets/Content/Scenes/Fix Scene/Scene Flow/Main Menu/MainMenu.unity'
+2026/03/31 11:59:59.528 10280 10336 Info Unity LittleHeroJourney.<LoadSceneSequence>d__29:MoveNext()
+2026/03/31 11:59:59.529 10280 10336 Info Unity [LoadingManager] LoadSceneSequence: Showing loading scene...
+2026/03/31 11:59:59.584 10280 10336 Info Unity [LoadingManager] LoadSceneSequence: Loading scene shown
+2026/03/31 11:59:59.584 10280 10336 Info Unity [LoadingManager] LoadSceneSequence: Playing open sequence...
+2026/03/31 12:00:00.576 10280 10336 Info Unity [LoadingManager] LoadSceneSequence: Open sequence completed
+2026/03/31 12:00:00.577 10280 10336 Info Unity [LoadingManager] LoadSceneSequence: Unloading previous scene...
+2026/03/31 12:00:00.577 10280 10336 Info Unity [LoadingManager] LoadSceneSequence: Creating load operation for 'Assets/Content/Scenes/Fix Scene/Scene Flow/Main Menu/MainMenu.unity' with mode Additive
+2026/03/31 12:00:00.577 10280 10336 Info Unity LittleHeroJourney.<LoadSceneSequence>d__29:MoveNext()
+2026/03/31 12:00:01.576 10280 10336 Info Unity [LoadingManager] LoadSceneSequence: Scene ready, activating...
+2026/03/31 12:00:01.576 10280 10336 Info Unity LittleHeroJourney.<LoadSceneSequence>d__29:MoveNext()
+2026/03/31 12:00:02.670 10280 10336 Info Unity [LoadingManager] LoadSceneSequence: Scene loaded
+2026/03/31 12:00:02.670 10280 10336 Info Unity LittleHeroJourney.<LoadSceneSequence>d__29:MoveNext()
+2026/03/31 12:00:02.736 10280 10336 Info Unity [LoadingManager] LoadSceneSequence: Setting active scene to 'MainMenu'
+2026/03/31 12:00:02.736 10280 10336 Info Unity LittleHeroJourney.<LoadSceneSequence>d__29:MoveNext()
+2026/03/31 12:00:02.737 10280 10336 Info Unity [LoadingManager] LoadSceneSequence: Playing close sequence...
+2026/03/31 12:00:03.864 10280 10336 Info Unity [LoadingManager] LoadSceneSequence: Unloading remaining scenes except target...
+2026/03/31 12:00:03.864 10280 10336 Info Unity [LoadingManager] LoadSceneSequence: Hiding loading scene...
+2026/03/31 12:00:03.899 10280 10336 Info Unity [LoadingManager] LoadSceneSequence: Completed! Firing LoadingFinished for 'MainMenu'
+2026/03/31 12:00:03.899 10280 10336 Info Unity LittleHeroJourney.<LoadSceneSequence>d__29:MoveNext()
+2026/03/31 12:00:03.900 10280 10336 Info Unity [AdShowOnMenuReturn] LoadingFinished scene=MainMenu
+2026/03/31 12:00:03.900 10280 10336 Info Unity LittleHeroJourney.AdShowOnMenuReturn:HandleLoadingFinished(String)
+2026/03/31 12:00:03.900 10280 10336 Info Unity LittleHeroJourney.<LoadSceneSequence>d__29:MoveNext()
+2026/03/31 12:00:03.900 10280 10336 Info Unity [AdShowOnMenuReturn] LoadingFinished ignored by flow rules
+2026/03/31 12:00:03.900 10280 10336 Info Unity LittleHeroJourney.<LoadSceneSequence>d__29:MoveNext()
+2026/03/31 12:00:03.905 10280 10336 Info Unity LittleHeroJourney.<LoadSceneSequence>d__29:MoveNext()
+2026/03/31 12:00:03.905 10280 10336 Info Unity LittleHeroJourney.<LoadSceneSequence>d__29:MoveNext()
+2026/03/31 12:00:03.905 10280 10336 Info Unity LittleHeroJourney.<LoadSceneSequence>d__29:MoveNext()
+2026/03/31 12:00:05.565 10280 10280 Info Unity [AdsManager] MobileAds.Initialize done
+2026/03/31 12:00:05.565 10280 10280 Info Unity GoogleMobileAds.Android.MobileAdsClient:onInitializationComplete(AndroidJavaObject)
+2026/03/31 12:00:06.098 10280 10336 Info Unity [AdShowOnMenuReturn] CanvasOpenComplete canvasId=MainMenu pending=False
+2026/03/31 12:00:06.098 10280 10336 Info Unity LittleHeroJourney.AdShowOnMenuReturn:HandleCanvasOpenComplete(String)
+2026/03/31 12:00:06.843 10280 10696 Info Unity [AdsManager] LoadInterstitial failed code=0 domain=com.google.android.gms.ads message=Unable to obtain a JavascriptEngine.
+2026/03/31 12:00:06.844 10280 10696 Info Unity [AdsManager] Retry scheduled in 5s
+2026/03/31 12:00:06.844 10280 10696 Info Unity LittleHeroJourney.AdsManager:ScheduleRetryLoad(Single)
+2026/03/31 12:00:11.847 10280 10336 Info Unity [AdsManager] LoadInterstitial request unitId=ca-app-pub-3940256099942544/1033173712
+2026/03/31 12:00:11.847 10280 10336 Info Unity LittleHeroJourney.AdsManager:LoadInterstitial()
+2026/03/31 12:00:11.864 10280 10447 Info DynamiteModule Considering local module com.google.android.gms.ads.dynamite:0 and remote module com.google.android.gms.ads.dynamite:260480602
+2026/03/31 12:00:11.864 10280 10447 Info DynamiteModule Selected remote version of com.google.android.gms.ads.dynamite, version >= 260480602
+2026/03/31 12:00:11.871 10280 10447 Info Ads Use RequestConfiguration.Builder().setTestDeviceIds(Arrays.asList("3F972CA8089213622BD386FC386AD808")) to get test ads on this device.
+2026/03/31 12:00:11.897 10280 10701 Warn ServiceBindIntentUtils Dynamic lookup for intent failed for action: com.google.android.gms.ads.service.START
+2026/03/31 12:00:16.890 10280 10748 Info Unity [AdsManager] LoadInterstitial failed code=0 domain=com.google.android.gms.ads message=Unable to obtain a JavascriptEngine.
+2026/03/31 12:00:16.890 10280 10748 Info Unity [AdsManager] Retry scheduled in 5s
+2026/03/31 12:00:16.890 10280 10748 Info Unity LittleHeroJourney.AdsManager:ScheduleRetryLoad(Single)
+2026/03/31 12:00:21.905 10280 10336 Info Unity [AdsManager] LoadInterstitial request unitId=ca-app-pub-3940256099942544/1033173712
+2026/03/31 12:00:21.905 10280 10336 Info Unity LittleHeroJourney.AdsManager:LoadInterstitial()
+2026/03/31 12:00:21.930 10280 10447 Info DynamiteModule Considering local module com.google.android.gms.ads.dynamite:0 and remote module com.google.android.gms.ads.dynamite:260480602
+2026/03/31 12:00:21.930 10280 10447 Info DynamiteModule Selected remote version of com.google.android.gms.ads.dynamite, version >= 260480602
+2026/03/31 12:00:21.934 10280 10447 Info Ads Use RequestConfiguration.Builder().setTestDeviceIds(Arrays.asList("3F972CA8089213622BD386FC386AD808")) to get test ads on this device.
+2026/03/31 12:00:22.087 10280 11231 Warn ServiceBindIntentUtils Dynamic lookup for intent failed for action: com.google.android.gms.ads.service.START
+2026/03/31 12:00:26.585 10280 10336 Info Unity [AdShowOnMenuReturn] CanvasOpenComplete canvasId=StorySelector pending=False
+2026/03/31 12:00:26.585 10280 10336 Info Unity LittleHeroJourney.AdShowOnMenuReturn:HandleCanvasOpenComplete(String)
+2026/03/31 12:00:26.934 10280 11635 Info Unity [AdsManager] LoadInterstitial failed code=0 domain=com.google.android.gms.ads message=Unable to obtain a JavascriptEngine.
+2026/03/31 12:00:26.934 10280 11635 Info Unity [AdsManager] Retry scheduled in 5s
+2026/03/31 12:00:26.934 10280 11635 Info Unity LittleHeroJourney.AdsManager:ScheduleRetryLoad(Single)
+2026/03/31 12:00:29.838 10280 10336 Info Unity [LoadingManager] LoadSceneSequence: Starting for scene 'Assets/Content/Scenes/Fix Scene/Gameplay/Map.unity'
+2026/03/31 12:00:29.838 10280 10336 Info Unity LittleHeroJourney.<LoadSceneSequence>d__29:MoveNext()
+2026/03/31 12:00:29.838 10280 10336 Info Unity LittleHeroJourney.JourneyManager:LoadStage(Int32)
+2026/03/31 12:00:29.840 10280 10336 Info Unity [LoadingManager] LoadSceneSequence: Showing loading scene...
+2026/03/31 12:00:29.840 10280 10336 Info Unity LittleHeroJourney.JourneyManager:LoadStage(Int32)
+2026/03/31 12:00:29.841 10280 10336 Info Unity LittleHeroJourney.JourneyManager:LoadStage(Int32)
+2026/03/31 12:00:29.841 10280 10336 Info Unity LittleHeroJourney.JourneyManager:LoadStage(Int32)
+2026/03/31 12:00:29.842 10280 10336 Info Unity LittleHeroJourney.JourneyManager:LoadStage(Int32)
+2026/03/31 12:00:29.843 10280 10336 Info Unity LittleHeroJourney.JourneyManager:LoadStage(Int32)
+2026/03/31 12:00:29.908 10280 10336 Info Unity [LoadingManager] LoadSceneSequence: Loading scene shown
+2026/03/31 12:00:29.908 10280 10336 Info Unity [LoadingManager] LoadSceneSequence: Playing open sequence...
+2026/03/31 12:00:30.904 10280 10336 Info Unity [LoadingManager] LoadSceneSequence: Open sequence completed
+2026/03/31 12:00:30.906 10280 10336 Info Unity [LoadingManager] LoadSceneSequence: Unloading previous scene...
+2026/03/31 12:00:30.906 10280 10336 Info Unity [LoadingManager] LoadSceneSequence: Creating load operation for 'Assets/Content/Scenes/Fix Scene/Gameplay/Map.unity' with mode Additive
+2026/03/31 12:00:30.906 10280 10336 Info Unity LittleHeroJourney.<LoadSceneSequence>d__29:MoveNext()
+2026/03/31 12:00:31.947 10280 10336 Info Unity [AdsManager] LoadInterstitial request unitId=ca-app-pub-3940256099942544/1033173712
+2026/03/31 12:00:31.947 10280 10336 Info Unity LittleHeroJourney.AdsManager:LoadInterstitial()
+2026/03/31 12:00:31.962 10280 10447 Info DynamiteModule Considering local module com.google.android.gms.ads.dynamite:0 and remote module com.google.android.gms.ads.dynamite:260480602
+2026/03/31 12:00:31.962 10280 10447 Info DynamiteModule Selected remote version of com.google.android.gms.ads.dynamite, version >= 260480602
+2026/03/31 12:00:31.968 10280 10447 Info Ads Use RequestConfiguration.Builder().setTestDeviceIds(Arrays.asList("3F972CA8089213622BD386FC386AD808")) to get test ads on this device.
+2026/03/31 12:00:32.015 10280 11672 Warn ServiceBindIntentUtils Dynamic lookup for intent failed for action: com.google.android.gms.ads.service.START
+2026/03/31 12:00:32.429 10280 10336 Info Unity [LoadingManager] LoadSceneSequence: Scene ready, activating...
+2026/03/31 12:00:32.429 10280 10336 Info Unity LittleHeroJourney.<LoadSceneSequence>d__29:MoveNext()
+2026/03/31 12:00:32.446 10280 10336 Info Unity [LoadingManager] LoadSceneSequence: Scene ready, activating...
+2026/03/31 12:00:32.446 10280 10336 Info Unity LittleHeroJourney.<LoadSceneSequence>d__29:MoveNext()
+2026/03/31 12:00:32.462 10280 10336 Info Unity [LoadingManager] LoadSceneSequence: Scene ready, activating...
+2026/03/31 12:00:32.462 10280 10336 Info Unity LittleHeroJourney.<LoadSceneSequence>d__29:MoveNext()
+2026/03/31 12:00:32.479 10280 10336 Info Unity [LoadingManager] LoadSceneSequence: Scene ready, activating...
+2026/03/31 12:00:32.479 10280 10336 Info Unity LittleHeroJourney.<LoadSceneSequence>d__29:MoveNext()
+2026/03/31 12:00:32.499 10280 10336 Info Unity [LoadingManager] LoadSceneSequence: Scene ready, activating...
+2026/03/31 12:00:32.499 10280 10336 Info Unity LittleHeroJourney.<LoadSceneSequence>d__29:MoveNext()
+2026/03/31 12:00:32.519 10280 10336 Info Unity [LoadingManager] LoadSceneSequence: Scene ready, activating...
+2026/03/31 12:00:32.519 10280 10336 Info Unity LittleHeroJourney.<LoadSceneSequence>d__29:MoveNext()
+2026/03/31 12:00:32.538 10280 10336 Info Unity [LoadingManager] LoadSceneSequence: Scene ready, activating...
+2026/03/31 12:00:32.538 10280 10336 Info Unity LittleHeroJourney.<LoadSceneSequence>d__29:MoveNext()
+2026/03/31 12:00:32.547 10280 10336 Info Unity [LoadingManager] LoadSceneSequence: Scene ready, activating...
+2026/03/31 12:00:32.547 10280 10336 Info Unity LittleHeroJourney.<LoadSceneSequence>d__29:MoveNext()
+2026/03/31 12:00:32.549 10280 10336 Info Unity [LoadingManager] LoadSceneSequence: Scene ready, activating...
+2026/03/31 12:00:32.549 10280 10336 Info Unity LittleHeroJourney.<LoadSceneSequence>d__29:MoveNext()
+2026/03/31 12:00:32.594 10280 10336 Info Unity LittleHeroJourney.GameplayManager:HandleSceneLoaded(Scene, LoadSceneMode)
+2026/03/31 12:00:32.594 10280 10336 Info Unity LittleHeroJourney.GameplayManager:HandleSceneLoaded(Scene, LoadSceneMode)
+2026/03/31 12:00:32.595 10280 10336 Warn Unity LittleHeroJourney.GameplayManager:HandleSceneLoaded(Scene, LoadSceneMode)
+2026/03/31 12:00:32.596 10280 10336 Info Unity LittleHeroJourney.GameplayManager:HandleSceneLoaded(Scene, LoadSceneMode)
+2026/03/31 12:00:32.596 10280 10336 Info Unity LittleHeroJourney.GameplayManager:HandleSceneLoaded(Scene, LoadSceneMode)
+2026/03/31 12:00:32.605 10280 10336 Info Unity [LoadingManager] LoadSceneSequence: Scene loaded
+2026/03/31 12:00:32.605 10280 10336 Info Unity LittleHeroJourney.<LoadSceneSequence>d__29:MoveNext()
+2026/03/31 12:00:32.758 10280 10336 Info Unity [LoadingManager] LoadSceneSequence: Setting active scene to 'Map'
+2026/03/31 12:00:32.758 10280 10336 Info Unity LittleHeroJourney.<LoadSceneSequence>d__29:MoveNext()
+2026/03/31 12:00:33.590 10280 10336 Info Unity LittleHeroJourney.<LoadSceneSequence>d__29:MoveNext()
+2026/03/31 12:00:33.590 10280 10336 Info Unity LittleHeroJourney.<LoadSceneSequence>d__29:MoveNext()
+2026/03/31 12:00:33.591 10280 10336 Info Unity LittleHeroJourney.<LoadSceneSequence>d__29:MoveNext()
+2026/03/31 12:00:33.591 10280 10336 Info Unity LittleHeroJourney.<LoadSceneSequence>d__29:MoveNext()
+2026/03/31 12:00:33.591 10280 10336 Info Unity LittleHeroJourney.<LoadSceneSequence>d__29:MoveNext()
+2026/03/31 12:00:34.114 10280 10336 Info Unity [AdShowOnMenuReturn] CanvasOpenComplete canvasId=StorySequence pending=False
+2026/03/31 12:00:34.114 10280 10336 Info Unity LittleHeroJourney.AdShowOnMenuReturn:HandleCanvasOpenComplete(String)
+2026/03/31 12:00:35.167 10280 10336 Info Unity [LoadingManager] LoadSceneSequence: Playing close sequence...
+2026/03/31 12:00:36.185 10280 10336 Info Unity [LoadingManager] LoadSceneSequence: Unloading remaining scenes except target...
+2026/03/31 12:00:36.187 10280 10336 Info Unity [LoadingManager] LoadSceneSequence: Hiding loading scene...
+2026/03/31 12:00:36.236 10280 10336 Info Unity [LoadingManager] LoadSceneSequence: Completed! Firing LoadingFinished for 'Map'
+2026/03/31 12:00:36.236 10280 10336 Info Unity LittleHeroJourney.<LoadSceneSequence>d__29:MoveNext()
+2026/03/31 12:00:36.243 10280 10336 Info Unity LittleHeroJourney.<LoadSceneSequence>d__29:MoveNext()
+2026/03/31 12:00:36.244 10280 10336 Info Unity LittleHeroJourney.<LoadSceneSequence>d__29:MoveNext()
+2026/03/31 12:00:36.244 10280 10336 Info Unity [AdShowOnMenuReturn] LoadingFinished scene=Map
+2026/03/31 12:00:36.244 10280 10336 Info Unity LittleHeroJourney.AdShowOnMenuReturn:HandleLoadingFinished(String)
+2026/03/31 12:00:36.244 10280 10336 Info Unity LittleHeroJourney.<LoadSceneSequence>d__29:MoveNext()
+2026/03/31 12:00:36.244 10280 10336 Info Unity [AdShowOnMenuReturn] LoadingFinished ignored by flow rules
+2026/03/31 12:00:36.244 10280 10336 Info Unity LittleHeroJourney.<LoadSceneSequence>d__29:MoveNext()
+2026/03/31 12:00:36.998 10280 11721 Info Unity [AdsManager] LoadInterstitial failed code=0 domain=com.google.android.gms.ads message=Unable to obtain a JavascriptEngine.
+2026/03/31 12:00:36.998 10280 11721 Info Unity [AdsManager] Retry scheduled in 5s
+2026/03/31 12:00:36.998 10280 11721 Info Unity LittleHeroJourney.AdsManager:ScheduleRetryLoad(Single)
+2026/03/31 12:00:42.050 10280 10336 Info Unity [AdsManager] LoadInterstitial request unitId=ca-app-pub-3940256099942544/1033173712
+2026/03/31 12:00:42.050 10280 10336 Info Unity LittleHeroJourney.AdsManager:LoadInterstitial()
+2026/03/31 12:00:42.058 10280 10447 Info DynamiteModule Considering local module com.google.android.gms.ads.dynamite:0 and remote module com.google.android.gms.ads.dynamite:260480602
+2026/03/31 12:00:42.058 10280 10447 Info DynamiteModule Selected remote version of com.google.android.gms.ads.dynamite, version >= 260480602
+2026/03/31 12:00:42.061 10280 10447 Info Ads Use RequestConfiguration.Builder().setTestDeviceIds(Arrays.asList("3F972CA8089213622BD386FC386AD808")) to get test ads on this device.
+2026/03/31 12:00:42.080 10280 11751 Warn ServiceBindIntentUtils Dynamic lookup for intent failed for action: com.google.android.gms.ads.service.START
+2026/03/31 12:00:47.049 10280 11834 Info Unity [AdsManager] LoadInterstitial failed code=0 domain=com.google.android.gms.ads message=Unable to obtain a JavascriptEngine.
+2026/03/31 12:00:47.049 10280 11834 Info Unity [AdsManager] Retry scheduled in 5s
+2026/03/31 12:00:47.049 10280 11834 Info Unity LittleHeroJourney.AdsManager:ScheduleRetryLoad(Single)
+2026/03/31 12:00:48.126 10280 10336 Info Unity [AdShowOnMenuReturn] CanvasOpenComplete canvasId=Gameplay pending=False
+2026/03/31 12:00:48.126 10280 10336 Info Unity LittleHeroJourney.AdShowOnMenuReturn:HandleCanvasOpenComplete(String)
+2026/03/31 12:00:50.074 10280 10336 Info Unity [AdShowOnMenuReturn] CanvasOpenComplete canvasId=Pause pending=False
+2026/03/31 12:00:50.074 10280 10336 Info Unity LittleHeroJourney.AdShowOnMenuReturn:HandleCanvasOpenComplete(String)
+2026/03/31 12:00:50.455 10280 10336 Info Unity [LoadingManager] LoadSceneSequence: Starting for scene 'Assets/Content/Scenes/Fix Scene/Scene Flow/Main Menu/MainMenu.unity'
+2026/03/31 12:00:50.455 10280 10336 Info Unity LittleHeroJourney.<LoadSceneSequence>d__29:MoveNext()
+2026/03/31 12:00:50.455 10280 10336 Info Unity [LoadingManager] LoadSceneSequence: Showing loading scene...
+2026/03/31 12:00:50.591 10280 10336 Info Unity [LoadingManager] LoadSceneSequence: Loading scene shown
+2026/03/31 12:00:50.592 10280 10336 Info Unity [LoadingManager] LoadSceneSequence: Playing open sequence...
+2026/03/31 12:00:51.571 10280 10336 Info Unity [LoadingManager] LoadSceneSequence: Open sequence completed
+2026/03/31 12:00:51.572 10280 10336 Info Unity [LoadingManager] LoadSceneSequence: Unloading previous scene...
+2026/03/31 12:00:51.573 10280 10336 Info Unity [LoadingManager] LoadSceneSequence: Creating load operation for 'Assets/Content/Scenes/Fix Scene/Scene Flow/Main Menu/MainMenu.unity' with mode Additive
+2026/03/31 12:00:51.573 10280 10336 Info Unity LittleHeroJourney.<LoadSceneSequence>d__29:MoveNext()
+2026/03/31 12:00:52.049 10280 10336 Info Unity [AdsManager] LoadInterstitial request unitId=ca-app-pub-3940256099942544/1033173712
+2026/03/31 12:00:52.049 10280 10336 Info Unity LittleHeroJourney.AdsManager:LoadInterstitial()
+2026/03/31 12:00:52.067 10280 10447 Info DynamiteModule Considering local module com.google.android.gms.ads.dynamite:0 and remote module com.google.android.gms.ads.dynamite:260480602
+2026/03/31 12:00:52.067 10280 10447 Info DynamiteModule Selected remote version of com.google.android.gms.ads.dynamite, version >= 260480602
+2026/03/31 12:00:52.072 10280 10447 Info Ads Use RequestConfiguration.Builder().setTestDeviceIds(Arrays.asList("3F972CA8089213622BD386FC386AD808")) to get test ads on this device.
+2026/03/31 12:00:52.112 10280 12187 Warn ServiceBindIntentUtils Dynamic lookup for intent failed for action: com.google.android.gms.ads.service.START
+2026/03/31 12:00:52.566 10280 10336 Info Unity [LoadingManager] LoadSceneSequence: Scene ready, activating...
+2026/03/31 12:00:52.566 10280 10336 Info Unity LittleHeroJourney.<LoadSceneSequence>d__29:MoveNext()
+2026/03/31 12:00:52.599 10280 10336 Info Unity [LoadingManager] LoadSceneSequence: Scene loaded
+2026/03/31 12:00:52.599 10280 10336 Info Unity LittleHeroJourney.<LoadSceneSequence>d__29:MoveNext()
+2026/03/31 12:00:52.614 10280 10336 Info Unity [LoadingManager] LoadSceneSequence: Setting active scene to 'MainMenu'
+2026/03/31 12:00:52.614 10280 10336 Info Unity LittleHeroJourney.<LoadSceneSequence>d__29:MoveNext()
+2026/03/31 12:00:52.616 10280 10336 Info Unity [LoadingManager] LoadSceneSequence: Playing close sequence...
+2026/03/31 12:00:53.656 10280 10336 Info Unity [LoadingManager] LoadSceneSequence: Unloading remaining scenes except target...
+2026/03/31 12:00:53.656 10280 10336 Info Unity [LoadingManager] LoadSceneSequence: Hiding loading scene...
+2026/03/31 12:00:53.706 10280 10336 Info Unity [LoadingManager] LoadSceneSequence: Completed! Firing LoadingFinished for 'MainMenu'
+2026/03/31 12:00:53.706 10280 10336 Info Unity LittleHeroJourney.<LoadSceneSequence>d__29:MoveNext()
+2026/03/31 12:00:53.706 10280 10336 Info Unity [AdShowOnMenuReturn] LoadingFinished scene=MainMenu
+2026/03/31 12:00:53.706 10280 10336 Info Unity LittleHeroJourney.AdShowOnMenuReturn:HandleLoadingFinished(String)
+2026/03/31 12:00:53.706 10280 10336 Info Unity LittleHeroJourney.<LoadSceneSequence>d__29:MoveNext()
+2026/03/31 12:00:53.708 10280 10336 Info Unity [AdShowOnMenuReturn] LoadingFinished accepted, waiting CanvasOpenComplete
+2026/03/31 12:00:53.708 10280 10336 Info Unity LittleHeroJourney.<LoadSceneSequence>d__29:MoveNext()
+2026/03/31 12:00:53.708 10280 10336 Info Unity LittleHeroJourney.<LoadSceneSequence>d__29:MoveNext()
+2026/03/31 12:00:53.709 10280 10336 Info Unity LittleHeroJourney.<LoadSceneSequence>d__29:MoveNext()
+2026/03/31 12:00:53.709 10280 10336 Info Unity LittleHeroJourney.<LoadSceneSequence>d__29:MoveNext()
+2026/03/31 12:00:55.922 10280 10336 Info Unity [AdShowOnMenuReturn] CanvasOpenComplete canvasId=MainMenu pending=True
+2026/03/31 12:00:55.922 10280 10336 Info Unity LittleHeroJourney.AdShowOnMenuReturn:HandleCanvasOpenComplete(String)
+2026/03/31 12:00:55.923 10280 10336 Info Unity [AdShowOnMenuReturn] Delay before show=2,2
+2026/03/31 12:00:55.923 10280 10336 Info Unity LittleHeroJourney.AdShowOnMenuReturn:HandleCanvasOpenComplete(String)
+2026/03/31 12:00:57.128 10280 12458 Info Unity [AdsManager] LoadInterstitial failed code=0 domain=com.google.android.gms.ads message=Unable to obtain a JavascriptEngine.
+2026/03/31 12:00:57.128 10280 12458 Info Unity [AdsManager] Retry scheduled in 5s
+2026/03/31 12:00:57.128 10280 12458 Info Unity LittleHeroJourney.AdsManager:ScheduleRetryLoad(Single)
+2026/03/31 12:00:58.126 10280 10336 Info Unity [AdShowOnMenuReturn] Show attempt ready=false, reload
+2026/03/31 12:00:58.127 10280 10336 Info Unity [AdsManager] LoadInterstitial request unitId=ca-app-pub-3940256099942544/1033173712
+2026/03/31 12:00:58.127 10280 10336 Info Unity LittleHeroJourney.AdsManager:LoadInterstitial()
+2026/03/31 12:00:58.150 10280 10447 Info DynamiteModule Considering local module com.google.android.gms.ads.dynamite:0 and remote module com.google.android.gms.ads.dynamite:260480602
+2026/03/31 12:00:58.150 10280 10447 Info DynamiteModule Selected remote version of com.google.android.gms.ads.dynamite, version >= 260480602
+2026/03/31 12:00:58.163 10280 10447 Info Ads Use RequestConfiguration.Builder().setTestDeviceIds(Arrays.asList("3F972CA8089213622BD386FC386AD808")) to get test ads on this device.
+2026/03/31 12:01:02.147 10280 10336 Info Unity [AdsManager] LoadInterstitial skipped load in progress
+2026/03/31 12:01:07.228 10280 12543 Info Unity [AdsManager] LoadInterstitial failed code=0 domain=com.google.android.gms.ads message=Unable to obtain a JavascriptEngine.
+2026/03/31 12:01:07.228 10280 12543 Info Unity [AdsManager] Retry scheduled in 5s
+2026/03/31 12:01:07.228 10280 12543 Info Unity LittleHeroJourney.AdsManager:ScheduleRetryLoad(Single)

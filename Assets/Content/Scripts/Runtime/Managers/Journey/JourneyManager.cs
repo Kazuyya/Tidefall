@@ -36,6 +36,8 @@ namespace LittleHeroJourney
 
         [Header("Debug")]
         [SerializeField] private bool showDebugLog = false;
+        [SerializeField] private bool clearSaveOnStartInDevelopmentBuild = true;
+        [SerializeField] private bool clearSaveOncePerAppVersion = true;
 
         private int currentLevelNumber = 0;
 
@@ -64,6 +66,7 @@ namespace LittleHeroJourney
         private Action<string> _loadingFinishedHandler;
         private StorySequenceDisplay _currentStoryDisplay;
         private static int _pendingStoryStageNumber;
+        private const string SaveResetVersionKeyPrefix = "JourneySaveResetVersion_";
         private StorySequenceSO _pendingEndStorySequence;
         private StorySequenceSO _pendingStartStorySequence;
         private bool _startStoryCanvasOpened;
@@ -170,11 +173,32 @@ namespace LittleHeroJourney
 
         private void Start()
         {
+            TryApplyStartupSaveReset();
             if (journeysData == null || journeysData.JourneyCount == 0) return;
             if (ES3.KeyExists(CurrentSaveKey))
                 ApplySaveData(ES3.Load<JourneySaveData>(CurrentSaveKey));
             else if (levelStates.Count == 0)
                 InitializeLevelStates();
+        }
+
+        private void TryApplyStartupSaveReset()
+        {
+            if (!clearSaveOnStartInDevelopmentBuild) return;
+            if (!Debug.isDebugBuild) return;
+            if (!clearSaveOncePerAppVersion)
+            {
+                ES3.DeleteKey(CurrentSaveKey);
+                if (showDebugLog) Debug.Log("[JourneyManager] Cleared save at startup (debug build).");
+                return;
+            }
+            string versionKey = SaveResetVersionKeyPrefix + Application.identifier;
+            string appVersion = Application.version;
+            string appliedVersion = PlayerPrefs.GetString(versionKey, string.Empty);
+            if (string.Equals(appliedVersion, appVersion, StringComparison.Ordinal)) return;
+            ES3.DeleteKey(CurrentSaveKey);
+            PlayerPrefs.SetString(versionKey, appVersion);
+            PlayerPrefs.Save();
+            if (showDebugLog) Debug.Log("[JourneyManager] Cleared save for new app version: " + appVersion);
         }
 
         #region Stage Loading

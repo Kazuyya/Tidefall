@@ -1,0 +1,127 @@
+Running Android Gradle Build Pre-Processor.
+UnityEngine.Debug:Log (object)
+GoogleMobileAds.Editor.AndroidBuildPreProcessor:ApplyBuildSettings (UnityEditor.Build.Reporting.BuildReport) (at Assets/GoogleMobileAds/Editor/AndroidBuildPreProcessor.cs:60)
+GoogleMobileAds.Editor.AndroidBuildPreProcessor:OnPreprocessBuild (UnityEditor.Build.Reporting.BuildReport) (at Assets/GoogleMobileAds/Editor/AndroidBuildPreProcessor.cs:54)
+UnityEditor.EditorApplication:Internal_CallDelayFunctions ()
+
+Verified Minimum API Level is >= 23.
+UnityEngine.Debug:Log (object)
+GoogleMobileAds.Editor.AndroidBuildPreProcessor:ApplyBuildSettings (UnityEditor.Build.Reporting.BuildReport) (at Assets/GoogleMobileAds/Editor/AndroidBuildPreProcessor.cs:70)
+GoogleMobileAds.Editor.AndroidBuildPreProcessor:OnPreprocessBuild (UnityEditor.Build.Reporting.BuildReport) (at Assets/GoogleMobileAds/Editor/AndroidBuildPreProcessor.cs:54)
+UnityEditor.EditorApplication:Internal_CallDelayFunctions ()
+
+Verified mainTemplate.gradle.
+UnityEngine.Debug:Log (object)
+GoogleMobileAds.Editor.AndroidBuildPreProcessor:EnsureGradleFileExists (string) (at Assets/GoogleMobileAds/Editor/AndroidBuildPreProcessor.cs:167)
+GoogleMobileAds.Editor.AndroidBuildPreProcessor:ApplyBuildSettings (UnityEditor.Build.Reporting.BuildReport) (at Assets/GoogleMobileAds/Editor/AndroidBuildPreProcessor.cs:88)
+GoogleMobileAds.Editor.AndroidBuildPreProcessor:OnPreprocessBuild (UnityEditor.Build.Reporting.BuildReport) (at Assets/GoogleMobileAds/Editor/AndroidBuildPreProcessor.cs:54)
+UnityEditor.EditorApplication:Internal_CallDelayFunctions ()
+
+Verified gradleTemplate.properties.
+UnityEngine.Debug:Log (object)
+GoogleMobileAds.Editor.AndroidBuildPreProcessor:EnsureGradleFileExists (string) (at Assets/GoogleMobileAds/Editor/AndroidBuildPreProcessor.cs:167)
+GoogleMobileAds.Editor.AndroidBuildPreProcessor:ApplyBuildSettings (UnityEditor.Build.Reporting.BuildReport) (at Assets/GoogleMobileAds/Editor/AndroidBuildPreProcessor.cs:91)
+GoogleMobileAds.Editor.AndroidBuildPreProcessor:OnPreprocessBuild (UnityEditor.Build.Reporting.BuildReport) (at Assets/GoogleMobileAds/Editor/AndroidBuildPreProcessor.cs:54)
+UnityEditor.EditorApplication:Internal_CallDelayFunctions ()
+
+Resolving Android Gradle dependencies.
+UnityEngine.Debug:Log (object)
+GoogleMobileAds.Editor.AndroidBuildPreProcessor:ApplyBuildSettings (UnityEditor.Build.Reporting.BuildReport) (at Assets/GoogleMobileAds/Editor/AndroidBuildPreProcessor.cs:120)
+GoogleMobileAds.Editor.AndroidBuildPreProcessor:OnPreprocessBuild (UnityEditor.Build.Reporting.BuildReport) (at Assets/GoogleMobileAds/Editor/AndroidBuildPreProcessor.cs:54)
+UnityEditor.EditorApplication:Internal_CallDelayFunctions ()
+
+Android Build Pre-Processor finished.
+UnityEngine.Debug:Log (object)
+GoogleMobileAds.Editor.AndroidBuildPreProcessor:ApplyBuildSettings (UnityEditor.Build.Reporting.BuildReport) (at Assets/GoogleMobileAds/Editor/AndroidBuildPreProcessor.cs:122)
+GoogleMobileAds.Editor.AndroidBuildPreProcessor:OnPreprocessBuild (UnityEditor.Build.Reporting.BuildReport) (at Assets/GoogleMobileAds/Editor/AndroidBuildPreProcessor.cs:54)
+UnityEditor.EditorApplication:Internal_CallDelayFunctions ()
+
+Custom Gradle template at 'Assets/Plugins/Android\mainTemplate.gradle' has been detected without the required ndkVersion property. This property needs to be set explicitly starting from Android Gradle Plugin 8.3. The default ndkVersion will be automatically added.
+UnityEditor.EditorApplication:Internal_CallDelayFunctions ()
+
+You are making an Android IL2CPP build, but it does not have native 64-bit support.
+It is recommended to enable ARM64 in Player Settings: Target Architecture in to natively support 64-bit devices.
+UnityEditor.EditorApplication:Internal_CallDelayFunctions ()
+
+Assets\Content\Scripts\Runtime\Ads\AdShowOnMenuReturn.cs(22,17): warning CS0618: 'Object.FindObjectOfType<T>()' is obsolete: 'Object.FindObjectOfType has been deprecated. Use Object.FindFirstObjectByType instead or if finding any instance is acceptable the faster Object.FindAnyObjectByType'
+
+Assets\Content\Scripts\Runtime\Camera\TargetLockCameraController.cs(147,35): warning CS0618: 'Object.FindObjectOfType<T>()' is obsolete: 'Object.FindObjectOfType has been deprecated. Use Object.FindFirstObjectByType instead or if finding any instance is acceptable the faster Object.FindAnyObjectByType'
+
+Assets\Content\Scripts\Runtime\Effects\Manager\CharacterEffectManager.cs(25,33): warning CS0618: 'Object.FindObjectOfType<T>()' is obsolete: 'Object.FindObjectOfType has been deprecated. Use Object.FindFirstObjectByType instead or if finding any instance is acceptable the faster Object.FindAnyObjectByType'
+
+Assets\Content\Scripts\Runtime\Camera\TargetLockCameraController.cs(193,34): warning CS0618: 'Object.FindObjectOfType<T>()' is obsolete: 'Object.FindObjectOfType has been deprecated. Use Object.FindFirstObjectByType instead or if finding any instance is acceptable the faster Object.FindAnyObjectByType'
+
+Assets\Content\Scripts\Runtime\Camera\TargetLockCameraController.cs(196,38): warning CS0618: 'Object.FindObjectOfType<T>()' is obsolete: 'Object.FindObjectOfType has been deprecated. Use Object.FindFirstObjectByType instead or if finding any instance is acceptable the faster Object.FindAnyObjectByType'
+
+Assets\Content\Scripts\Runtime\Camera\TargetLockCameraController.cs(206,61): warning CS0618: 'Object.FindObjectOfType<T>()' is obsolete: 'Object.FindObjectOfType has been deprecated. Use Object.FindFirstObjectByType instead or if finding any instance is acceptable the faster Object.FindAnyObjectByType'
+
+Assets\Content\Scripts\Runtime\Camera\TargetLockCameraController.cs(214,47): warning CS0618: 'Object.FindObjectsOfType<T>()' is obsolete: 'Object.FindObjectsOfType has been deprecated. Use Object.FindObjectsByType instead which lets you decide whether you need the results sorted or not.  FindObjectsOfType sorts the results by InstanceID but if you do not need this using FindObjectSortMode.None is considerably faster.'
+
+Assets\Content\Scripts\Runtime\Character Controller\AutoAimController.cs(54,37): warning CS0618: 'Object.FindObjectOfType<T>()' is obsolete: 'Object.FindObjectOfType has been deprecated. Use Object.FindFirstObjectByType instead or if finding any instance is acceptable the faster Object.FindAnyObjectByType'
+
+Assets\Content\Scripts\Runtime\Character Controller\AutoAimController.cs(72,41): warning CS0618: 'Object.FindObjectOfType<T>()' is obsolete: 'Object.FindObjectOfType has been deprecated. Use Object.FindFirstObjectByType instead or if finding any instance is acceptable the faster Object.FindAnyObjectByType'
+
+Assets\Content\Scripts\Runtime\Camera\TargetLockCameraController.cs(386,111): warning CS0618: 'Object.FindObjectOfType<T>()' is obsolete: 'Object.FindObjectOfType has been deprecated. Use Object.FindFirstObjectByType instead or if finding any instance is acceptable the faster Object.FindAnyObjectByType'
+
+Assets\Content\Scripts\Runtime\Camera\TargetLockCameraController.cs(396,42): warning CS0618: 'Object.FindObjectOfType<T>()' is obsolete: 'Object.FindObjectOfType has been deprecated. Use Object.FindFirstObjectByType instead or if finding any instance is acceptable the faster Object.FindAnyObjectByType'
+
+Assets\Content\Scripts\Runtime\Managers\Settings\SettingsManager.cs(27,33): warning CS0618: 'Object.FindObjectOfType<T>()' is obsolete: 'Object.FindObjectOfType has been deprecated. Use Object.FindFirstObjectByType instead or if finding any instance is acceptable the faster Object.FindAnyObjectByType'
+
+Assets\Content\Scripts\Runtime\Managers\GameplayManager.cs(212,27): warning CS0618: 'Object.FindObjectOfType<T>()' is obsolete: 'Object.FindObjectOfType has been deprecated. Use Object.FindFirstObjectByType instead or if finding any instance is acceptable the faster Object.FindAnyObjectByType'
+
+Assets\Content\Scripts\Runtime\Managers\CanvasManager.cs(50,80): warning CS0618: 'Object.FindObjectOfType<T>()' is obsolete: 'Object.FindObjectOfType has been deprecated. Use Object.FindFirstObjectByType instead or if finding any instance is acceptable the faster Object.FindAnyObjectByType'
+
+Assets\Content\Scripts\Runtime\Managers\Journey\JourneyManager.cs(230,32): warning CS0618: 'Object.FindObjectsOfType<T>()' is obsolete: 'Object.FindObjectsOfType has been deprecated. Use Object.FindObjectsByType instead which lets you decide whether you need the results sorted or not.  FindObjectsOfType sorts the results by InstanceID but if you do not need this using FindObjectSortMode.None is considerably faster.'
+
+Assets\Content\Scripts\Runtime\Camera\TargetLockCameraController.cs(574,37): warning CS0618: 'Object.FindObjectsOfType<T>(bool)' is obsolete: 'Object.FindObjectsOfType has been deprecated. Use Object.FindObjectsByType instead which lets you decide whether you need the results sorted or not.  FindObjectsOfType sorts the results by InstanceID but if you do not need this using FindObjectSortMode.None is considerably faster.'
+
+Assets\Content\Scripts\Runtime\Managers\GameplayManager.cs(271,25): warning CS0618: 'Object.FindObjectOfType<T>()' is obsolete: 'Object.FindObjectOfType has been deprecated. Use Object.FindFirstObjectByType instead or if finding any instance is acceptable the faster Object.FindAnyObjectByType'
+
+Assets\Content\Scripts\Runtime\Managers\Journey\JourneyManager.cs(245,32): warning CS0618: 'Object.FindObjectsOfType<T>()' is obsolete: 'Object.FindObjectsOfType has been deprecated. Use Object.FindObjectsByType instead which lets you decide whether you need the results sorted or not.  FindObjectsOfType sorts the results by InstanceID but if you do not need this using FindObjectSortMode.None is considerably faster.'
+
+Assets\Content\Scripts\Runtime\Managers\GameplayManager.cs(292,32): warning CS0618: 'Object.FindObjectOfType<T>()' is obsolete: 'Object.FindObjectOfType has been deprecated. Use Object.FindFirstObjectByType instead or if finding any instance is acceptable the faster Object.FindAnyObjectByType'
+
+Assets\Content\Scripts\Runtime\Managers\Journey\JourneyManager.cs(298,26): warning CS0618: 'Object.FindObjectOfType<T>()' is obsolete: 'Object.FindObjectOfType has been deprecated. Use Object.FindFirstObjectByType instead or if finding any instance is acceptable the faster Object.FindAnyObjectByType'
+
+Assets\Content\Scripts\Runtime\Managers\Journey\JourneyManager.cs(376,27): warning CS0618: 'Object.FindObjectOfType<T>()' is obsolete: 'Object.FindObjectOfType has been deprecated. Use Object.FindFirstObjectByType instead or if finding any instance is acceptable the faster Object.FindAnyObjectByType'
+
+Assets\Content\Scripts\Runtime\Managers\GameplayManager.cs(363,25): warning CS0618: 'Object.FindObjectsOfType<T>()' is obsolete: 'Object.FindObjectsOfType has been deprecated. Use Object.FindObjectsByType instead which lets you decide whether you need the results sorted or not.  FindObjectsOfType sorts the results by InstanceID but if you do not need this using FindObjectSortMode.None is considerably faster.'
+
+Assets\Content\Scripts\Runtime\Managers\Journey\JourneyManager.cs(412,27): warning CS0618: 'Object.FindObjectOfType<T>()' is obsolete: 'Object.FindObjectOfType has been deprecated. Use Object.FindFirstObjectByType instead or if finding any instance is acceptable the faster Object.FindAnyObjectByType'
+
+Assets\Content\Scripts\Runtime\Managers\CanvasManager.cs(153,35): warning CS0618: 'Object.FindObjectsOfType<T>(bool)' is obsolete: 'Object.FindObjectsOfType has been deprecated. Use Object.FindObjectsByType instead which lets you decide whether you need the results sorted or not.  FindObjectsOfType sorts the results by InstanceID but if you do not need this using FindObjectSortMode.None is considerably faster.'
+
+Assets\Content\Scripts\Runtime\Helpers\Helper.cs(502,28): warning CS0618: 'Object.FindObjectsOfType<T>(bool)' is obsolete: 'Object.FindObjectsOfType has been deprecated. Use Object.FindObjectsByType instead which lets you decide whether you need the results sorted or not.  FindObjectsOfType sorts the results by InstanceID but if you do not need this using FindObjectSortMode.None is considerably faster.'
+
+Assets\Content\Scripts\Runtime\Managers\SceneManagement\LoadingManager.cs(283,19): warning CS0618: 'Object.FindObjectOfType<T>(bool)' is obsolete: 'Object.FindObjectOfType has been deprecated. Use Object.FindFirstObjectByType instead or if finding any instance is acceptable the faster Object.FindAnyObjectByType'
+
+Assets\Content\Scripts\Runtime\Managers\Journey\JourneyManager.cs(502,28): warning CS0618: 'Object.FindObjectsOfType<T>()' is obsolete: 'Object.FindObjectsOfType has been deprecated. Use Object.FindObjectsByType instead which lets you decide whether you need the results sorted or not.  FindObjectsOfType sorts the results by InstanceID but if you do not need this using FindObjectSortMode.None is considerably faster.'
+
+Assets\Content\Scripts\Runtime\Managers\SceneManagement\LoadingManager.cs(413,26): warning CS0618: 'Object.FindObjectOfType<T>()' is obsolete: 'Object.FindObjectOfType has been deprecated. Use Object.FindFirstObjectByType instead or if finding any instance is acceptable the faster Object.FindAnyObjectByType'
+
+Assets\Content\Scripts\Runtime\Managers\CanvasManager.cs(342,84): warning CS0618: 'Object.FindObjectOfType<T>()' is obsolete: 'Object.FindObjectOfType has been deprecated. Use Object.FindFirstObjectByType instead or if finding any instance is acceptable the faster Object.FindAnyObjectByType'
+
+Assets\Content\Scripts\Runtime\Managers\SceneManagement\LoadingManager.cs(442,28): warning CS0618: 'Object.FindObjectsOfType<T>(bool)' is obsolete: 'Object.FindObjectsOfType has been deprecated. Use Object.FindObjectsByType instead which lets you decide whether you need the results sorted or not.  FindObjectsOfType sorts the results by InstanceID but if you do not need this using FindObjectSortMode.None is considerably faster.'
+
+Assets\Content\Scripts\Runtime\Managers\GameplayManager.cs(576,30): warning CS0618: 'Object.FindObjectOfType<T>()' is obsolete: 'Object.FindObjectOfType has been deprecated. Use Object.FindFirstObjectByType instead or if finding any instance is acceptable the faster Object.FindAnyObjectByType'
+
+Assets\Content\Scripts\Runtime\Effects\Manager\CharacterEffectManager.cs(1200,23): warning CS0618: 'Object.FindObjectsOfType<T>(bool)' is obsolete: 'Object.FindObjectsOfType has been deprecated. Use Object.FindObjectsByType instead which lets you decide whether you need the results sorted or not.  FindObjectsOfType sorts the results by InstanceID but if you do not need this using FindObjectSortMode.None is considerably faster.'
+
+Assets\Content\Scripts\Runtime\Character Controller\AutoAimController.cs(25,39): warning CS0414: The field 'AutoAimController.showDebugGizmos' is assigned but its value is never used
+
+Assets\Content\Scripts\Runtime\Camera\TargetLockCameraController.cs(44,39): warning CS0414: The field 'TargetLockCameraController.showDebugGizmo' is assigned but its value is never used
+
+Game scripts or other custom code contains OnMouse_ event handlers. Presence of such handlers might impact performance on handheld devices.
+UnityEditor.EditorApplication:Internal_CallDelayFunctions ()
+
+There were some warnings while validating the gradle project in 'C:\Users\Lenovo\Unity\Unity Project\LittleHeroJourney_\Library\Bee\Android\Prj\IL2CPP\Gradle':
+ 'unityLibrary\build.gradle' is missing 'common.gradle' include.
+
+
+Application "C:/Users/Lenovo/Unity/Unity Build/Tidefall/Tidefall.apk" installed to device "hub6zt6t9hjr9ldu [Redmi Note 8 Pro]".
+
+Launching application "com.DefaultCompany.TideFall/com.unity3d.player.UnityPlayerActivity" on device "hub6zt6t9hjr9ldu [Redmi Note 8 Pro]".
+
+Build completed with a result of 'Succeeded' in 57 seconds (56705 ms) [3/31/2026 11:58:57 AM -> 3/31/2026 11:59:54 AM, 56s]
+UnityEditor.EditorApplication:Internal_CallDelayFunctions ()
+

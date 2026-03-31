@@ -8,6 +8,7 @@ namespace LittleHeroJourney
         [Header("Interstitial")]
         public string androidInterstitialUnitId;
         public string iosInterstitialUnitId;
+        public bool useTestInterstitial = true;
         public float showDelayAfterLoadingSeconds = 1f;
         public bool enableDebugLogs = true;
 

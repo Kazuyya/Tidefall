@@ -19,10 +19,15 @@ namespace LittleHeroJourney
         private static void Bootstrap()
         {
             if (_bootstrapped) return;
-            _bootstrapped = true;
+            if (Object.FindObjectOfType<AdShowOnMenuReturn>() != null)
+            {
+                _bootstrapped = true;
+                return;
+            }
             var go = new GameObject("AdShowOnMenuReturn");
             Object.DontDestroyOnLoad(go);
             go.AddComponent<AdShowOnMenuReturn>();
+            _bootstrapped = true;
         }
 
         private void OnEnable()
