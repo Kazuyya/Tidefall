@@ -1,562 +1,69 @@
-[GameManager] Initialized as singleton. CanvasManager is on same GameObject.
+Running Android Gradle Build Pre-Processor.
 UnityEngine.Debug:Log (object)
-LittleHeroJourney.GameManager:Awake () (at Assets/Content/Scripts/Runtime/Managers/GameManager.cs:60)
+GoogleMobileAds.Editor.AndroidBuildPreProcessor:ApplyBuildSettings (UnityEditor.Build.Reporting.BuildReport) (at Assets/GoogleMobileAds/Editor/AndroidBuildPreProcessor.cs:60)
+GoogleMobileAds.Editor.AndroidBuildPreProcessor:OnPreprocessBuild (UnityEditor.Build.Reporting.BuildReport) (at Assets/GoogleMobileAds/Editor/AndroidBuildPreProcessor.cs:54)
+UnityEngine.GUIUtility:ProcessEvent (int,intptr,bool&)
 
-[GameplayManager] Cinemachine Camera NOT found in this scene.
-UnityEngine.Debug:LogWarning (object)
-LittleHeroJourney.GameplayManager:FindCinemachineCamera () (at Assets/Content/Scripts/Runtime/Managers/GameplayManager.cs:277)
-LittleHeroJourney.GameplayManager:FindReferences () (at Assets/Content/Scripts/Runtime/Managers/GameplayManager.cs:244)
-LittleHeroJourney.GameplayManager:Start () (at Assets/Content/Scripts/Runtime/Managers/GameplayManager.cs:94)
-
-[GameplayManager] Player Controller NOT found in this scene.
-UnityEngine.Debug:LogWarning (object)
-LittleHeroJourney.GameplayManager:FindPlayer () (at Assets/Content/Scripts/Runtime/Managers/GameplayManager.cs:297)
-LittleHeroJourney.GameplayManager:FindReferences () (at Assets/Content/Scripts/Runtime/Managers/GameplayManager.cs:245)
-LittleHeroJourney.GameplayManager:Start () (at Assets/Content/Scripts/Runtime/Managers/GameplayManager.cs:94)
-
-[GameplayManager] No encounter spawner found in this scene.
-UnityEngine.Debug:LogWarning (object)
-LittleHeroJourney.GameplayManager:FindEncounterZones () (at Assets/Content/Scripts/Runtime/Managers/GameplayManager.cs:362)
-LittleHeroJourney.GameplayManager:FindReferences () (at Assets/Content/Scripts/Runtime/Managers/GameplayManager.cs:246)
-LittleHeroJourney.GameplayManager:Start () (at Assets/Content/Scripts/Runtime/Managers/GameplayManager.cs:94)
-
-[GameplayManager] FindReferences completed.
-UnityEngine.Debug:Log (object)
-LittleHeroJourney.GameplayManager:FindReferences () (at Assets/Content/Scripts/Runtime/Managers/GameplayManager.cs:247)
-LittleHeroJourney.GameplayManager:Start () (at Assets/Content/Scripts/Runtime/Managers/GameplayManager.cs:94)
-
-[SceneManager] GoToId: currentId=, targetId=MainMenu, useLoading=True, hasLoadingManager=True
-UnityEngine.Debug:Log (object)
-LittleHeroJourney.SceneManager:GoToId (string) (at Assets/Content/Scripts/Runtime/Managers/SceneManagement/SceneManager.cs:99)
-LittleHeroJourney.SplashScreenManager:OnSequenceComplete () (at Assets/Content/Scripts/SplashScreen Manager/Runtime/SplashScreenManager.cs:125)
-DG.Tweening.Tween:OnTweenCallback (DG.Tweening.TweenCallback,DG.Tweening.Tween) (at D:/DG/_Develop/__UNITY_ASSETS/_Demigiant/__DOTween/_DOTween.Assembly/DOTween/Tween.cs:298)
-DG.Tweening.Sequence:ApplyInternalCycle (DG.Tweening.Sequence,single,single,DG.Tweening.Core.Enums.UpdateMode,bool,bool,bool) (at D:/DG/_Develop/__UNITY_ASSETS/_Demigiant/__DOTween/_DOTween.Assembly/DOTween/Sequence.cs:353)
-DG.Tweening.Sequence:DoApplyTween (DG.Tweening.Sequence,single,int,int,bool,DG.Tweening.Core.Enums.UpdateMode) (at D:/DG/_Develop/__UNITY_ASSETS/_Demigiant/__DOTween/_DOTween.Assembly/DOTween/Sequence.cs:252)
-DG.Tweening.Sequence:ApplyTween (single,int,int,bool,DG.Tweening.Core.Enums.UpdateMode,DG.Tweening.Core.Enums.UpdateNotice) (at D:/DG/_Develop/__UNITY_ASSETS/_Demigiant/__DOTween/_DOTween.Assembly/DOTween/Sequence.cs:166)
-DG.Tweening.Tween:DoGoto (DG.Tweening.Tween,single,int,DG.Tweening.Core.Enums.UpdateMode) (at D:/DG/_Develop/__UNITY_ASSETS/_Demigiant/__DOTween/_DOTween.Assembly/DOTween/Tween.cs:266)
-DG.Tweening.Core.TweenManager:Update (DG.Tweening.Tween,single,single,bool) (at D:/DG/_Develop/__UNITY_ASSETS/_Demigiant/__DOTween/_DOTween.Assembly/DOTween/Core/TweenManager.cs:569)
-DG.Tweening.Core.TweenManager:Update (DG.Tweening.UpdateType,single,single) (at D:/DG/_Develop/__UNITY_ASSETS/_Demigiant/__DOTween/_DOTween.Assembly/DOTween/Core/TweenManager.cs:417)
-DG.Tweening.Core.DOTweenComponent:Update () (at D:/DG/_Develop/__UNITY_ASSETS/_Demigiant/__DOTween/_DOTween.Assembly/DOTween/Core/DOTweenComponent.cs:75)
-
-[LoadingManager] LoadSceneSequence: Starting for scene 'Assets/Content/Scenes/Fix Scene/Scene Flow/Main Menu/MainMenu.unity'
-UnityEngine.Debug:Log (object)
-LittleHeroJourney.LoadingManager/<LoadSceneSequence>d__29:MoveNext () (at Assets/Content/Scripts/Runtime/Managers/SceneManagement/LoadingManager.cs:74)
-UnityEngine.MonoBehaviour:StartCoroutine (System.Collections.IEnumerator)
-LittleHeroJourney.LoadingManager:LoadSceneWithLoading (string,UnityEngine.SceneManagement.LoadSceneMode,single,System.Action,bool) (at Assets/Content/Scripts/Runtime/Managers/SceneManagement/LoadingManager.cs:69)
-LittleHeroJourney.SceneManager:GoToId (string) (at Assets/Content/Scripts/Runtime/Managers/SceneManagement/SceneManager.cs:105)
-LittleHeroJourney.SplashScreenManager:OnSequenceComplete () (at Assets/Content/Scripts/SplashScreen Manager/Runtime/SplashScreenManager.cs:125)
-DG.Tweening.Tween:OnTweenCallback (DG.Tweening.TweenCallback,DG.Tweening.Tween) (at D:/DG/_Develop/__UNITY_ASSETS/_Demigiant/__DOTween/_DOTween.Assembly/DOTween/Tween.cs:298)
-DG.Tweening.Sequence:ApplyInternalCycle (DG.Tweening.Sequence,single,single,DG.Tweening.Core.Enums.UpdateMode,bool,bool,bool) (at D:/DG/_Develop/__UNITY_ASSETS/_Demigiant/__DOTween/_DOTween.Assembly/DOTween/Sequence.cs:353)
-DG.Tweening.Sequence:DoApplyTween (DG.Tweening.Sequence,single,int,int,bool,DG.Tweening.Core.Enums.UpdateMode) (at D:/DG/_Develop/__UNITY_ASSETS/_Demigiant/__DOTween/_DOTween.Assembly/DOTween/Sequence.cs:252)
-DG.Tweening.Sequence:ApplyTween (single,int,int,bool,DG.Tweening.Core.Enums.UpdateMode,DG.Tweening.Core.Enums.UpdateNotice) (at D:/DG/_Develop/__UNITY_ASSETS/_Demigiant/__DOTween/_DOTween.Assembly/DOTween/Sequence.cs:166)
-DG.Tweening.Tween:DoGoto (DG.Tweening.Tween,single,int,DG.Tweening.Core.Enums.UpdateMode) (at D:/DG/_Develop/__UNITY_ASSETS/_Demigiant/__DOTween/_DOTween.Assembly/DOTween/Tween.cs:266)
-DG.Tweening.Core.TweenManager:Update (DG.Tweening.Tween,single,single,bool) (at D:/DG/_Develop/__UNITY_ASSETS/_Demigiant/__DOTween/_DOTween.Assembly/DOTween/Core/TweenManager.cs:569)
-DG.Tweening.Core.TweenManager:Update (DG.Tweening.UpdateType,single,single) (at D:/DG/_Develop/__UNITY_ASSETS/_Demigiant/__DOTween/_DOTween.Assembly/DOTween/Core/TweenManager.cs:417)
-DG.Tweening.Core.DOTweenComponent:Update () (at D:/DG/_Develop/__UNITY_ASSETS/_Demigiant/__DOTween/_DOTween.Assembly/DOTween/Core/DOTweenComponent.cs:75)
-
-[LoadingManager] LoadSceneSequence: Showing loading scene...
-UnityEngine.Debug:Log (object)
-LittleHeroJourney.LoadingManager/<OpenPhaseRoutine>d__30:MoveNext () (at Assets/Content/Scripts/Runtime/Managers/SceneManagement/LoadingManager.cs:156)
-UnityEngine.MonoBehaviour:StartCoroutine (System.Collections.IEnumerator)
-LittleHeroJourney.LoadingManager:LoadSceneWithLoading (string,UnityEngine.SceneManagement.LoadSceneMode,single,System.Action,bool) (at Assets/Content/Scripts/Runtime/Managers/SceneManagement/LoadingManager.cs:69)
-LittleHeroJourney.SceneManager:GoToId (string) (at Assets/Content/Scripts/Runtime/Managers/SceneManagement/SceneManager.cs:105)
-LittleHeroJourney.SplashScreenManager:OnSequenceComplete () (at Assets/Content/Scripts/SplashScreen Manager/Runtime/SplashScreenManager.cs:125)
-DG.Tweening.Tween:OnTweenCallback (DG.Tweening.TweenCallback,DG.Tweening.Tween) (at D:/DG/_Develop/__UNITY_ASSETS/_Demigiant/__DOTween/_DOTween.Assembly/DOTween/Tween.cs:298)
-DG.Tweening.Sequence:ApplyInternalCycle (DG.Tweening.Sequence,single,single,DG.Tweening.Core.Enums.UpdateMode,bool,bool,bool) (at D:/DG/_Develop/__UNITY_ASSETS/_Demigiant/__DOTween/_DOTween.Assembly/DOTween/Sequence.cs:353)
-DG.Tweening.Sequence:DoApplyTween (DG.Tweening.Sequence,single,int,int,bool,DG.Tweening.Core.Enums.UpdateMode) (at D:/DG/_Develop/__UNITY_ASSETS/_Demigiant/__DOTween/_DOTween.Assembly/DOTween/Sequence.cs:252)
-DG.Tweening.Sequence:ApplyTween (single,int,int,bool,DG.Tweening.Core.Enums.UpdateMode,DG.Tweening.Core.Enums.UpdateNotice) (at D:/DG/_Develop/__UNITY_ASSETS/_Demigiant/__DOTween/_DOTween.Assembly/DOTween/Sequence.cs:166)
-DG.Tweening.Tween:DoGoto (DG.Tweening.Tween,single,int,DG.Tweening.Core.Enums.UpdateMode) (at D:/DG/_Develop/__UNITY_ASSETS/_Demigiant/__DOTween/_DOTween.Assembly/DOTween/Tween.cs:266)
-DG.Tweening.Core.TweenManager:Update (DG.Tweening.Tween,single,single,bool) (at D:/DG/_Develop/__UNITY_ASSETS/_Demigiant/__DOTween/_DOTween.Assembly/DOTween/Core/TweenManager.cs:569)
-DG.Tweening.Core.TweenManager:Update (DG.Tweening.UpdateType,single,single) (at D:/DG/_Develop/__UNITY_ASSETS/_Demigiant/__DOTween/_DOTween.Assembly/DOTween/Core/TweenManager.cs:417)
-DG.Tweening.Core.DOTweenComponent:Update () (at D:/DG/_Develop/__UNITY_ASSETS/_Demigiant/__DOTween/_DOTween.Assembly/DOTween/Core/DOTweenComponent.cs:75)
-
-[LoadingManager] ShowLoadingSceneRoutine: Starting...
-UnityEngine.Debug:Log (object)
-LittleHeroJourney.LoadingManager/<ShowLoadingSceneRoutine>d__34:MoveNext () (at Assets/Content/Scripts/Runtime/Managers/SceneManagement/LoadingManager.cs:228)
-UnityEngine.MonoBehaviour:StartCoroutine (System.Collections.IEnumerator)
-LittleHeroJourney.LoadingManager:LoadSceneWithLoading (string,UnityEngine.SceneManagement.LoadSceneMode,single,System.Action,bool) (at Assets/Content/Scripts/Runtime/Managers/SceneManagement/LoadingManager.cs:69)
-LittleHeroJourney.SceneManager:GoToId (string) (at Assets/Content/Scripts/Runtime/Managers/SceneManagement/SceneManager.cs:105)
-LittleHeroJourney.SplashScreenManager:OnSequenceComplete () (at Assets/Content/Scripts/SplashScreen Manager/Runtime/SplashScreenManager.cs:125)
-DG.Tweening.Tween:OnTweenCallback (DG.Tweening.TweenCallback,DG.Tweening.Tween) (at D:/DG/_Develop/__UNITY_ASSETS/_Demigiant/__DOTween/_DOTween.Assembly/DOTween/Tween.cs:298)
-DG.Tweening.Sequence:ApplyInternalCycle (DG.Tweening.Sequence,single,single,DG.Tweening.Core.Enums.UpdateMode,bool,bool,bool) (at D:/DG/_Develop/__UNITY_ASSETS/_Demigiant/__DOTween/_DOTween.Assembly/DOTween/Sequence.cs:353)
-DG.Tweening.Sequence:DoApplyTween (DG.Tweening.Sequence,single,int,int,bool,DG.Tweening.Core.Enums.UpdateMode) (at D:/DG/_Develop/__UNITY_ASSETS/_Demigiant/__DOTween/_DOTween.Assembly/DOTween/Sequence.cs:252)
-DG.Tweening.Sequence:ApplyTween (single,int,int,bool,DG.Tweening.Core.Enums.UpdateMode,DG.Tweening.Core.Enums.UpdateNotice) (at D:/DG/_Develop/__UNITY_ASSETS/_Demigiant/__DOTween/_DOTween.Assembly/DOTween/Sequence.cs:166)
-DG.Tweening.Tween:DoGoto (DG.Tweening.Tween,single,int,DG.Tweening.Core.Enums.UpdateMode) (at D:/DG/_Develop/__UNITY_ASSETS/_Demigiant/__DOTween/_DOTween.Assembly/DOTween/Tween.cs:266)
-DG.Tweening.Core.TweenManager:Update (DG.Tweening.Tween,single,single,bool) (at D:/DG/_Develop/__UNITY_ASSETS/_Demigiant/__DOTween/_DOTween.Assembly/DOTween/Core/TweenManager.cs:569)
-DG.Tweening.Core.TweenManager:Update (DG.Tweening.UpdateType,single,single) (at D:/DG/_Develop/__UNITY_ASSETS/_Demigiant/__DOTween/_DOTween.Assembly/DOTween/Core/TweenManager.cs:417)
-DG.Tweening.Core.DOTweenComponent:Update () (at D:/DG/_Develop/__UNITY_ASSETS/_Demigiant/__DOTween/_DOTween.Assembly/DOTween/Core/DOTweenComponent.cs:75)
-
-[LoadingManager] ShowLoadingSceneRoutine: Loading scene from path 'Assets/Content/Scenes/Fix Scene/Scene Flow/Loading/Loading.unity'
-UnityEngine.Debug:Log (object)
-LittleHeroJourney.LoadingManager/<ShowLoadingSceneRoutine>d__34:MoveNext () (at Assets/Content/Scripts/Runtime/Managers/SceneManagement/LoadingManager.cs:245)
-UnityEngine.MonoBehaviour:StartCoroutine (System.Collections.IEnumerator)
-LittleHeroJourney.LoadingManager:LoadSceneWithLoading (string,UnityEngine.SceneManagement.LoadSceneMode,single,System.Action,bool) (at Assets/Content/Scripts/Runtime/Managers/SceneManagement/LoadingManager.cs:69)
-LittleHeroJourney.SceneManager:GoToId (string) (at Assets/Content/Scripts/Runtime/Managers/SceneManagement/SceneManager.cs:105)
-LittleHeroJourney.SplashScreenManager:OnSequenceComplete () (at Assets/Content/Scripts/SplashScreen Manager/Runtime/SplashScreenManager.cs:125)
-DG.Tweening.Tween:OnTweenCallback (DG.Tweening.TweenCallback,DG.Tweening.Tween) (at D:/DG/_Develop/__UNITY_ASSETS/_Demigiant/__DOTween/_DOTween.Assembly/DOTween/Tween.cs:298)
-DG.Tweening.Sequence:ApplyInternalCycle (DG.Tweening.Sequence,single,single,DG.Tweening.Core.Enums.UpdateMode,bool,bool,bool) (at D:/DG/_Develop/__UNITY_ASSETS/_Demigiant/__DOTween/_DOTween.Assembly/DOTween/Sequence.cs:353)
-DG.Tweening.Sequence:DoApplyTween (DG.Tweening.Sequence,single,int,int,bool,DG.Tweening.Core.Enums.UpdateMode) (at D:/DG/_Develop/__UNITY_ASSETS/_Demigiant/__DOTween/_DOTween.Assembly/DOTween/Sequence.cs:252)
-DG.Tweening.Sequence:ApplyTween (single,int,int,bool,DG.Tweening.Core.Enums.UpdateMode,DG.Tweening.Core.Enums.UpdateNotice) (at D:/DG/_Develop/__UNITY_ASSETS/_Demigiant/__DOTween/_DOTween.Assembly/DOTween/Sequence.cs:166)
-DG.Tweening.Tween:DoGoto (DG.Tweening.Tween,single,int,DG.Tweening.Core.Enums.UpdateMode) (at D:/DG/_Develop/__UNITY_ASSETS/_Demigiant/__DOTween/_DOTween.Assembly/DOTween/Tween.cs:266)
-DG.Tweening.Core.TweenManager:Update (DG.Tweening.Tween,single,single,bool) (at D:/DG/_Develop/__UNITY_ASSETS/_Demigiant/__DOTween/_DOTween.Assembly/DOTween/Core/TweenManager.cs:569)
-DG.Tweening.Core.TweenManager:Update (DG.Tweening.UpdateType,single,single) (at D:/DG/_Develop/__UNITY_ASSETS/_Demigiant/__DOTween/_DOTween.Assembly/DOTween/Core/TweenManager.cs:417)
-DG.Tweening.Core.DOTweenComponent:Update () (at D:/DG/_Develop/__UNITY_ASSETS/_Demigiant/__DOTween/_DOTween.Assembly/DOTween/Core/DOTweenComponent.cs:75)
-
-[LoadingManager] ShowLoadingSceneRoutine: Loaded via build index 1
-UnityEngine.Debug:Log (object)
-LittleHeroJourney.LoadingManager/<ShowLoadingSceneRoutine>d__34:MoveNext () (at Assets/Content/Scripts/Runtime/Managers/SceneManagement/LoadingManager.cs:257)
-UnityEngine.MonoBehaviour:StartCoroutine (System.Collections.IEnumerator)
-LittleHeroJourney.LoadingManager:LoadSceneWithLoading (string,UnityEngine.SceneManagement.LoadSceneMode,single,System.Action,bool) (at Assets/Content/Scripts/Runtime/Managers/SceneManagement/LoadingManager.cs:69)
-LittleHeroJourney.SceneManager:GoToId (string) (at Assets/Content/Scripts/Runtime/Managers/SceneManagement/SceneManager.cs:105)
-LittleHeroJourney.SplashScreenManager:OnSequenceComplete () (at Assets/Content/Scripts/SplashScreen Manager/Runtime/SplashScreenManager.cs:125)
-DG.Tweening.Tween:OnTweenCallback (DG.Tweening.TweenCallback,DG.Tweening.Tween) (at D:/DG/_Develop/__UNITY_ASSETS/_Demigiant/__DOTween/_DOTween.Assembly/DOTween/Tween.cs:298)
-DG.Tweening.Sequence:ApplyInternalCycle (DG.Tweening.Sequence,single,single,DG.Tweening.Core.Enums.UpdateMode,bool,bool,bool) (at D:/DG/_Develop/__UNITY_ASSETS/_Demigiant/__DOTween/_DOTween.Assembly/DOTween/Sequence.cs:353)
-DG.Tweening.Sequence:DoApplyTween (DG.Tweening.Sequence,single,int,int,bool,DG.Tweening.Core.Enums.UpdateMode) (at D:/DG/_Develop/__UNITY_ASSETS/_Demigiant/__DOTween/_DOTween.Assembly/DOTween/Sequence.cs:252)
-DG.Tweening.Sequence:ApplyTween (single,int,int,bool,DG.Tweening.Core.Enums.UpdateMode,DG.Tweening.Core.Enums.UpdateNotice) (at D:/DG/_Develop/__UNITY_ASSETS/_Demigiant/__DOTween/_DOTween.Assembly/DOTween/Sequence.cs:166)
-DG.Tweening.Tween:DoGoto (DG.Tweening.Tween,single,int,DG.Tweening.Core.Enums.UpdateMode) (at D:/DG/_Develop/__UNITY_ASSETS/_Demigiant/__DOTween/_DOTween.Assembly/DOTween/Tween.cs:266)
-DG.Tweening.Core.TweenManager:Update (DG.Tweening.Tween,single,single,bool) (at D:/DG/_Develop/__UNITY_ASSETS/_Demigiant/__DOTween/_DOTween.Assembly/DOTween/Core/TweenManager.cs:569)
-DG.Tweening.Core.TweenManager:Update (DG.Tweening.UpdateType,single,single) (at D:/DG/_Develop/__UNITY_ASSETS/_Demigiant/__DOTween/_DOTween.Assembly/DOTween/Core/TweenManager.cs:417)
-DG.Tweening.Core.DOTweenComponent:Update () (at D:/DG/_Develop/__UNITY_ASSETS/_Demigiant/__DOTween/_DOTween.Assembly/DOTween/Core/DOTweenComponent.cs:75)
-
-[LoadingManager] ShowLoadingSceneRoutine: Waiting for async operation...
-UnityEngine.Debug:Log (object)
-LittleHeroJourney.LoadingManager/<ShowLoadingSceneRoutine>d__34:MoveNext () (at Assets/Content/Scripts/Runtime/Managers/SceneManagement/LoadingManager.cs:273)
-UnityEngine.MonoBehaviour:StartCoroutine (System.Collections.IEnumerator)
-LittleHeroJourney.LoadingManager:LoadSceneWithLoading (string,UnityEngine.SceneManagement.LoadSceneMode,single,System.Action,bool) (at Assets/Content/Scripts/Runtime/Managers/SceneManagement/LoadingManager.cs:69)
-LittleHeroJourney.SceneManager:GoToId (string) (at Assets/Content/Scripts/Runtime/Managers/SceneManagement/SceneManager.cs:105)
-LittleHeroJourney.SplashScreenManager:OnSequenceComplete () (at Assets/Content/Scripts/SplashScreen Manager/Runtime/SplashScreenManager.cs:125)
-DG.Tweening.Tween:OnTweenCallback (DG.Tweening.TweenCallback,DG.Tweening.Tween) (at D:/DG/_Develop/__UNITY_ASSETS/_Demigiant/__DOTween/_DOTween.Assembly/DOTween/Tween.cs:298)
-DG.Tweening.Sequence:ApplyInternalCycle (DG.Tweening.Sequence,single,single,DG.Tweening.Core.Enums.UpdateMode,bool,bool,bool) (at D:/DG/_Develop/__UNITY_ASSETS/_Demigiant/__DOTween/_DOTween.Assembly/DOTween/Sequence.cs:353)
-DG.Tweening.Sequence:DoApplyTween (DG.Tweening.Sequence,single,int,int,bool,DG.Tweening.Core.Enums.UpdateMode) (at D:/DG/_Develop/__UNITY_ASSETS/_Demigiant/__DOTween/_DOTween.Assembly/DOTween/Sequence.cs:252)
-DG.Tweening.Sequence:ApplyTween (single,int,int,bool,DG.Tweening.Core.Enums.UpdateMode,DG.Tweening.Core.Enums.UpdateNotice) (at D:/DG/_Develop/__UNITY_ASSETS/_Demigiant/__DOTween/_DOTween.Assembly/DOTween/Sequence.cs:166)
-DG.Tweening.Tween:DoGoto (DG.Tweening.Tween,single,int,DG.Tweening.Core.Enums.UpdateMode) (at D:/DG/_Develop/__UNITY_ASSETS/_Demigiant/__DOTween/_DOTween.Assembly/DOTween/Tween.cs:266)
-DG.Tweening.Core.TweenManager:Update (DG.Tweening.Tween,single,single,bool) (at D:/DG/_Develop/__UNITY_ASSETS/_Demigiant/__DOTween/_DOTween.Assembly/DOTween/Core/TweenManager.cs:569)
-DG.Tweening.Core.TweenManager:Update (DG.Tweening.UpdateType,single,single) (at D:/DG/_Develop/__UNITY_ASSETS/_Demigiant/__DOTween/_DOTween.Assembly/DOTween/Core/TweenManager.cs:417)
-DG.Tweening.Core.DOTweenComponent:Update () (at D:/DG/_Develop/__UNITY_ASSETS/_Demigiant/__DOTween/_DOTween.Assembly/DOTween/Core/DOTweenComponent.cs:75)
-
-[LoadingManager] ShowLoadingSceneRoutine: Loading scene loaded
-UnityEngine.Debug:Log (object)
-LittleHeroJourney.LoadingManager/<ShowLoadingSceneRoutine>d__34:MoveNext () (at Assets/Content/Scripts/Runtime/Managers/SceneManagement/LoadingManager.cs:278)
-UnityEngine.SetupCoroutine:InvokeMoveNext (System.Collections.IEnumerator,intptr)
-
-[LoadingManager] ShowLoadingSceneRoutine: Found LoadingUIController, canvas=null
-UnityEngine.Debug:Log (object)
-LittleHeroJourney.LoadingManager/<ShowLoadingSceneRoutine>d__34:MoveNext () (at Assets/Content/Scripts/Runtime/Managers/SceneManagement/LoadingManager.cs:287)
-UnityEngine.SetupCoroutine:InvokeMoveNext (System.Collections.IEnumerator,intptr)
-
-[LoadingManager] ShowLoadingSceneRoutine: UIController - Name='Canvas - Loading', Active=True, Parent='null'
-UnityEngine.Debug:Log (object)
-LittleHeroJourney.LoadingManager/<ShowLoadingSceneRoutine>d__34:MoveNext () (at Assets/Content/Scripts/Runtime/Managers/SceneManagement/LoadingManager.cs:288)
-UnityEngine.SetupCoroutine:InvokeMoveNext (System.Collections.IEnumerator,intptr)
-
-[LoadingManager] ShowLoadingSceneRoutine: Calling PrepareForOpenImmediate...
-UnityEngine.Debug:Log (object)
-LittleHeroJourney.LoadingManager/<ShowLoadingSceneRoutine>d__34:MoveNext () (at Assets/Content/Scripts/Runtime/Managers/SceneManagement/LoadingManager.cs:298)
-UnityEngine.SetupCoroutine:InvokeMoveNext (System.Collections.IEnumerator,intptr)
-
-[LoadingManager] ShowLoadingSceneRoutine: PrepareForOpenImmediate completed
-UnityEngine.Debug:Log (object)
-LittleHeroJourney.LoadingManager/<ShowLoadingSceneRoutine>d__34:MoveNext () (at Assets/Content/Scripts/Runtime/Managers/SceneManagement/LoadingManager.cs:300)
-UnityEngine.SetupCoroutine:InvokeMoveNext (System.Collections.IEnumerator,intptr)
-
-[LoadingManager] ShowLoadingSceneRoutine: Completed
-UnityEngine.Debug:Log (object)
-LittleHeroJourney.LoadingManager/<ShowLoadingSceneRoutine>d__34:MoveNext () (at Assets/Content/Scripts/Runtime/Managers/SceneManagement/LoadingManager.cs:317)
-UnityEngine.SetupCoroutine:InvokeMoveNext (System.Collections.IEnumerator,intptr)
-
-[LoadingManager] LoadSceneSequence: Loading scene shown
-UnityEngine.Debug:Log (object)
-LittleHeroJourney.LoadingManager/<OpenPhaseRoutine>d__30:MoveNext () (at Assets/Content/Scripts/Runtime/Managers/SceneManagement/LoadingManager.cs:158)
-UnityEngine.SetupCoroutine:InvokeMoveNext (System.Collections.IEnumerator,intptr)
-
-[LoadingManager] LoadSceneSequence: Playing open sequence...
-UnityEngine.Debug:Log (object)
-LittleHeroJourney.LoadingManager/<OpenPhaseRoutine>d__30:MoveNext () (at Assets/Content/Scripts/Runtime/Managers/SceneManagement/LoadingManager.cs:162)
-UnityEngine.SetupCoroutine:InvokeMoveNext (System.Collections.IEnumerator,intptr)
-
-[LoadingManager] LoadSceneSequence: Open sequence completed
-UnityEngine.Debug:Log (object)
-LittleHeroJourney.LoadingManager/<OpenPhaseRoutine>d__30:MoveNext () (at Assets/Content/Scripts/Runtime/Managers/SceneManagement/LoadingManager.cs:164)
-UnityEngine.SetupCoroutine:InvokeMoveNext (System.Collections.IEnumerator,intptr)
-
-[LoadingManager] LoadSceneSequence: Unloading previous scene...
-UnityEngine.Debug:Log (object)
-LittleHeroJourney.LoadingManager/<OpenPhaseRoutine>d__30:MoveNext () (at Assets/Content/Scripts/Runtime/Managers/SceneManagement/LoadingManager.cs:173)
-UnityEngine.SetupCoroutine:InvokeMoveNext (System.Collections.IEnumerator,intptr)
-
-[LoadingManager] LoadSceneSequence: Creating load operation for 'Assets/Content/Scenes/Fix Scene/Scene Flow/Main Menu/MainMenu.unity' with mode Additive
-UnityEngine.Debug:Log (object)
-LittleHeroJourney.LoadingManager/<LoadSceneSequence>d__29:MoveNext () (at Assets/Content/Scripts/Runtime/Managers/SceneManagement/LoadingManager.cs:91)
-UnityEngine.SetupCoroutine:InvokeMoveNext (System.Collections.IEnumerator,intptr)
-
-[LoadingManager] LoadSceneSequence: Scene ready, activating...
-UnityEngine.Debug:Log (object)
-LittleHeroJourney.LoadingManager/<LoadSceneSequence>d__29:MoveNext () (at Assets/Content/Scripts/Runtime/Managers/SceneManagement/LoadingManager.cs:114)
-UnityEngine.SetupCoroutine:InvokeMoveNext (System.Collections.IEnumerator,intptr)
-
-[CanvasManager] Registered Canvas: MainMenu
-UnityEngine.Debug:Log (object)
-LittleHeroJourney.CanvasManager:RegisterCanvas (LittleHeroJourney.UI.GameCanvas) (at Assets/Content/Scripts/Runtime/Managers/CanvasManager.cs:106)
-LittleHeroJourney.UI.GameCanvas:OnEnable () (at Assets/Content/Scripts/Runtime/UI/GameCanvas.cs:58)
-
-[LoadingManager] LoadSceneSequence: Scene loaded
-UnityEngine.Debug:Log (object)
-LittleHeroJourney.LoadingManager/<LoadSceneSequence>d__29:MoveNext () (at Assets/Content/Scripts/Runtime/Managers/SceneManagement/LoadingManager.cs:122)
-UnityEngine.SetupCoroutine:InvokeMoveNext (System.Collections.IEnumerator,intptr)
-
-[LoadingManager] LoadSceneSequence: Setting active scene to 'MainMenu'
-UnityEngine.Debug:Log (object)
-LittleHeroJourney.LoadingManager/<LoadSceneSequence>d__29:MoveNext () (at Assets/Content/Scripts/Runtime/Managers/SceneManagement/LoadingManager.cs:137)
-UnityEngine.SetupCoroutine:InvokeMoveNext (System.Collections.IEnumerator,intptr)
-
-[LoadingManager] LoadSceneSequence: Playing close sequence...
-UnityEngine.Debug:Log (object)
-LittleHeroJourney.LoadingManager/<ClosePhaseRoutine>d__31:MoveNext () (at Assets/Content/Scripts/Runtime/Managers/SceneManagement/LoadingManager.cs:189)
-UnityEngine.SetupCoroutine:InvokeMoveNext (System.Collections.IEnumerator,intptr)
-
-[LoadingManager] PlayCloseSequenceRoutine: UI Controller found, playing close sequence
-UnityEngine.Debug:Log (object)
-LittleHeroJourney.LoadingManager/<ClosePhaseRoutine>d__31:MoveNext () (at Assets/Content/Scripts/Runtime/Managers/SceneManagement/LoadingManager.cs:192)
-UnityEngine.SetupCoroutine:InvokeMoveNext (System.Collections.IEnumerator,intptr)
-
-[LoadingManager] PlayCloseSequenceRoutine: Close sequence completed
-UnityEngine.Debug:Log (object)
-LittleHeroJourney.LoadingManager/<ClosePhaseRoutine>d__31:MoveNext () (at Assets/Content/Scripts/Runtime/Managers/SceneManagement/LoadingManager.cs:194)
-UnityEngine.SetupCoroutine:InvokeMoveNext (System.Collections.IEnumerator,intptr)
-
-[LoadingManager] LoadSceneSequence: Unloading remaining scenes except target...
-UnityEngine.Debug:Log (object)
-LittleHeroJourney.LoadingManager/<ClosePhaseRoutine>d__31:MoveNext () (at Assets/Content/Scripts/Runtime/Managers/SceneManagement/LoadingManager.cs:200)
-UnityEngine.SetupCoroutine:InvokeMoveNext (System.Collections.IEnumerator,intptr)
-
-[LoadingManager] LoadSceneSequence: Hiding loading scene...
-UnityEngine.Debug:Log (object)
-LittleHeroJourney.LoadingManager/<ClosePhaseRoutine>d__31:MoveNext () (at Assets/Content/Scripts/Runtime/Managers/SceneManagement/LoadingManager.cs:203)
-UnityEngine.SetupCoroutine:InvokeMoveNext (System.Collections.IEnumerator,intptr)
-
-[LoadingManager] HideLoadingSceneRoutine: Starting...
-UnityEngine.Debug:Log (object)
-LittleHeroJourney.LoadingManager/<HideLoadingSceneRoutine>d__35:MoveNext () (at Assets/Content/Scripts/Runtime/Managers/SceneManagement/LoadingManager.cs:322)
-UnityEngine.SetupCoroutine:InvokeMoveNext (System.Collections.IEnumerator,intptr)
-
-[LoadingManager] HideLoadingSceneRoutine: Unloading loading scene 'Loading'
-UnityEngine.Debug:Log (object)
-LittleHeroJourney.LoadingManager/<HideLoadingSceneRoutine>d__35:MoveNext () (at Assets/Content/Scripts/Runtime/Managers/SceneManagement/LoadingManager.cs:331)
-UnityEngine.SetupCoroutine:InvokeMoveNext (System.Collections.IEnumerator,intptr)
-
-[LoadingManager] HideLoadingSceneRoutine: Loading scene unloaded
-UnityEngine.Debug:Log (object)
-LittleHeroJourney.LoadingManager/<HideLoadingSceneRoutine>d__35:MoveNext () (at Assets/Content/Scripts/Runtime/Managers/SceneManagement/LoadingManager.cs:339)
-UnityEngine.SetupCoroutine:InvokeMoveNext (System.Collections.IEnumerator,intptr)
-
-[LoadingManager] HideLoadingSceneRoutine: Completed
-UnityEngine.Debug:Log (object)
-LittleHeroJourney.LoadingManager/<HideLoadingSceneRoutine>d__35:MoveNext () (at Assets/Content/Scripts/Runtime/Managers/SceneManagement/LoadingManager.cs:352)
-UnityEngine.SetupCoroutine:InvokeMoveNext (System.Collections.IEnumerator,intptr)
-
-[LoadingManager] LoadSceneSequence: Completed! Firing LoadingFinished for 'MainMenu'
-UnityEngine.Debug:Log (object)
-LittleHeroJourney.LoadingManager/<LoadSceneSequence>d__29:MoveNext () (at Assets/Content/Scripts/Runtime/Managers/SceneManagement/LoadingManager.cs:144)
-UnityEngine.SetupCoroutine:InvokeMoveNext (System.Collections.IEnumerator,intptr)
-
-[CanvasManager] SwitchCanvas: from='null' -> to='MainMenu', Mode=WaitOutThenIn, currentActive=null
-UnityEngine.Debug:Log (object)
-LittleHeroJourney.CanvasManager:SwitchCanvas (string,bool) (at Assets/Content/Scripts/Runtime/Managers/CanvasManager.cs:168)
-LittleHeroJourney.UI.GameCanvas:TriggerOpenForScene (string) (at Assets/Content/Scripts/Runtime/UI/GameCanvas.cs:278)
-LittleHeroJourney.UI.GameCanvas:HandleLoadingFinished (string) (at Assets/Content/Scripts/Runtime/UI/GameCanvas.cs:253)
-LittleHeroJourney.GameEventSystem:Publish (LittleHeroJourney.UIActionEvent) (at Assets/Content/Scripts/Runtime/Events/GameEventSystem.cs:97)
-LittleHeroJourney.LoadingManager/<LoadSceneSequence>d__29:MoveNext () (at Assets/Content/Scripts/Runtime/Managers/SceneManagement/LoadingManager.cs:146)
-UnityEngine.SetupCoroutine:InvokeMoveNext (System.Collections.IEnumerator,intptr)
-
-[CanvasManager] No active canvas, direct open: MainMenu
-UnityEngine.Debug:Log (object)
-LittleHeroJourney.CanvasManager:SwitchCanvas (string,bool) (at Assets/Content/Scripts/Runtime/Managers/CanvasManager.cs:173)
-LittleHeroJourney.UI.GameCanvas:TriggerOpenForScene (string) (at Assets/Content/Scripts/Runtime/UI/GameCanvas.cs:278)
-LittleHeroJourney.UI.GameCanvas:HandleLoadingFinished (string) (at Assets/Content/Scripts/Runtime/UI/GameCanvas.cs:253)
-LittleHeroJourney.GameEventSystem:Publish (LittleHeroJourney.UIActionEvent) (at Assets/Content/Scripts/Runtime/Events/GameEventSystem.cs:97)
-LittleHeroJourney.LoadingManager/<LoadSceneSequence>d__29:MoveNext () (at Assets/Content/Scripts/Runtime/Managers/SceneManagement/LoadingManager.cs:146)
-UnityEngine.SetupCoroutine:InvokeMoveNext (System.Collections.IEnumerator,intptr)
-
-[CanvasManager] Open start: MainMenu
-UnityEngine.Debug:Log (object)
-LittleHeroJourney.CanvasManager:HandleCanvasOpenStartByPayload (string) (at Assets/Content/Scripts/Runtime/Managers/CanvasManager.cs:294)
-LittleHeroJourney.GameEventSystem:Publish (LittleHeroJourney.UIActionEvent) (at Assets/Content/Scripts/Runtime/Events/GameEventSystem.cs:97)
-LittleHeroJourney.UI.GameCanvas:Show () (at Assets/Content/Scripts/Runtime/UI/GameCanvas.cs:94)
-LittleHeroJourney.CanvasManager:SwitchCanvas (string,bool) (at Assets/Content/Scripts/Runtime/Managers/CanvasManager.cs:174)
-LittleHeroJourney.UI.GameCanvas:TriggerOpenForScene (string) (at Assets/Content/Scripts/Runtime/UI/GameCanvas.cs:278)
-LittleHeroJourney.UI.GameCanvas:HandleLoadingFinished (string) (at Assets/Content/Scripts/Runtime/UI/GameCanvas.cs:253)
-LittleHeroJourney.GameEventSystem:Publish (LittleHeroJourney.UIActionEvent) (at Assets/Content/Scripts/Runtime/Events/GameEventSystem.cs:97)
-LittleHeroJourney.LoadingManager/<LoadSceneSequence>d__29:MoveNext () (at Assets/Content/Scripts/Runtime/Managers/SceneManagement/LoadingManager.cs:146)
-UnityEngine.SetupCoroutine:InvokeMoveNext (System.Collections.IEnumerator,intptr)
-
-[CanvasManager] Open complete: MainMenu
-UnityEngine.Debug:Log (object)
-LittleHeroJourney.CanvasManager:HandleCanvasOpenCompleteByPayload (string) (at Assets/Content/Scripts/Runtime/Managers/CanvasManager.cs:303)
-LittleHeroJourney.GameEventSystem:Publish (LittleHeroJourney.UIActionEvent) (at Assets/Content/Scripts/Runtime/Events/GameEventSystem.cs:97)
-LittleHeroJourney.UI.GameCanvas/<ShowRoutine>d__20:MoveNext () (at Assets/Content/Scripts/Runtime/UI/GameCanvas.cs:111)
-UnityEngine.SetupCoroutine:InvokeMoveNext (System.Collections.IEnumerator,intptr)
-
-[CanvasManager] Registered Canvas: StorySelector
-UnityEngine.Debug:Log (object)
-LittleHeroJourney.CanvasManager:RegisterCanvas (LittleHeroJourney.UI.GameCanvas) (at Assets/Content/Scripts/Runtime/Managers/CanvasManager.cs:106)
-LittleHeroJourney.CanvasManager:SwitchCanvas (string,bool) (at Assets/Content/Scripts/Runtime/Managers/CanvasManager.cs:145)
-LittleHeroJourney.JourneyManager:OpenJourneySelector () (at Assets/Content/Scripts/Runtime/Managers/Journey/JourneyManager.cs:139)
-LittleHeroJourney.JourneyManager:HandlePlay () (at Assets/Content/Scripts/Runtime/Managers/Journey/JourneyManager.cs:106)
-LittleHeroJourney.GameEventSystem:Publish (LittleHeroJourney.UIActionEvent) (at Assets/Content/Scripts/Runtime/Events/GameEventSystem.cs:90)
-LittleHeroJourney.UI.UIInputConnector:InvokeAction (string) (at Assets/Content/Scripts/Runtime/UI/Input/UIInputConnector.cs:11)
-UnityEngine.EventSystems.EventSystem:Update () (at ./Library/PackageCache/com.unity.ugui@1.0.0/Runtime/EventSystem/EventSystem.cs:530)
-
-[CanvasManager] Auto-discovered and registered canvas: StorySelector
-UnityEngine.Debug:Log (object)
-LittleHeroJourney.CanvasManager:SwitchCanvas (string,bool) (at Assets/Content/Scripts/Runtime/Managers/CanvasManager.cs:146)
-LittleHeroJourney.JourneyManager:OpenJourneySelector () (at Assets/Content/Scripts/Runtime/Managers/Journey/JourneyManager.cs:139)
-LittleHeroJourney.JourneyManager:HandlePlay () (at Assets/Content/Scripts/Runtime/Managers/Journey/JourneyManager.cs:106)
-LittleHeroJourney.GameEventSystem:Publish (LittleHeroJourney.UIActionEvent) (at Assets/Content/Scripts/Runtime/Events/GameEventSystem.cs:90)
-LittleHeroJourney.UI.UIInputConnector:InvokeAction (string) (at Assets/Content/Scripts/Runtime/UI/Input/UIInputConnector.cs:11)
-UnityEngine.EventSystems.EventSystem:Update () (at ./Library/PackageCache/com.unity.ugui@1.0.0/Runtime/EventSystem/EventSystem.cs:530)
-
-[CanvasManager] Duplicate canvas ID registered: StorySelector. Replacing old instance.
-UnityEngine.Debug:LogWarning (object)
-LittleHeroJourney.CanvasManager:RegisterCanvas (LittleHeroJourney.UI.GameCanvas) (at Assets/Content/Scripts/Runtime/Managers/CanvasManager.cs:96)
-LittleHeroJourney.CanvasManager:SwitchCanvas (string,bool) (at Assets/Content/Scripts/Runtime/Managers/CanvasManager.cs:145)
-LittleHeroJourney.JourneyManager:OpenJourneySelector () (at Assets/Content/Scripts/Runtime/Managers/Journey/JourneyManager.cs:139)
-LittleHeroJourney.JourneyManager:HandlePlay () (at Assets/Content/Scripts/Runtime/Managers/Journey/JourneyManager.cs:106)
-LittleHeroJourney.GameEventSystem:Publish (LittleHeroJourney.UIActionEvent) (at Assets/Content/Scripts/Runtime/Events/GameEventSystem.cs:90)
-LittleHeroJourney.UI.UIInputConnector:InvokeAction (string) (at Assets/Content/Scripts/Runtime/UI/Input/UIInputConnector.cs:11)
-UnityEngine.EventSystems.EventSystem:Update () (at ./Library/PackageCache/com.unity.ugui@1.0.0/Runtime/EventSystem/EventSystem.cs:530)
-
-[CanvasManager] Registered Canvas: StorySelector
-UnityEngine.Debug:Log (object)
-LittleHeroJourney.CanvasManager:RegisterCanvas (LittleHeroJourney.UI.GameCanvas) (at Assets/Content/Scripts/Runtime/Managers/CanvasManager.cs:106)
-LittleHeroJourney.CanvasManager:SwitchCanvas (string,bool) (at Assets/Content/Scripts/Runtime/Managers/CanvasManager.cs:145)
-LittleHeroJourney.JourneyManager:OpenJourneySelector () (at Assets/Content/Scripts/Runtime/Managers/Journey/JourneyManager.cs:139)
-LittleHeroJourney.JourneyManager:HandlePlay () (at Assets/Content/Scripts/Runtime/Managers/Journey/JourneyManager.cs:106)
-LittleHeroJourney.GameEventSystem:Publish (LittleHeroJourney.UIActionEvent) (at Assets/Content/Scripts/Runtime/Events/GameEventSystem.cs:90)
-LittleHeroJourney.UI.UIInputConnector:InvokeAction (string) (at Assets/Content/Scripts/Runtime/UI/Input/UIInputConnector.cs:11)
-UnityEngine.EventSystems.EventSystem:Update () (at ./Library/PackageCache/com.unity.ugui@1.0.0/Runtime/EventSystem/EventSystem.cs:530)
-
-[CanvasManager] Auto-discovered and registered canvas: StorySelector
-UnityEngine.Debug:Log (object)
-LittleHeroJourney.CanvasManager:SwitchCanvas (string,bool) (at Assets/Content/Scripts/Runtime/Managers/CanvasManager.cs:146)
-LittleHeroJourney.JourneyManager:OpenJourneySelector () (at Assets/Content/Scripts/Runtime/Managers/Journey/JourneyManager.cs:139)
-LittleHeroJourney.JourneyManager:HandlePlay () (at Assets/Content/Scripts/Runtime/Managers/Journey/JourneyManager.cs:106)
-LittleHeroJourney.GameEventSystem:Publish (LittleHeroJourney.UIActionEvent) (at Assets/Content/Scripts/Runtime/Events/GameEventSystem.cs:90)
-LittleHeroJourney.UI.UIInputConnector:InvokeAction (string) (at Assets/Content/Scripts/Runtime/UI/Input/UIInputConnector.cs:11)
-UnityEngine.EventSystems.EventSystem:Update () (at ./Library/PackageCache/com.unity.ugui@1.0.0/Runtime/EventSystem/EventSystem.cs:530)
-
-[CanvasManager] SwitchCanvas: from='MainMenu' -> to='StorySelector', Mode=WaitOutThenIn, currentActive=MainMenu
-UnityEngine.Debug:Log (object)
-LittleHeroJourney.CanvasManager:SwitchCanvas (string,bool) (at Assets/Content/Scripts/Runtime/Managers/CanvasManager.cs:168)
-LittleHeroJourney.JourneyManager:OpenJourneySelector () (at Assets/Content/Scripts/Runtime/Managers/Journey/JourneyManager.cs:139)
-LittleHeroJourney.JourneyManager:HandlePlay () (at Assets/Content/Scripts/Runtime/Managers/Journey/JourneyManager.cs:106)
-LittleHeroJourney.GameEventSystem:Publish (LittleHeroJourney.UIActionEvent) (at Assets/Content/Scripts/Runtime/Events/GameEventSystem.cs:90)
-LittleHeroJourney.UI.UIInputConnector:InvokeAction (string) (at Assets/Content/Scripts/Runtime/UI/Input/UIInputConnector.cs:11)
-UnityEngine.EventSystems.EventSystem:Update () (at ./Library/PackageCache/com.unity.ugui@1.0.0/Runtime/EventSystem/EventSystem.cs:530)
-
-[CanvasManager] Close: MainMenu
-UnityEngine.Debug:Log (object)
-LittleHeroJourney.CanvasManager/<RunTransitionRoutine>d__38:MoveNext () (at Assets/Content/Scripts/Runtime/Managers/CanvasManager.cs:391)
-UnityEngine.MonoBehaviour:StartCoroutine (System.Collections.IEnumerator)
-LittleHeroJourney.CanvasManager:SwitchCanvas (string,bool) (at Assets/Content/Scripts/Runtime/Managers/CanvasManager.cs:221)
-LittleHeroJourney.JourneyManager:OpenJourneySelector () (at Assets/Content/Scripts/Runtime/Managers/Journey/JourneyManager.cs:139)
-LittleHeroJourney.JourneyManager:HandlePlay () (at Assets/Content/Scripts/Runtime/Managers/Journey/JourneyManager.cs:106)
-LittleHeroJourney.GameEventSystem:Publish (LittleHeroJourney.UIActionEvent) (at Assets/Content/Scripts/Runtime/Events/GameEventSystem.cs:90)
-LittleHeroJourney.UI.UIInputConnector:InvokeAction (string) (at Assets/Content/Scripts/Runtime/UI/Input/UIInputConnector.cs:11)
-UnityEngine.EventSystems.EventSystem:Update () (at ./Library/PackageCache/com.unity.ugui@1.0.0/Runtime/EventSystem/EventSystem.cs:530)
-
-[CanvasManager] Close start: MainMenu
-UnityEngine.Debug:Log (object)
-LittleHeroJourney.CanvasManager:HandleCanvasCloseStartByPayload (string) (at Assets/Content/Scripts/Runtime/Managers/CanvasManager.cs:312)
-LittleHeroJourney.GameEventSystem:Publish (LittleHeroJourney.UIActionEvent) (at Assets/Content/Scripts/Runtime/Events/GameEventSystem.cs:97)
-LittleHeroJourney.UI.GameCanvas/<CloseForTransitionRoutine>d__37:MoveNext () (at Assets/Content/Scripts/Runtime/UI/GameCanvas.cs:300)
-UnityEngine.MonoBehaviour:StartCoroutine (System.Collections.IEnumerator)
-LittleHeroJourney.CanvasManager:SwitchCanvas (string,bool) (at Assets/Content/Scripts/Runtime/Managers/CanvasManager.cs:221)
-LittleHeroJourney.JourneyManager:OpenJourneySelector () (at Assets/Content/Scripts/Runtime/Managers/Journey/JourneyManager.cs:139)
-LittleHeroJourney.JourneyManager:HandlePlay () (at Assets/Content/Scripts/Runtime/Managers/Journey/JourneyManager.cs:106)
-LittleHeroJourney.GameEventSystem:Publish (LittleHeroJourney.UIActionEvent) (at Assets/Content/Scripts/Runtime/Events/GameEventSystem.cs:90)
-LittleHeroJourney.UI.UIInputConnector:InvokeAction (string) (at Assets/Content/Scripts/Runtime/UI/Input/UIInputConnector.cs:11)
-UnityEngine.EventSystems.EventSystem:Update () (at ./Library/PackageCache/com.unity.ugui@1.0.0/Runtime/EventSystem/EventSystem.cs:530)
-
-[CanvasManager] Already transitioning, ignoring SwitchCanvas(StorySelector)
-UnityEngine.Debug:LogWarning (object)
-LittleHeroJourney.CanvasManager:SwitchCanvas (string,bool) (at Assets/Content/Scripts/Runtime/Managers/CanvasManager.cs:160)
-LittleHeroJourney.JourneyManager:OpenJourneySelector () (at Assets/Content/Scripts/Runtime/Managers/Journey/JourneyManager.cs:139)
-LittleHeroJourney.JourneyManager:HandlePlay () (at Assets/Content/Scripts/Runtime/Managers/Journey/JourneyManager.cs:106)
-LittleHeroJourney.GameEventSystem:Publish (LittleHeroJourney.UIActionEvent) (at Assets/Content/Scripts/Runtime/Events/GameEventSystem.cs:90)
-LittleHeroJourney.MainMenuManager/<>c:<RefreshMenuUI>b__10_0 () (at Assets/Content/Scripts/Runtime/Managers/MainMenuManager.cs:66)
-UnityEngine.EventSystems.EventSystem:Update () (at ./Library/PackageCache/com.unity.ugui@1.0.0/Runtime/EventSystem/EventSystem.cs:530)
-
-[CanvasManager] Close complete: MainMenu
+Verified Minimum API Level is >= 23.
 UnityEngine.Debug:Log (object)
-LittleHeroJourney.CanvasManager:HandleCanvasCloseCompleteByPayload (string) (at Assets/Content/Scripts/Runtime/Managers/CanvasManager.cs:321)
-LittleHeroJourney.GameEventSystem:Publish (LittleHeroJourney.UIActionEvent) (at Assets/Content/Scripts/Runtime/Events/GameEventSystem.cs:97)
-LittleHeroJourney.UI.GameCanvas/<CloseForTransitionRoutine>d__37:MoveNext () (at Assets/Content/Scripts/Runtime/UI/GameCanvas.cs:307)
-UnityEngine.SetupCoroutine:InvokeMoveNext (System.Collections.IEnumerator,intptr)
+GoogleMobileAds.Editor.AndroidBuildPreProcessor:ApplyBuildSettings (UnityEditor.Build.Reporting.BuildReport) (at Assets/GoogleMobileAds/Editor/AndroidBuildPreProcessor.cs:70)
+GoogleMobileAds.Editor.AndroidBuildPreProcessor:OnPreprocessBuild (UnityEditor.Build.Reporting.BuildReport) (at Assets/GoogleMobileAds/Editor/AndroidBuildPreProcessor.cs:54)
+UnityEngine.GUIUtility:ProcessEvent (int,intptr,bool&)
 
-[CanvasManager] ShowAndWait: StorySelector
+Verified mainTemplate.gradle.
 UnityEngine.Debug:Log (object)
-LittleHeroJourney.CanvasManager/<RunTransitionRoutine>d__38:MoveNext () (at Assets/Content/Scripts/Runtime/Managers/CanvasManager.cs:392)
-UnityEngine.SetupCoroutine:InvokeMoveNext (System.Collections.IEnumerator,intptr)
+GoogleMobileAds.Editor.AndroidBuildPreProcessor:EnsureGradleFileExists (string) (at Assets/GoogleMobileAds/Editor/AndroidBuildPreProcessor.cs:167)
+GoogleMobileAds.Editor.AndroidBuildPreProcessor:ApplyBuildSettings (UnityEditor.Build.Reporting.BuildReport) (at Assets/GoogleMobileAds/Editor/AndroidBuildPreProcessor.cs:88)
+GoogleMobileAds.Editor.AndroidBuildPreProcessor:OnPreprocessBuild (UnityEditor.Build.Reporting.BuildReport) (at Assets/GoogleMobileAds/Editor/AndroidBuildPreProcessor.cs:54)
+UnityEngine.GUIUtility:ProcessEvent (int,intptr,bool&)
 
-[JourneyDisplay] Configured stage=1, title='Whispering Woods', btn=True
+Verified gradleTemplate.properties.
 UnityEngine.Debug:Log (object)
-LittleHeroJourney.UI.JourneyDisplay:Configure (string,string,UnityEngine.Sprite,int,LittleHeroJourney.UI.JourneySelectorManager) (at Assets/Content/Scripts/Runtime/UI/Journey/JourneyDisplay.cs:32)
-LittleHeroJourney.UI.JourneySelectorManager:SetupFromJourneysData () (at Assets/Content/Scripts/Runtime/UI/Journey/JourneySelectorManager.cs:46)
-LittleHeroJourney.UI.JourneySelectorManager:OnEnable () (at Assets/Content/Scripts/Runtime/UI/Journey/JourneySelectorManager.cs:23)
-LittleHeroJourney.UI.GameCanvas/<ShowAndWait>d__19:MoveNext () (at Assets/Content/Scripts/Runtime/UI/GameCanvas.cs:100)
-UnityEngine.SetupCoroutine:InvokeMoveNext (System.Collections.IEnumerator,intptr)
+GoogleMobileAds.Editor.AndroidBuildPreProcessor:EnsureGradleFileExists (string) (at Assets/GoogleMobileAds/Editor/AndroidBuildPreProcessor.cs:167)
+GoogleMobileAds.Editor.AndroidBuildPreProcessor:ApplyBuildSettings (UnityEditor.Build.Reporting.BuildReport) (at Assets/GoogleMobileAds/Editor/AndroidBuildPreProcessor.cs:91)
+GoogleMobileAds.Editor.AndroidBuildPreProcessor:OnPreprocessBuild (UnityEditor.Build.Reporting.BuildReport) (at Assets/GoogleMobileAds/Editor/AndroidBuildPreProcessor.cs:54)
+UnityEngine.GUIUtility:ProcessEvent (int,intptr,bool&)
 
-[JourneySelectorManager] Card setup stage=1, title='Whispering Woods'
+Verified Jetifier Entry exists.
 UnityEngine.Debug:Log (object)
-LittleHeroJourney.UI.JourneySelectorManager:SetupFromJourneysData () (at Assets/Content/Scripts/Runtime/UI/Journey/JourneySelectorManager.cs:49)
-LittleHeroJourney.UI.JourneySelectorManager:OnEnable () (at Assets/Content/Scripts/Runtime/UI/Journey/JourneySelectorManager.cs:23)
-LittleHeroJourney.UI.GameCanvas/<ShowAndWait>d__19:MoveNext () (at Assets/Content/Scripts/Runtime/UI/GameCanvas.cs:100)
-UnityEngine.SetupCoroutine:InvokeMoveNext (System.Collections.IEnumerator,intptr)
+GoogleMobileAds.Editor.AndroidBuildPreProcessor:ApplyBuildSettings (UnityEditor.Build.Reporting.BuildReport) (at Assets/GoogleMobileAds/Editor/AndroidBuildPreProcessor.cs:111)
+GoogleMobileAds.Editor.AndroidBuildPreProcessor:OnPreprocessBuild (UnityEditor.Build.Reporting.BuildReport) (at Assets/GoogleMobileAds/Editor/AndroidBuildPreProcessor.cs:54)
+UnityEngine.GUIUtility:ProcessEvent (int,intptr,bool&)
 
-[JourneyDisplay] Configured stage=2, title='Fallen Herd Grounds', btn=True
+Resolving Android Gradle dependencies.
 UnityEngine.Debug:Log (object)
-LittleHeroJourney.UI.JourneyDisplay:Configure (string,string,UnityEngine.Sprite,int,LittleHeroJourney.UI.JourneySelectorManager) (at Assets/Content/Scripts/Runtime/UI/Journey/JourneyDisplay.cs:32)
-LittleHeroJourney.UI.JourneySelectorManager:SetupFromJourneysData () (at Assets/Content/Scripts/Runtime/UI/Journey/JourneySelectorManager.cs:46)
-LittleHeroJourney.UI.JourneySelectorManager:OnEnable () (at Assets/Content/Scripts/Runtime/UI/Journey/JourneySelectorManager.cs:23)
-LittleHeroJourney.UI.GameCanvas/<ShowAndWait>d__19:MoveNext () (at Assets/Content/Scripts/Runtime/UI/GameCanvas.cs:100)
-UnityEngine.SetupCoroutine:InvokeMoveNext (System.Collections.IEnumerator,intptr)
+GoogleMobileAds.Editor.AndroidBuildPreProcessor:ApplyBuildSettings (UnityEditor.Build.Reporting.BuildReport) (at Assets/GoogleMobileAds/Editor/AndroidBuildPreProcessor.cs:120)
+GoogleMobileAds.Editor.AndroidBuildPreProcessor:OnPreprocessBuild (UnityEditor.Build.Reporting.BuildReport) (at Assets/GoogleMobileAds/Editor/AndroidBuildPreProcessor.cs:54)
+UnityEngine.GUIUtility:ProcessEvent (int,intptr,bool&)
 
-[JourneySelectorManager] Card setup stage=2, title='Fallen Herd Grounds'
+Android Build Pre-Processor finished.
 UnityEngine.Debug:Log (object)
-LittleHeroJourney.UI.JourneySelectorManager:SetupFromJourneysData () (at Assets/Content/Scripts/Runtime/UI/Journey/JourneySelectorManager.cs:49)
-LittleHeroJourney.UI.JourneySelectorManager:OnEnable () (at Assets/Content/Scripts/Runtime/UI/Journey/JourneySelectorManager.cs:23)
-LittleHeroJourney.UI.GameCanvas/<ShowAndWait>d__19:MoveNext () (at Assets/Content/Scripts/Runtime/UI/GameCanvas.cs:100)
-UnityEngine.SetupCoroutine:InvokeMoveNext (System.Collections.IEnumerator,intptr)
+GoogleMobileAds.Editor.AndroidBuildPreProcessor:ApplyBuildSettings (UnityEditor.Build.Reporting.BuildReport) (at Assets/GoogleMobileAds/Editor/AndroidBuildPreProcessor.cs:122)
+GoogleMobileAds.Editor.AndroidBuildPreProcessor:OnPreprocessBuild (UnityEditor.Build.Reporting.BuildReport) (at Assets/GoogleMobileAds/Editor/AndroidBuildPreProcessor.cs:54)
+UnityEngine.GUIUtility:ProcessEvent (int,intptr,bool&)
 
-[JourneyDisplay] Configured stage=3, title='Forsaken Village', btn=True
-UnityEngine.Debug:Log (object)
-LittleHeroJourney.UI.JourneyDisplay:Configure (string,string,UnityEngine.Sprite,int,LittleHeroJourney.UI.JourneySelectorManager) (at Assets/Content/Scripts/Runtime/UI/Journey/JourneyDisplay.cs:32)
-LittleHeroJourney.UI.JourneySelectorManager:SetupFromJourneysData () (at Assets/Content/Scripts/Runtime/UI/Journey/JourneySelectorManager.cs:46)
-LittleHeroJourney.UI.JourneySelectorManager:OnEnable () (at Assets/Content/Scripts/Runtime/UI/Journey/JourneySelectorManager.cs:23)
-LittleHeroJourney.UI.GameCanvas/<ShowAndWait>d__19:MoveNext () (at Assets/Content/Scripts/Runtime/UI/GameCanvas.cs:100)
-UnityEngine.SetupCoroutine:InvokeMoveNext (System.Collections.IEnumerator,intptr)
-
-[JourneySelectorManager] Card setup stage=3, title='Forsaken Village'
-UnityEngine.Debug:Log (object)
-LittleHeroJourney.UI.JourneySelectorManager:SetupFromJourneysData () (at Assets/Content/Scripts/Runtime/UI/Journey/JourneySelectorManager.cs:49)
-LittleHeroJourney.UI.JourneySelectorManager:OnEnable () (at Assets/Content/Scripts/Runtime/UI/Journey/JourneySelectorManager.cs:23)
-LittleHeroJourney.UI.GameCanvas/<ShowAndWait>d__19:MoveNext () (at Assets/Content/Scripts/Runtime/UI/GameCanvas.cs:100)
-UnityEngine.SetupCoroutine:InvokeMoveNext (System.Collections.IEnumerator,intptr)
-
-[JourneySelectorManager] LastCompleted=3 (firstUncompleted=4, total=3)
-UnityEngine.Debug:Log (object)
-LittleHeroJourney.UI.JourneySelectorManager:GetLastCompletedStage () (at Assets/Content/Scripts/Runtime/UI/Journey/JourneySelectorManager.cs:100)
-LittleHeroJourney.UI.JourneySelectorManager:ApplyVisibilityByCompletion () (at Assets/Content/Scripts/Runtime/UI/Journey/JourneySelectorManager.cs:105)
-LittleHeroJourney.UI.JourneySelectorManager:SetupFromJourneysData () (at Assets/Content/Scripts/Runtime/UI/Journey/JourneySelectorManager.cs:53)
-LittleHeroJourney.UI.JourneySelectorManager:OnEnable () (at Assets/Content/Scripts/Runtime/UI/Journey/JourneySelectorManager.cs:23)
-LittleHeroJourney.UI.GameCanvas/<ShowAndWait>d__19:MoveNext () (at Assets/Content/Scripts/Runtime/UI/GameCanvas.cs:100)
-UnityEngine.SetupCoroutine:InvokeMoveNext (System.Collections.IEnumerator,intptr)
-
-[JourneySelectorManager] Card stage=1 visible=True
-UnityEngine.Debug:Log (object)
-LittleHeroJourney.UI.JourneySelectorManager:ApplyVisibilityByCompletion () (at Assets/Content/Scripts/Runtime/UI/Journey/JourneySelectorManager.cs:115)
-LittleHeroJourney.UI.JourneySelectorManager:SetupFromJourneysData () (at Assets/Content/Scripts/Runtime/UI/Journey/JourneySelectorManager.cs:53)
-LittleHeroJourney.UI.JourneySelectorManager:OnEnable () (at Assets/Content/Scripts/Runtime/UI/Journey/JourneySelectorManager.cs:23)
-LittleHeroJourney.UI.GameCanvas/<ShowAndWait>d__19:MoveNext () (at Assets/Content/Scripts/Runtime/UI/GameCanvas.cs:100)
-UnityEngine.SetupCoroutine:InvokeMoveNext (System.Collections.IEnumerator,intptr)
-
-[JourneySelectorManager] Card stage=2 visible=True
-UnityEngine.Debug:Log (object)
-LittleHeroJourney.UI.JourneySelectorManager:ApplyVisibilityByCompletion () (at Assets/Content/Scripts/Runtime/UI/Journey/JourneySelectorManager.cs:115)
-LittleHeroJourney.UI.JourneySelectorManager:SetupFromJourneysData () (at Assets/Content/Scripts/Runtime/UI/Journey/JourneySelectorManager.cs:53)
-LittleHeroJourney.UI.JourneySelectorManager:OnEnable () (at Assets/Content/Scripts/Runtime/UI/Journey/JourneySelectorManager.cs:23)
-LittleHeroJourney.UI.GameCanvas/<ShowAndWait>d__19:MoveNext () (at Assets/Content/Scripts/Runtime/UI/GameCanvas.cs:100)
-UnityEngine.SetupCoroutine:InvokeMoveNext (System.Collections.IEnumerator,intptr)
-
-[JourneySelectorManager] Card stage=3 visible=True
-UnityEngine.Debug:Log (object)
-LittleHeroJourney.UI.JourneySelectorManager:ApplyVisibilityByCompletion () (at Assets/Content/Scripts/Runtime/UI/Journey/JourneySelectorManager.cs:115)
-LittleHeroJourney.UI.JourneySelectorManager:SetupFromJourneysData () (at Assets/Content/Scripts/Runtime/UI/Journey/JourneySelectorManager.cs:53)
-LittleHeroJourney.UI.JourneySelectorManager:OnEnable () (at Assets/Content/Scripts/Runtime/UI/Journey/JourneySelectorManager.cs:23)
-LittleHeroJourney.UI.GameCanvas/<ShowAndWait>d__19:MoveNext () (at Assets/Content/Scripts/Runtime/UI/GameCanvas.cs:100)
-UnityEngine.SetupCoroutine:InvokeMoveNext (System.Collections.IEnumerator,intptr)
-
-[JourneySelectorManager] Card stage=4 visible=False
-UnityEngine.Debug:Log (object)
-LittleHeroJourney.UI.JourneySelectorManager:ApplyVisibilityByCompletion () (at Assets/Content/Scripts/Runtime/UI/Journey/JourneySelectorManager.cs:115)
-LittleHeroJourney.UI.JourneySelectorManager:SetupFromJourneysData () (at Assets/Content/Scripts/Runtime/UI/Journey/JourneySelectorManager.cs:53)
-LittleHeroJourney.UI.JourneySelectorManager:OnEnable () (at Assets/Content/Scripts/Runtime/UI/Journey/JourneySelectorManager.cs:23)
-LittleHeroJourney.UI.GameCanvas/<ShowAndWait>d__19:MoveNext () (at Assets/Content/Scripts/Runtime/UI/GameCanvas.cs:100)
-UnityEngine.SetupCoroutine:InvokeMoveNext (System.Collections.IEnumerator,intptr)
-
-[JourneySelectorManager] Card stage=5 visible=False
-UnityEngine.Debug:Log (object)
-LittleHeroJourney.UI.JourneySelectorManager:ApplyVisibilityByCompletion () (at Assets/Content/Scripts/Runtime/UI/Journey/JourneySelectorManager.cs:115)
-LittleHeroJourney.UI.JourneySelectorManager:SetupFromJourneysData () (at Assets/Content/Scripts/Runtime/UI/Journey/JourneySelectorManager.cs:53)
-LittleHeroJourney.UI.JourneySelectorManager:OnEnable () (at Assets/Content/Scripts/Runtime/UI/Journey/JourneySelectorManager.cs:23)
-LittleHeroJourney.UI.GameCanvas/<ShowAndWait>d__19:MoveNext () (at Assets/Content/Scripts/Runtime/UI/GameCanvas.cs:100)
-UnityEngine.SetupCoroutine:InvokeMoveNext (System.Collections.IEnumerator,intptr)
+Installation failed with the following output:
+adb: failed to install C:\Users\Lenovo\Unity\Unity Build\Tidefall\Tidefall.apk: Failure [INSTALL_FAILED_USER_RESTRICTED: Install canceled by user]
+UnityEngine.GUIUtility:ProcessEvent (int,intptr,bool&)
 
-[JourneySelectorManager] LastCompleted=3 (firstUncompleted=4, total=3)
-UnityEngine.Debug:Log (object)
-LittleHeroJourney.UI.JourneySelectorManager:GetLastCompletedStage () (at Assets/Content/Scripts/Runtime/UI/Journey/JourneySelectorManager.cs:100)
-LittleHeroJourney.UI.JourneySelectorManager:AutoSelectLatestCompleted () (at Assets/Content/Scripts/Runtime/UI/Journey/JourneySelectorManager.cs:120)
-LittleHeroJourney.UI.JourneySelectorManager:SetupFromJourneysData () (at Assets/Content/Scripts/Runtime/UI/Journey/JourneySelectorManager.cs:54)
-LittleHeroJourney.UI.JourneySelectorManager:OnEnable () (at Assets/Content/Scripts/Runtime/UI/Journey/JourneySelectorManager.cs:23)
-LittleHeroJourney.UI.GameCanvas/<ShowAndWait>d__19:MoveNext () (at Assets/Content/Scripts/Runtime/UI/GameCanvas.cs:100)
-UnityEngine.SetupCoroutine:InvokeMoveNext (System.Collections.IEnumerator,intptr)
-
-[JourneySelectorManager] AutoSelectLatestCompleted scheduling stage=3
-UnityEngine.Debug:Log (object)
-LittleHeroJourney.UI.JourneySelectorManager:AutoSelectLatestCompleted () (at Assets/Content/Scripts/Runtime/UI/Journey/JourneySelectorManager.cs:130)
-LittleHeroJourney.UI.JourneySelectorManager:SetupFromJourneysData () (at Assets/Content/Scripts/Runtime/UI/Journey/JourneySelectorManager.cs:54)
-LittleHeroJourney.UI.JourneySelectorManager:OnEnable () (at Assets/Content/Scripts/Runtime/UI/Journey/JourneySelectorManager.cs:23)
-LittleHeroJourney.UI.GameCanvas/<ShowAndWait>d__19:MoveNext () (at Assets/Content/Scripts/Runtime/UI/GameCanvas.cs:100)
-UnityEngine.SetupCoroutine:InvokeMoveNext (System.Collections.IEnumerator,intptr)
-
-[JourneySelectorManager] UpdateDetails title='null', sprite='null'
-UnityEngine.Debug:Log (object)
-LittleHeroJourney.UI.JourneySelectorManager:UpdateDetails (UnityEngine.Sprite,LittleHeroJourney.JourneyDataSO) (at Assets/Content/Scripts/Runtime/UI/Journey/JourneySelectorManager.cs:82)
-LittleHeroJourney.UI.JourneySelectorManager:OnEnable () (at Assets/Content/Scripts/Runtime/UI/Journey/JourneySelectorManager.cs:24)
-LittleHeroJourney.UI.GameCanvas/<ShowAndWait>d__19:MoveNext () (at Assets/Content/Scripts/Runtime/UI/GameCanvas.cs:100)
-UnityEngine.SetupCoroutine:InvokeMoveNext (System.Collections.IEnumerator,intptr)
-
-[JourneySelectorManager] Enabled and initialized
-UnityEngine.Debug:Log (object)
-LittleHeroJourney.UI.JourneySelectorManager:OnEnable () (at Assets/Content/Scripts/Runtime/UI/Journey/JourneySelectorManager.cs:32)
-LittleHeroJourney.UI.GameCanvas/<ShowAndWait>d__19:MoveNext () (at Assets/Content/Scripts/Runtime/UI/GameCanvas.cs:100)
-UnityEngine.SetupCoroutine:InvokeMoveNext (System.Collections.IEnumerator,intptr)
-
-[CanvasManager] Open start: StorySelector
-UnityEngine.Debug:Log (object)
-LittleHeroJourney.CanvasManager:HandleCanvasOpenStartByPayload (string) (at Assets/Content/Scripts/Runtime/Managers/CanvasManager.cs:294)
-LittleHeroJourney.GameEventSystem:Publish (LittleHeroJourney.UIActionEvent) (at Assets/Content/Scripts/Runtime/Events/GameEventSystem.cs:97)
-LittleHeroJourney.UI.GameCanvas/<ShowAndWait>d__19:MoveNext () (at Assets/Content/Scripts/Runtime/UI/GameCanvas.cs:101)
-UnityEngine.SetupCoroutine:InvokeMoveNext (System.Collections.IEnumerator,intptr)
-
-[JourneySelectorManager] UpdateDetails title='Forsaken Village', sprite='3d'
-UnityEngine.Debug:Log (object)
-LittleHeroJourney.UI.JourneySelectorManager:UpdateDetails (UnityEngine.Sprite,LittleHeroJourney.JourneyDataSO) (at Assets/Content/Scripts/Runtime/UI/Journey/JourneySelectorManager.cs:82)
-LittleHeroJourney.UI.JourneySelectorManager:SelectJourney (int) (at Assets/Content/Scripts/Runtime/UI/Journey/JourneySelectorManager.cs:60)
-LittleHeroJourney.UI.JourneySelectorManager/<DeferredSelectAndScroll>d__20:MoveNext () (at Assets/Content/Scripts/Runtime/UI/Journey/JourneySelectorManager.cs:136)
-UnityEngine.SetupCoroutine:InvokeMoveNext (System.Collections.IEnumerator,intptr)
-
-[JourneySelectorManager] SelectJourney stage=3, title='Forsaken Village'
-UnityEngine.Debug:Log (object)
-LittleHeroJourney.UI.JourneySelectorManager:SelectJourney (int) (at Assets/Content/Scripts/Runtime/UI/Journey/JourneySelectorManager.cs:64)
-LittleHeroJourney.UI.JourneySelectorManager/<DeferredSelectAndScroll>d__20:MoveNext () (at Assets/Content/Scripts/Runtime/UI/Journey/JourneySelectorManager.cs:136)
-UnityEngine.SetupCoroutine:InvokeMoveNext (System.Collections.IEnumerator,intptr)
+DeploymentOperationFailedException: Installation failed. See the Console for details.
+UnityEditor.Android.AndroidDeploymentTargetsExtension.UploadAPK (UnityEditor.Android.AndroidBuildProperties buildProperties, UnityEditor.Android.AndroidDevice device, UnityEditor.Android.AndroidDeploymentTargetsExtension+LaunchProgressTaskManager taskManager) (at /home/bokken/build/output/unity/unity/PlatformDependent/AndroidPlayer/Editor/Managed/DeploymentTargets/AndroidDeploymentTargetsExtension.cs:719)
+UnityEditor.Android.AndroidDeploymentTargetsExtension+<>c__DisplayClass15_1.<LaunchBuildOnTarget>b__3 () (at /home/bokken/build/output/unity/unity/PlatformDependent/AndroidPlayer/Editor/Managed/DeploymentTargets/AndroidDeploymentTargetsExtension.cs:542)
+UnityEditor.ProgressTaskManager.Run () (at <4b8f645257c94d1296f440a10c6f388e>:0)
+UnityEditor.Android.AndroidDeploymentTargetsExtension.LaunchBuildOnTarget (UnityEditor.DeploymentTargets.IDeploymentTargetsMainThreadContext context, UnityEditor.BuildProperties buildProperties, UnityEditor.DeploymentTargets.DeploymentTargetId targetId, UnityEditor.ProgressHandler progressHandler) (at /home/bokken/build/output/unity/unity/PlatformDependent/AndroidPlayer/Editor/Managed/DeploymentTargets/AndroidDeploymentTargetsExtension.cs:550)
+UnityEditor.DeploymentTargets.DeploymentTargetManager.LaunchBuildOnTarget (UnityEditor.BuildProperties buildProperties, UnityEditor.DeploymentTargets.DeploymentTargetId targetId, UnityEditor.ProgressHandler progressHandler) (at <4b8f645257c94d1296f440a10c6f388e>:0)
+UnityEditor.PostprocessBuildPlayer+<>c__DisplayClass22_1.<LaunchOnTargets>b__1 () (at <4b8f645257c94d1296f440a10c6f388e>:0)
+UnityEngine.GUIUtility:ProcessEvent(Int32, IntPtr, Boolean&)
 
-[JourneySelectorManager] AutoScrollToStage stage=3, t=1.000
-UnityEngine.Debug:Log (object)
-LittleHeroJourney.UI.JourneySelectorManager:AutoScrollToStage (int) (at Assets/Content/Scripts/Runtime/UI/Journey/JourneySelectorManager.cs:171)
-LittleHeroJourney.UI.JourneySelectorManager/<DeferredSelectAndScroll>d__20:MoveNext () (at Assets/Content/Scripts/Runtime/UI/Journey/JourneySelectorManager.cs:139)
-UnityEngine.SetupCoroutine:InvokeMoveNext (System.Collections.IEnumerator,intptr)
+UnityException: Could not find any valid targets to launch on for Android
+UnityEditor.PostprocessBuildPlayer.LaunchOnTargets (UnityEditor.BuildTargetGroup targetGroup, UnityEditor.BuildTarget buildTarget, UnityEditor.Build.Reporting.BuildReport buildReport, System.Collections.Generic.List`1[T] launchTargets) (at <4b8f645257c94d1296f440a10c6f388e>:0)
+UnityEditor.Android.PostProcessAndroidPlayer.Launch (UnityEditor.BuildTarget target, System.String installPath, UnityEditor.Build.Reporting.BuildReport report) (at /home/bokken/build/output/unity/unity/PlatformDependent/AndroidPlayer/Editor/Managed/PostProcessAndroidPlayer.cs:278)
+UnityEditor.Android.AndroidBuildPostprocessor.LaunchPlayer (UnityEditor.Modules.BuildLaunchPlayerArgs args) (at /home/bokken/build/output/unity/unity/PlatformDependent/AndroidPlayer/Editor/Managed/ExtensionModule.cs:964)
+UnityEditor.PostprocessBuildPlayer.Launch (UnityEditor.BuildTargetGroup targetGroup, UnityEditor.BuildTarget buildTarget, System.String path, System.String productName, UnityEditor.BuildOptions options, UnityEditor.Build.Reporting.BuildReport buildReport) (at <4b8f645257c94d1296f440a10c6f388e>:0)
+UnityEngine.GUIUtility:ProcessEvent(Int32, IntPtr, Boolean&)
 
-[JourneySelectorManager] Deferred select/scroll done stage=3
-UnityEngine.Debug:Log (object)
-LittleHeroJourney.UI.JourneySelectorManager/<DeferredSelectAndScroll>d__20:MoveNext () (at Assets/Content/Scripts/Runtime/UI/Journey/JourneySelectorManager.cs:142)
-UnityEngine.SetupCoroutine:InvokeMoveNext (System.Collections.IEnumerator,intptr)
+UnityException: Could not find any valid targets to launch on for Android
 
-[CanvasManager] Open complete: StorySelector
-UnityEngine.Debug:Log (object)
-LittleHeroJourney.CanvasManager:HandleCanvasOpenCompleteByPayload (string) (at Assets/Content/Scripts/Runtime/Managers/CanvasManager.cs:303)
-LittleHeroJourney.GameEventSystem:Publish (LittleHeroJourney.UIActionEvent) (at Assets/Content/Scripts/Runtime/Events/GameEventSystem.cs:97)
-LittleHeroJourney.UI.GameCanvas/<ShowRoutine>d__20:MoveNext () (at Assets/Content/Scripts/Runtime/UI/GameCanvas.cs:111)
-UnityEngine.SetupCoroutine:InvokeMoveNext (System.Collections.IEnumerator,intptr)
+Build completed with a result of 'Succeeded' in 158 seconds (157576 ms)
+UnityEngine.GUIUtility:ProcessEvent (int,intptr,bool&)
 

@@ -84,7 +84,6 @@ namespace LittleHeroJourney
 
         public void ResetGameState()
         {
-            Time.timeScale = 1f;
             if (showDebugLog)
                 Debug.Log($"[{GetType().Name}] Game state reset");
         }
@@ -97,7 +96,6 @@ namespace LittleHeroJourney
         {
             if (showDebugLog)
                 Debug.Log($"[{GetType().Name}] Exiting game...");
-            Time.timeScale = 1f;
 #if UNITY_EDITOR
             UnityEditor.EditorApplication.isPlaying = false;
 #else
@@ -124,7 +122,6 @@ namespace LittleHeroJourney
 
         public void SetTimeScale(float scale)
         {
-            Time.timeScale = Mathf.Clamp(scale, 0f, float.MaxValue);
         }
 
         #endregion

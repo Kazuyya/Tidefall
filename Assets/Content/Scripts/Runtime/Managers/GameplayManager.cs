@@ -448,7 +448,6 @@ namespace LittleHeroJourney
 
             if (GameManager.Instance != null)
             {
-                GameManager.Instance.SetTimeScale(1f);
                 GameManager.Instance.ResetGameState();
             }
             if (JourneyManager.Instance != null)
@@ -471,6 +470,15 @@ namespace LittleHeroJourney
         public void PauseGame()
         {
             if (isPaused) return;
+            if (LoadingManager.Instance != null && LoadingManager.Instance.IsLoading) return;
+            if (AdsManager.IsShowing) return;
+            if (SceneManager.Instance != null)
+            {
+                var cfg = SceneManager.Instance.Config;
+                string menuId = cfg != null ? cfg.mainMenuId : null;
+                if (!string.IsNullOrEmpty(menuId) && string.Equals(SceneManager.Instance.CurrentId, menuId, StringComparison.OrdinalIgnoreCase))
+                    return;
+            }
             isPaused = true;
             if (GameManager.Instance?.CanvasManager != null && !string.IsNullOrEmpty(pauseCanvasId))
                 GameManager.Instance.CanvasManager.SwitchCanvas(pauseCanvasId);
@@ -610,7 +618,6 @@ namespace LittleHeroJourney
             if (showDebugLog) Debug.Log("[GameplayManager] Loading stage " + stageNumber);
             if (GameManager.Instance != null)
             {
-                GameManager.Instance.SetTimeScale(1f);
                 GameManager.Instance.ResetGameState();
             }
             if (JourneyManager.Instance != null)

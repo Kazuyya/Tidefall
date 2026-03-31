@@ -250,7 +250,6 @@ namespace LittleHeroJourney
             }
             if (GameManager.Instance != null)
             {
-                GameManager.Instance.SetTimeScale(1f);
                 GameManager.Instance.ResetGameState();
             }
             string targetId = _canvasHistory[_canvasHistory.Count - 1];

@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sequenceId: Tidefall Start
   steps:
-  - stepId: '#5 Tidefall'
+  - stepId: '#5 tidefall'
     canSkipStep: 0
     backgroundType: 0
     backgroundImage: {fileID: 0}

@@ -15,11 +15,13 @@ namespace LittleHeroJourney
 #pragma warning restore 0414
 
         private string _currentId;
+        private string _previousId;
         private Dictionary<string, string> _idToPath = new Dictionary<string, string>();
         private Dictionary<string, Action> _sceneActionHandlers = new Dictionary<string, Action>();
 
         public static SceneManager Instance { get; private set; }
         public string CurrentId => _currentId;
+        public string PreviousId => _previousId;
         public SceneFlowConfigSO Config => config;
 
         private void Awake()
@@ -82,7 +84,6 @@ namespace LittleHeroJourney
             if (string.IsNullOrEmpty(sceneId)) return;
             if (GameManager.Instance != null)
             {
-                GameManager.Instance.SetTimeScale(1f);
                 GameManager.Instance.ResetGameState();
             }
             GoToId(sceneId);
@@ -94,6 +95,9 @@ namespace LittleHeroJourney
             string path = ResolvePathById(targetId);
             if (string.IsNullOrEmpty(path)) return;
 
+            if (GameManager.Instance != null) GameManager.Instance.ResetGameState();
+
+            _previousId = _currentId;
             bool useLoading = ShouldUseLoading(_currentId, targetId, out bool closeBeforeLoading);
             if (showDebugLog)
                 Debug.Log($"[SceneManager] GoToId: currentId={_currentId}, targetId={targetId}, useLoading={useLoading}, hasLoadingManager={GameManager.Instance != null && GameManager.Instance.LoadingManager != null}");
@@ -110,12 +114,14 @@ namespace LittleHeroJourney
             }
 
             _currentId = targetId;
+            GameEventSystem.Publish(new UIActionEvent("SceneIdChanged", _currentId));
         }
 
         public void StartStageScene(string sceneName, string targetId = "gameplay", Action onComplete = null)
         {
             if (string.IsNullOrEmpty(sceneName)) return;
             if (string.IsNullOrEmpty(targetId)) targetId = "gameplay";
+            _previousId = _currentId;
             bool useLoading = ShouldUseLoading(_currentId, targetId, out bool closeBeforeLoading);
             if (useLoading && GameManager.Instance != null && GameManager.Instance.LoadingManager != null)
             {
@@ -126,6 +132,7 @@ namespace LittleHeroJourney
                 StartCoroutine(LoadSceneWithoutLoadingRoutine(sceneName, onComplete));
             }
             _currentId = targetId;
+            GameEventSystem.Publish(new UIActionEvent("SceneIdChanged", _currentId));
         }
 
         public void ReturnToMainMenu()

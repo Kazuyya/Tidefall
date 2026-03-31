@@ -558,7 +558,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &7225048428805089171
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1084,8 +1084,6 @@ MonoBehaviour:
     y: 0
     width: 0
     height: 0
-  addInputDevice: 1
-  usage: Primary2DMotion
   currentPointerId: -2
 --- !u!1 &1451859994352434468
 GameObject:
@@ -1551,7 +1549,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1389227911619609737
 RectTransform:
   m_ObjectHideFlags: 0

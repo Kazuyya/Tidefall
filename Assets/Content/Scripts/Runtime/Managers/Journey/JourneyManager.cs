@@ -548,7 +548,6 @@ namespace LittleHeroJourney
 
             if (GameManager.Instance != null)
             {
-                GameManager.Instance.SetTimeScale(1f);
                 GameManager.Instance.ResetGameState();
             }
 
