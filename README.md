@@ -17,6 +17,3 @@ Third-party services used may include:
 - Google Mobile Ads (AdMob)
 
 This game is intended for entertainment and educational purposes.
-
-If you have any questions, contact:
-reyeslorraine.dev@gmail.com
