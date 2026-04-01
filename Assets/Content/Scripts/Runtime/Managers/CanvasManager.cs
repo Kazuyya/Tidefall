@@ -12,7 +12,9 @@ namespace LittleHeroJourney
 
         [SerializeField] private bool showDebugLog = false;
         [SerializeField] private bool disableEventSystemDuringTransition = true;
-        private EventSystem _eventSystem;
+        [SerializeField] private float eventSystemEnableDelay = 0.5f;
+        private readonly List<EventSystem> _eventSystems = new List<EventSystem>();
+        private Coroutine _delayedEnableEventSystemRoutine;
         
         public System.Action<GameCanvas> OnOpenStart;
         public System.Action<GameCanvas> OnOpenComplete;
@@ -47,7 +49,7 @@ namespace LittleHeroJourney
 
         private void OnEnable()
         {
-            _eventSystem = EventSystem.current != null ? EventSystem.current : FindObjectOfType<EventSystem>();
+            RefreshEventSystemsCache();
             _canvasOpenStartHandler = HandleCanvasOpenStartByPayload;
             _canvasOpenCompleteHandler = HandleCanvasOpenCompleteByPayload;
             _canvasCloseStartHandler = HandleCanvasCloseStartByPayload;
@@ -85,6 +87,8 @@ namespace LittleHeroJourney
                 GameEventSystem.UnsubscribeAction(backActionId, _backActionHandler);
                 _backActionHandler = null;
             }
+            CancelDelayedEventSystemEnable();
+            if (disableEventSystemDuringTransition) SetEventSystemEnabled(true);
         }
 
         #endregion
@@ -304,7 +308,11 @@ namespace LittleHeroJourney
             var canvas = GetCanvas(canvasId);
             if (canvas == null) return;
             if (showDebugLog) Debug.Log($"[{GetType().Name}] Open start: {canvasId}");
-            if (disableEventSystemDuringTransition) SetEventSystemEnabled(false);
+            if (disableEventSystemDuringTransition)
+            {
+                CancelDelayedEventSystemEnable();
+                SetEventSystemEnabled(false);
+            }
             OnOpenStart?.Invoke(canvas);
         }
         
@@ -313,7 +321,7 @@ namespace LittleHeroJourney
             var canvas = GetCanvas(canvasId);
             if (canvas == null) return;
             if (showDebugLog) Debug.Log($"[{GetType().Name}] Open complete: {canvasId}");
-            if (disableEventSystemDuringTransition) SetEventSystemEnabled(true);
+            if (disableEventSystemDuringTransition) ScheduleDelayedEventSystemEnable();
             OnOpenComplete?.Invoke(canvas);
         }
         
@@ -322,7 +330,11 @@ namespace LittleHeroJourney
             var canvas = GetCanvas(canvasId);
             if (canvas == null) return;
             if (showDebugLog) Debug.Log($"[{GetType().Name}] Close start: {canvasId}");
-            if (disableEventSystemDuringTransition) SetEventSystemEnabled(false);
+            if (disableEventSystemDuringTransition)
+            {
+                CancelDelayedEventSystemEnable();
+                SetEventSystemEnabled(false);
+            }
             OnCloseStart?.Invoke(canvas);
         }
         
@@ -331,20 +343,56 @@ namespace LittleHeroJourney
             var canvas = GetCanvas(canvasId);
             if (canvas == null) return;
             if (showDebugLog) Debug.Log($"[{GetType().Name}] Close complete: {canvasId}");
-            if (disableEventSystemDuringTransition) SetEventSystemEnabled(true);
+            if (disableEventSystemDuringTransition) ScheduleDelayedEventSystemEnable();
             OnCloseComplete?.Invoke(canvas);
         }
         
         private void SetEventSystemEnabled(bool enabled)
         {
-            if (_eventSystem == null)
+            RefreshEventSystemsCache();
+            int affected = 0;
+            for (int i = 0; i < _eventSystems.Count; i++)
             {
-                _eventSystem = EventSystem.current != null ? EventSystem.current : FindObjectOfType<EventSystem>();
+                var es = _eventSystems[i];
+                if (es == null) continue;
+                if (es.enabled == enabled) continue;
+                es.enabled = enabled;
+                affected++;
             }
-            if (_eventSystem != null)
+            if (showDebugLog) Debug.Log($"[{GetType().Name}] EventSystem set enabled={enabled}, affected={affected}, totalCached={_eventSystems.Count}");
+        }
+
+        private void RefreshEventSystemsCache()
+        {
+            _eventSystems.Clear();
+            var systems = FindObjectsOfType<EventSystem>(true);
+            for (int i = 0; i < systems.Length; i++)
             {
-                _eventSystem.enabled = enabled;
+                var es = systems[i];
+                if (es == null) continue;
+                _eventSystems.Add(es);
             }
+        }
+
+        private void ScheduleDelayedEventSystemEnable()
+        {
+            CancelDelayedEventSystemEnable();
+            _delayedEnableEventSystemRoutine = StartCoroutine(DelayedEventSystemEnableRoutine(Mathf.Max(0f, eventSystemEnableDelay)));
+        }
+
+        private void CancelDelayedEventSystemEnable()
+        {
+            if (_delayedEnableEventSystemRoutine == null) return;
+            StopCoroutine(_delayedEnableEventSystemRoutine);
+            _delayedEnableEventSystemRoutine = null;
+        }
+
+        private System.Collections.IEnumerator DelayedEventSystemEnableRoutine(float delay)
+        {
+            if (delay > 0f)
+                yield return new WaitForSeconds(delay);
+            SetEventSystemEnabled(true);
+            _delayedEnableEventSystemRoutine = null;
         }
         
         #endregion

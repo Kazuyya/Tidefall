@@ -83,6 +83,7 @@ namespace LittleHeroJourney
         private bool _targetHealthCached = false;
         private ILockOnTarget _currentTargetLockOnPoint;
         private Action _unlockOnActionHandler;
+        private bool _lastAimIconVisible;
         #endregion
 
         #region Unity Lifecycle
@@ -463,7 +464,12 @@ namespace LittleHeroJourney
             if (aimIcon)
             {
                 bool shouldShow = isTargeting && !IsTargetInvalid();
+                if (showDebugLog && shouldShow != _lastAimIconVisible)
+                {
+                    Debug.Log($"{GetType().Name}: AimIcon visible={shouldShow}, isTargeting={isTargeting}, targetNull={currentTarget == null}, targetInvalid={IsTargetInvalid()}");
+                }
                 aimIcon.gameObject.SetActive(shouldShow);
+                _lastAimIconVisible = shouldShow;
             }
         }
         #endregion

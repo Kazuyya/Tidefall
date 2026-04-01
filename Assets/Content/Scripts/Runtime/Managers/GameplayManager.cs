@@ -169,6 +169,12 @@ namespace LittleHeroJourney
 
         private void OnStorySequenceCompleted()
         {
+            if (JourneyManager.Instance != null && JourneyManager.Instance.IsWaitingTutorialCompletion)
+            {
+                SetInputActive(false);
+                if (showDebugLog) Debug.Log("[GameplayManager] Story sequence completed -> tutorial gate active, waiting tutorial completion.");
+                return;
+            }
             FindReferences();
             if (GameManager.Instance?.CanvasManager != null && !string.IsNullOrEmpty(gameplayCanvasId))
                 GameManager.Instance.CanvasManager.SwitchCanvas(gameplayCanvasId);

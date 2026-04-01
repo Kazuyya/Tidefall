@@ -34,6 +34,9 @@ namespace LittleHeroJourney
         [SerializeField] private float bgmSwitchDelay = 0.35f;
         [Header("Loading Hold")]
         [SerializeField] private float loadingHoldAfterStoryOpen = 1f;
+        [Header("Tutorial")]
+        [SerializeField] private string tutorialOpenActionId = "OpenTutorial";
+        [SerializeField] private float tutorialOpenDelayAfterStartStoryComplete = 0.5f;
 
         [Header("Debug")]
         [SerializeField] private bool showDebugLog = false;
@@ -63,8 +66,10 @@ namespace LittleHeroJourney
         private Action _playerReadyForEncounterHandler;
         private Action _combatFinishedHandler;
         private Action _gameplayResetHandler;
+        private Action _exitToMainMenuHandler;
         private Action<string> _canvasOpenCompleteHandler;
         private Action<string> _loadingFinishedHandler;
+        private Action<string> _tutorialCompletedPayloadHandler;
         private StorySequenceDisplay _currentStoryDisplay;
         private static int _pendingStoryStageNumber;
         private const string SaveResetVersionKeyPrefix = "JourneySaveResetVersion_";
@@ -80,6 +85,10 @@ namespace LittleHeroJourney
         private Coroutine _bgmSwitchRoutine;
         private Coroutine _ensureBattleBgmRoutine;
         private Coroutine _battleBgmWatchdogRoutine;
+        private Coroutine _openTutorialRoutine;
+        private StoryEncounterSpawner _tutorialPendingEncounterSpawner;
+        private string _tutorialPendingId;
+        private bool _waitingTutorialCompletion;
         private string _currentJourneyBgmId = string.Empty;
 
         private void Awake()
@@ -105,10 +114,14 @@ namespace LittleHeroJourney
             GameEventSystem.SubscribeAction("CombatFinished", _combatFinishedHandler);
             _gameplayResetHandler = OnGameplayReset;
             GameEventSystem.SubscribeAction("GameplayReset", _gameplayResetHandler);
+            _exitToMainMenuHandler = OnExitToMainMenu;
+            GameEventSystem.SubscribeAction("ExitToMainMenu", _exitToMainMenuHandler);
             _canvasOpenCompleteHandler = OnCanvasOpenCompleteByPayload;
             GameEventSystem.SubscribeActionWithPayload("CanvasOpenComplete", _canvasOpenCompleteHandler);
             _loadingFinishedHandler = OnLoadingFinished;
             GameEventSystem.SubscribeActionWithPayload("LoadingFinished", _loadingFinishedHandler);
+            _tutorialCompletedPayloadHandler = OnTutorialCompletedByPayload;
+            GameEventSystem.SubscribeActionWithPayload("TutorialCompleted", _tutorialCompletedPayloadHandler);
         }
 
         private void HandlePlay()
@@ -167,15 +180,24 @@ namespace LittleHeroJourney
                 GameEventSystem.UnsubscribeAction("CombatFinished", _combatFinishedHandler);
             if (_gameplayResetHandler != null)
                 GameEventSystem.UnsubscribeAction("GameplayReset", _gameplayResetHandler);
+            if (_exitToMainMenuHandler != null)
+                GameEventSystem.UnsubscribeAction("ExitToMainMenu", _exitToMainMenuHandler);
             if (_canvasOpenCompleteHandler != null)
                 GameEventSystem.UnsubscribeActionWithPayload("CanvasOpenComplete", _canvasOpenCompleteHandler);
             if (_loadingFinishedHandler != null)
                 GameEventSystem.UnsubscribeActionWithPayload("LoadingFinished", _loadingFinishedHandler);
+            if (_tutorialCompletedPayloadHandler != null)
+                GameEventSystem.UnsubscribeActionWithPayload("TutorialCompleted", _tutorialCompletedPayloadHandler);
             StopBgmSwitchRoutine();
             if (_ensureBattleBgmRoutine != null)
             {
                 StopCoroutine(_ensureBattleBgmRoutine);
                 _ensureBattleBgmRoutine = null;
+            }
+            if (_openTutorialRoutine != null)
+            {
+                StopCoroutine(_openTutorialRoutine);
+                _openTutorialRoutine = null;
             }
             StopBattleBgmWatchdog();
         }
@@ -409,6 +431,17 @@ namespace LittleHeroJourney
 
         private void OnLoadingFinished(string loadedSceneName)
         {
+            if (IsAtMainMenu())
+            {
+                CleanupTutorialGateState();
+                StopBattleBgmWatchdog();
+                if (CharacterEffectManager.Instance != null && CharacterEffectManager.Instance.IsBgmPlaying(battleBgmEffectId))
+                    CharacterEffectManager.Instance.StopBGM();
+                if (string.Equals(_currentJourneyBgmId, battleBgmEffectId, StringComparison.Ordinal))
+                    _currentJourneyBgmId = string.Empty;
+                return;
+            }
+
             if (_skipStartStoryOnce)
             {
                 SkipStartStoryAndStartEncounter();
@@ -483,8 +516,16 @@ namespace LittleHeroJourney
             _lastStepCompleted = false;
             _pendingEncounterSpawner = null;
 
+            bool tutorialGateActive = false;
+            if (target != null)
+                tutorialGateActive = TryStartTutorialGate(target);
             GameEventSystem.Publish(new UIActionEvent("StorySequenceCompleted"));
 
+            if (tutorialGateActive)
+            {
+                if (showDebugLog) Debug.Log("[JourneyManager] Tutorial gate active -> delaying gameplay canvas + enemy spawn until tutorial completes.");
+                return;
+            }
             if (target != null)
             {
                 SwitchToBattleBgm();
@@ -733,10 +774,108 @@ namespace LittleHeroJourney
                 StopCoroutine(_ensureBattleBgmRoutine);
                 _ensureBattleBgmRoutine = null;
             }
+            if (_openTutorialRoutine != null)
+            {
+                StopCoroutine(_openTutorialRoutine);
+                _openTutorialRoutine = null;
+            }
             StopBattleBgmWatchdog();
+            _tutorialPendingEncounterSpawner = null;
+            _tutorialPendingId = null;
+            _waitingTutorialCompletion = false;
             if (!preserveSkipStartStoryFlag)
                 _skipStartStoryOnce = false;
             TraceBgm("ResetJourneyRuntimeState preserveSkip=" + preserveSkipStartStoryFlag + ", currentBgmId=" + _currentJourneyBgmId);
+        }
+
+        private bool TryStartTutorialGate(StoryEncounterSpawner encounterSpawner)
+        {
+            if (encounterSpawner == null) return false;
+            if (_skipStartStoryOnce) return false;
+            var journey = GetCurrentJourney();
+            if (journey == null || !journey.UseTutorial) return false;
+            string tutorialId = journey.TutorialId;
+            if (string.IsNullOrEmpty(tutorialId) || string.IsNullOrEmpty(tutorialOpenActionId)) return false;
+
+            _tutorialPendingEncounterSpawner = encounterSpawner;
+            _tutorialPendingId = tutorialId;
+            _waitingTutorialCompletion = true;
+
+            if (GameplayManager.Instance != null)
+                GameplayManager.Instance.SetInputActive(false);
+
+            if (_openTutorialRoutine != null)
+            {
+                StopCoroutine(_openTutorialRoutine);
+                _openTutorialRoutine = null;
+            }
+            _openTutorialRoutine = StartCoroutine(OpenTutorialAfterDelayRoutine(tutorialId));
+            return true;
+        }
+
+        private IEnumerator OpenTutorialAfterDelayRoutine(string tutorialId)
+        {
+            float delay = Mathf.Max(0f, tutorialOpenDelayAfterStartStoryComplete);
+            if (delay > 0f)
+                yield return new WaitForSeconds(delay);
+            _openTutorialRoutine = null;
+            GameEventSystem.Publish(new UIActionEvent(tutorialOpenActionId, tutorialId));
+        }
+
+        private void OnTutorialCompletedByPayload(string tutorialId)
+        {
+            if (!_waitingTutorialCompletion) return;
+            if (!string.IsNullOrEmpty(_tutorialPendingId) && !string.IsNullOrEmpty(tutorialId) &&
+                !string.Equals(_tutorialPendingId, tutorialId, StringComparison.OrdinalIgnoreCase))
+                return;
+
+            var pendingSpawner = _tutorialPendingEncounterSpawner;
+            _tutorialPendingEncounterSpawner = null;
+            _tutorialPendingId = null;
+            _waitingTutorialCompletion = false;
+
+            if (GameManager.Instance?.CanvasManager != null && GameplayManager.Instance != null)
+                GameplayManager.Instance.ShowGameplayCanvasAndEnableInput();
+            else if (GameplayManager.Instance != null)
+                GameplayManager.Instance.SetInputActive(true);
+
+            if (pendingSpawner == null) return;
+
+            EnsureBattleBgm();
+            pendingSpawner.StartEncounter();
+            GameEventSystem.Publish(new UIActionEvent("EncounterStarted"));
+            if (showDebugLog) Debug.Log("[JourneyManager] Tutorial completed -> gameplay canvas shown and encounter started.");
+        }
+
+        private void OnExitToMainMenu()
+        {
+            CleanupTutorialGateState();
+            StopBattleBgmWatchdog();
+            if (CharacterEffectManager.Instance != null && CharacterEffectManager.Instance.IsBgmPlaying(battleBgmEffectId))
+                CharacterEffectManager.Instance.StopBGM();
+            if (string.Equals(_currentJourneyBgmId, battleBgmEffectId, StringComparison.Ordinal))
+                _currentJourneyBgmId = string.Empty;
+        }
+
+        private void CleanupTutorialGateState()
+        {
+            if (_openTutorialRoutine != null)
+            {
+                StopCoroutine(_openTutorialRoutine);
+                _openTutorialRoutine = null;
+            }
+            _tutorialPendingEncounterSpawner = null;
+            _tutorialPendingId = null;
+            _waitingTutorialCompletion = false;
+        }
+
+        private bool IsAtMainMenu()
+        {
+            var sm = LittleHeroJourney.SceneManager.Instance;
+            if (sm == null || sm.Config == null) return false;
+            string menuId = sm.Config.mainMenuId;
+            if (string.IsNullOrEmpty(menuId)) return false;
+            return string.Equals(sm.CurrentId, menuId, StringComparison.OrdinalIgnoreCase);
         }
 
         private void TraceBgm(string message)
@@ -757,6 +896,7 @@ namespace LittleHeroJourney
 
         public int GetTotalLevels() => journeysData != null ? journeysData.JourneyCount : 0;
         public int GetCurrentLevelNumber() => currentLevelNumber;
+        public bool IsWaitingTutorialCompletion => _waitingTutorialCompletion;
 
         public int GetFirstUncompletedStageNumber()
         {

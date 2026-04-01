@@ -33,5 +33,8 @@ MonoBehaviour:
   MovementPreparationTime: 0.6
   speedParameterName: speed
   tauntTriggerName: taunt
+  tauntSfxEffectName: 
+  tauntSfxNormalizedTime: 0.15
+  tauntSfxPlaybackChannel: 0
   ShowDebugGizmos: 1
   ShowDebugLog: 1

@@ -1085,7 +1085,6 @@ GameObject:
   - component: {fileID: 209297275}
   - component: {fileID: 209297276}
   - component: {fileID: 209297277}
-  - component: {fileID: 209297278}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -1107,6 +1106,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   showDebugLog: 1
   disableEventSystemDuringTransition: 1
+  eventSystemEnableDelay: 0.5
   config: {fileID: 11400000, guid: 0a87c3b735ec8ed4c835a07973519a6d, type: 2}
   canvasActionIds: []
   backActionId: Back
@@ -1211,6 +1211,8 @@ MonoBehaviour:
   bgmFadeOutDuration: 0.35
   bgmSwitchDelay: 0.35
   loadingHoldAfterStoryOpen: 1
+  tutorialOpenActionId: OpenTutorial
+  tutorialOpenDelayAfterStartStoryComplete: 0.5
   showDebugLog: 1
   clearSaveOnStartInDevelopmentBuild: 1
   clearSaveOncePerAppVersion: 1
@@ -1286,18 +1288,6 @@ MonoBehaviour:
   - tutorialId: FirstTutorial
     sequence: {fileID: 11400000, guid: 780ccbabdcad8004b8e8d504604d46d1, type: 2}
   showDebugLog: 1
---- !u!114 &209297278
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 209297261}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 397ab3beeda3a894dbd56f43a98107ad, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::LittleHeroJourney.TMPRuntimeAssertTracer
 --- !u!1 &333094475
 GameObject:
   m_ObjectHideFlags: 0
@@ -2986,30 +2976,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1387920466}
     m_Modifications:
-    - target: {fileID: 620391108435478241, guid: 331794c2e0f07f243b3a4a83e784dc36, type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 620391108435478241, guid: 331794c2e0f07f243b3a4a83e784dc36, type: 3}
-      propertyPath: m_AnchorMin.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 620391108435478241, guid: 331794c2e0f07f243b3a4a83e784dc36, type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 384.885
-      objectReference: {fileID: 0}
-    - target: {fileID: 620391108435478241, guid: 331794c2e0f07f243b3a4a83e784dc36, type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 77.102
-      objectReference: {fileID: 0}
-    - target: {fileID: 620391108435478241, guid: 331794c2e0f07f243b3a4a83e784dc36, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 727.3275
-      objectReference: {fileID: 0}
-    - target: {fileID: 620391108435478241, guid: 331794c2e0f07f243b3a4a83e784dc36, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: -48.551
-      objectReference: {fileID: 0}
     - target: {fileID: 2737183002657398426, guid: 331794c2e0f07f243b3a4a83e784dc36, type: 3}
       propertyPath: m_Name
       value: Canvas - Tutorials
@@ -3017,30 +2983,6 @@ PrefabInstance:
     - target: {fileID: 2737183002657398426, guid: 331794c2e0f07f243b3a4a83e784dc36, type: 3}
       propertyPath: m_IsActive
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7455708632902862746, guid: 331794c2e0f07f243b3a4a83e784dc36, type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7455708632902862746, guid: 331794c2e0f07f243b3a4a83e784dc36, type: 3}
-      propertyPath: m_AnchorMin.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7455708632902862746, guid: 331794c2e0f07f243b3a4a83e784dc36, type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 384.885
-      objectReference: {fileID: 0}
-    - target: {fileID: 7455708632902862746, guid: 331794c2e0f07f243b3a4a83e784dc36, type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 77.102
-      objectReference: {fileID: 0}
-    - target: {fileID: 7455708632902862746, guid: 331794c2e0f07f243b3a4a83e784dc36, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 242.4425
-      objectReference: {fileID: 0}
-    - target: {fileID: 7455708632902862746, guid: 331794c2e0f07f243b3a4a83e784dc36, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: -48.551
       objectReference: {fileID: 0}
     - target: {fileID: 7636421986384402179, guid: 331794c2e0f07f243b3a4a83e784dc36, type: 3}
       propertyPath: m_Pivot.x

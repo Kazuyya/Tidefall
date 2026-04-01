@@ -16,6 +16,9 @@ namespace LittleHeroJourney
         [SerializeField] private StorySequenceSO endStorySequence;
         [Header("Encounter")]
         [SerializeField] private string startEncounterId = "";
+        [Header("Tutorial")]
+        [SerializeField] private bool useTutorial;
+        [SerializeField] private string tutorialId = "";
 
         public string JourneyId => journeyId;
         public string SceneName => sceneName ?? "";
@@ -27,5 +30,7 @@ namespace LittleHeroJourney
         public StorySequenceSO StartStorySequence => startStorySequence;
         public StorySequenceSO EndStorySequence => endStorySequence;
         public string StartEncounterId => startEncounterId ?? "";
+        public bool UseTutorial => useTutorial;
+        public string TutorialId => tutorialId ?? "";
     }
 }

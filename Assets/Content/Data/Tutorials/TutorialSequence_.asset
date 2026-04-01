@@ -13,5 +13,21 @@ MonoBehaviour:
   m_Name: TutorialSequence_
   m_EditorClassIdentifier: Assembly-CSharp::LittleHeroJourney.UI.TutorialSequenceSO
   steps:
-  - image: {fileID: 21300000, guid: fee82b5e449be8a46b229668ebd1c7c9, type: 3}
-    text: 
+  - image: {fileID: 21300000, guid: 09813be03addb484fb4f65da7668074d, type: 3}
+    text: "Survive and defeat all enemies. Watch your Health Bar and the enemy\u2019s.
+      There is no time limit, so use your best strategy."
+  - image: {fileID: 21300000, guid: f8bb5c396930dc344931d5befcd8b2df, type: 3}
+    text: Use the joystick to move your character. Move carefully to keep your distance,
+      avoid attacks, and find the best position during battle.
+  - image: {fileID: 21300000, guid: 751782ce8d3b02646b3ec528f6805bfc, type: 3}
+    text: Use the Dodge button to evade enemy attacks. Good timing will help you
+      escape danger and create openings for counterattacks.
+  - image: {fileID: 21300000, guid: bf943b85577b34248826f3df8949fd82, type: 3}
+    text: Your attacks will automatically aim at the nearest enemy. Use Lock-On to
+      focus your attacks and take down one enemy at a time.
+  - image: {fileID: 21300000, guid: 19133af08c16f0943a029c871d67832d, type: 3}
+    text: Tap the Attack button repeatedly to perform attack combos. Use proper timing
+      to keep your attacks effective and avoid enemy counters.
+  - image: {fileID: 21300000, guid: 1225727fcf19edc4eb0f3abdffac4454, type: 3}
+    text: The Pause button is here. This menu does not stop the game, so enemies
+      will continue moving and attacking. Use it to restart or return to menu.
