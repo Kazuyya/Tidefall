@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -13,6 +14,8 @@ namespace LittleHeroJourney
     /// </summary>
     public class CharacterEffectManager : MonoBehaviour
     {
+        private const bool ForceBgmTrace = true;
+        private const bool ForceBgmAutoRecover = true;
         #region Singleton
 
         private static CharacterEffectManager _instance;
@@ -87,6 +90,8 @@ namespace LittleHeroJourney
         private const double BgmSeamlessPreRollSeconds = 0.2d;
         private readonly Dictionary<AudioSource, float> _audioBaseVolumes = new Dictionary<AudioSource, float>();
         private readonly HashSet<AudioSource> _bgmTrackedSources = new HashSet<AudioSource>();
+        private Coroutine _bgmRuntimeDebugRoutine;
+        private int _bgmNotPlayingStreak;
 
         #endregion
 
@@ -117,11 +122,18 @@ namespace LittleHeroJourney
         private void OnEnable()
         {
             SettingsManager.AudioSettingsChanged += HandleAudioSettingsChanged;
+            if (_bgmRuntimeDebugRoutine == null)
+                _bgmRuntimeDebugRoutine = StartCoroutine(BgmRuntimeDebugRoutine());
         }
 
         private void OnDisable()
         {
             SettingsManager.AudioSettingsChanged -= HandleAudioSettingsChanged;
+            if (_bgmRuntimeDebugRoutine != null)
+            {
+                StopCoroutine(_bgmRuntimeDebugRoutine);
+                _bgmRuntimeDebugRoutine = null;
+            }
         }
 
         private void OnDestroy()
@@ -630,20 +642,24 @@ namespace LittleHeroJourney
         public void PlayBGM(string effectName)
         {
             if (string.IsNullOrEmpty(effectName) || audioSet == null) return;
+            TraceBgm("PlayBGM request " + effectName);
             StopBGM();
 
             AudioEffectData audioData = audioSet.GetAudioEffect(effectName);
             if (audioData == null || !audioData.IsValid)
             {
                 if (showDebugLog) Debug.LogWarning($"[{GetType().Name}] BGM effect '{effectName}' not found or invalid!");
+                TraceBgm("PlayBGM invalid effect " + effectName);
                 return;
             }
+            TraceBgm("PlayBGM start effect=" + effectName + " loop=" + audioData.loop + " useLoopSection=" + audioData.UseLoopSection + " playType=" + audioData.playType + " clips=" + audioData.ClipCount);
 
             _bgmSource = GetAudioFromPool(effectName);
             if (_bgmSource == null) return;
             _bgmSecondarySource = GetAudioFromPool(effectName);
 
             _bgmEffectName = effectName;
+            _bgmNotPlayingStreak = 0;
             _bgmFirstPlaySequentialIndex = 0;
             _bgmLoopSequentialIndex = 0;
             _bgmSource.transform.position = Vector3.zero;
@@ -714,14 +730,17 @@ namespace LittleHeroJourney
             }
 
             _bgmSequentialCoroutine = null;
+            TraceBgm("PlayBGMWithIntroAndLoop ended effect=" + effectName);
         }
 
         private IEnumerator WaitForBGMSectionEnd(float fallbackDuration)
         {
             if (_bgmSource != null && _bgmSource.clip != null && _bgmSource.isPlaying)
             {
+                float clipLen = _bgmSource.clip.length;
                 while (_bgmSource != null && _bgmSource.isPlaying)
                     yield return null;
+                TraceBgm("WaitForBGMSectionEnd source stopped clip=" + (_bgmSource != null && _bgmSource.clip != null ? _bgmSource.clip.name : "null") + " fallback=" + fallbackDuration + " clipLen=" + clipLen);
                 yield break;
             }
 
@@ -812,6 +831,7 @@ namespace LittleHeroJourney
         public void StopBGM()
         {
             string bgmEffect = _bgmEffectName;
+            TraceBgm("StopBGM effect=" + bgmEffect);
             if (_bgmFadeCoroutine != null)
             {
                 StopCoroutine(_bgmFadeCoroutine);
@@ -840,12 +860,24 @@ namespace LittleHeroJourney
             }
             _bgmBlendSources.Clear();
             _bgmEffectName = null;
+            _bgmNotPlayingStreak = 0;
             if (showDebugLog) Debug.Log($"[{GetType().Name}] BGM stopped");
+            TraceBgm("StopBGM completed");
+        }
+
+        public bool IsBgmPlaying(string effectName = null)
+        {
+            if (_bgmSource == null || !_bgmSource.gameObject.activeInHierarchy || !_bgmSource.isPlaying)
+                return false;
+            if (string.IsNullOrEmpty(effectName))
+                return true;
+            return string.Equals(_bgmEffectName, effectName, StringComparison.Ordinal);
         }
 
         public void FadeOutBGM(float duration)
         {
             if (_bgmSource == null) return;
+            TraceBgm("FadeOutBGM duration=" + duration + " effect=" + _bgmEffectName);
             if (_bgmFadeCoroutine != null) StopCoroutine(_bgmFadeCoroutine);
             _bgmFadeCoroutine = StartCoroutine(FadeOutBGMCoroutine(duration));
         }
@@ -862,6 +894,56 @@ namespace LittleHeroJourney
             }
             _bgmFadeCoroutine = null;
             StopBGM();
+        }
+
+        private IEnumerator BgmRuntimeDebugRoutine()
+        {
+            const float interval = 1f;
+            while (true)
+            {
+                yield return new WaitForSecondsRealtime(interval);
+                if (string.IsNullOrEmpty(_bgmEffectName)) continue;
+                if (_bgmFadeCoroutine != null) continue;
+                if (_bgmSource == null)
+                {
+                    _bgmNotPlayingStreak++;
+                    TraceBgm("RuntimeCheck: bgmEffect exists but source is NULL");
+                    TryAutoRecoverBgm();
+                    continue;
+                }
+                if (!_bgmSource.gameObject.activeInHierarchy)
+                {
+                    _bgmNotPlayingStreak++;
+                    TraceBgm("RuntimeCheck: bgm source inactive");
+                    TryAutoRecoverBgm();
+                    continue;
+                }
+                if (!_bgmSource.isPlaying)
+                {
+                    _bgmNotPlayingStreak++;
+                    TraceBgm("RuntimeCheck: bgm source not playing clip=" + (_bgmSource.clip != null ? _bgmSource.clip.name : "null") + " loop=" + _bgmSource.loop + " time=" + _bgmSource.time);
+                    TryAutoRecoverBgm();
+                    continue;
+                }
+                _bgmNotPlayingStreak = 0;
+            }
+        }
+
+        private void TryAutoRecoverBgm()
+        {
+            if (!ForceBgmAutoRecover) return;
+            if (_bgmNotPlayingStreak < 2) return;
+            if (string.IsNullOrEmpty(_bgmEffectName)) return;
+            string target = _bgmEffectName;
+            TraceBgm("AutoRecover: replay " + target);
+            PlayBGM(target);
+        }
+
+        private void TraceBgm(string message)
+        {
+            if (!ForceBgmTrace && !showDebugLog) return;
+            string sourceState = _bgmSource == null ? "src=null" : ("srcActive=" + _bgmSource.gameObject.activeInHierarchy + " srcPlay=" + _bgmSource.isPlaying + " srcLoop=" + _bgmSource.loop + " srcClip=" + (_bgmSource.clip != null ? _bgmSource.clip.name : "null"));
+            Debug.Log("[CharacterEffectManager:BGM] " + message + " | effect=" + _bgmEffectName + " | " + sourceState);
         }
 
         private float PlayFirstSection(AudioEffectData audioData, string effectName, Vector3 position)

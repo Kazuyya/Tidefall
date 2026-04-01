@@ -114,13 +114,13 @@ MonoBehaviour:
     backgroundFadeOutDuration: 0
   - stepId: "My head\u2026"
     canSkipStep: 1
-    backgroundType: 1
-    backgroundImage: {fileID: 21300000, guid: 2fd0d123d0e68c641ba8d3119ba7283f, type: 3}
-    backgroundColor: {r: 1, g: 1, b: 1, a: 1}
-    contentType: 1
-    narrativeText: 
+    backgroundType: 0
+    backgroundImage: {fileID: 0}
+    backgroundColor: {r: 0, g: 0, b: 0, a: 1}
+    contentType: 0
+    narrativeText: "My head\u2026"
     speakerName: 
-    dialogueLine: "My head\u2026"
+    dialogueLine: 
     textInEffect: 1
     textOutEffect: 1
     delayAfterTextComplete: 3
@@ -130,13 +130,13 @@ MonoBehaviour:
     backgroundFadeOutDuration: 0
   - stepId: "This fog\u2026 what happened?"
     canSkipStep: 1
-    backgroundType: 1
-    backgroundImage: {fileID: 21300000, guid: 2fd0d123d0e68c641ba8d3119ba7283f, type: 3}
-    backgroundColor: {r: 1, g: 1, b: 1, a: 1}
-    contentType: 1
-    narrativeText: 
+    backgroundType: 0
+    backgroundImage: {fileID: 0}
+    backgroundColor: {r: 0, g: 0, b: 0, a: 1}
+    contentType: 0
+    narrativeText: "This fog\u2026 what happened?"
     speakerName: 
-    dialogueLine: "This fog\u2026 what happened?"
+    dialogueLine: 
     textInEffect: 1
     textOutEffect: 1
     delayAfterTextComplete: 3

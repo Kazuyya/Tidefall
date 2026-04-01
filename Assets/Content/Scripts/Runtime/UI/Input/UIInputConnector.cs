@@ -9,6 +9,16 @@ namespace LittleHeroJourney.UI
 
         public void InvokeAction(string actionId)
         {
+            InvokeActionInternal(actionId, null);
+        }
+
+        public void InvokeActionWithPayload(string actionId, string payload)
+        {
+            InvokeActionInternal(actionId, payload);
+        }
+
+        private void InvokeActionInternal(string actionId, string payload)
+        {
             if (string.IsNullOrEmpty(actionId)) return;
             if (LoadingManager.Instance != null && LoadingManager.Instance.IsLoading) return;
             if (string.Equals(actionId, "ExitToMainMenu", System.StringComparison.Ordinal))
@@ -29,7 +39,7 @@ namespace LittleHeroJourney.UI
                         return;
                 }
             }
-            GameEventSystem.Publish(new UIActionEvent(actionId));
+            GameEventSystem.Publish(new UIActionEvent(actionId, payload));
         }
     }
 }

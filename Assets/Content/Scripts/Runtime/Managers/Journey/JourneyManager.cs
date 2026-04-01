@@ -8,6 +8,7 @@ namespace LittleHeroJourney
 {
     public class JourneyManager : MonoBehaviour
     {
+        private const bool ForceBgmTrace = true;
         public const string CurrentSaveKey = "GameState";
 
         public static JourneyManager Instance { get; private set; }
@@ -77,6 +78,8 @@ namespace LittleHeroJourney
         private bool _lastStepCompleted;
         private StoryEncounterSpawner _pendingEncounterSpawner;
         private Coroutine _bgmSwitchRoutine;
+        private Coroutine _ensureBattleBgmRoutine;
+        private Coroutine _battleBgmWatchdogRoutine;
         private string _currentJourneyBgmId = string.Empty;
 
         private void Awake()
@@ -169,6 +172,12 @@ namespace LittleHeroJourney
             if (_loadingFinishedHandler != null)
                 GameEventSystem.UnsubscribeActionWithPayload("LoadingFinished", _loadingFinishedHandler);
             StopBgmSwitchRoutine();
+            if (_ensureBattleBgmRoutine != null)
+            {
+                StopCoroutine(_ensureBattleBgmRoutine);
+                _ensureBattleBgmRoutine = null;
+            }
+            StopBattleBgmWatchdog();
         }
 
         private void Start()
@@ -214,6 +223,7 @@ namespace LittleHeroJourney
         {
             var journey = GetJourneyByNumber(stageNumber);
             if (journey == null || string.IsNullOrEmpty(journey.SceneName)) return;
+            ResetJourneyRuntimeState(_skipStartStoryOnce);
             currentLevelNumber = stageNumber;
             _pendingStoryStageNumber = stageNumber;
             if (GameManager.Instance?.SceneManager != null)
@@ -427,7 +437,6 @@ namespace LittleHeroJourney
 
         public void SkipStartStoryAndStartEncounter()
         {
-            _skipStartStoryOnce = false;
             _pendingStartStorySequence = null;
             _isStartStoryPlaying = false;
 
@@ -443,10 +452,12 @@ namespace LittleHeroJourney
                 target.StartEncounter();
                 GameEventSystem.Publish(new UIActionEvent("EncounterStarted"));
                 if (showDebugLog) Debug.Log("[JourneyManager] Skip start story -> reset gameplay and start encounter directly.");
+                _skipStartStoryOnce = false;
             }
             else
             {
                 if (showDebugLog) Debug.LogWarning("[JourneyManager] Skip start story requested but no StartEncounterSpawner found.");
+                _skipStartStoryOnce = false;
             }
         }
 
@@ -485,11 +496,10 @@ namespace LittleHeroJourney
 
         private void OnGameplayReset()
         {
-            // Start-story -> encounter flow also triggers GameplayReset. Keep BGM switch smooth there.
-            if (_isStartStoryPlaying)
+            if (_isStartStoryPlaying || _skipStartStoryOnce)
                 return;
 
-            // Battle reset/retry should also reset current journey BGM.
+            TraceBgm("OnGameplayReset -> StopJourneyBgmImmediate");
             StopJourneyBgmImmediate();
         }
 
@@ -591,13 +601,45 @@ namespace LittleHeroJourney
         public void EnsureBattleBgm()
         {
             if (string.IsNullOrEmpty(battleBgmEffectId)) return;
+            if (CharacterEffectManager.Instance == null)
+            {
+                if (_ensureBattleBgmRoutine != null)
+                    StopCoroutine(_ensureBattleBgmRoutine);
+                _ensureBattleBgmRoutine = StartCoroutine(EnsureBattleBgmWhenReady());
+                return;
+            }
             SwitchToBattleBgm();
+            EnsureBattleBgmWatchdogRunning();
+        }
+
+        private IEnumerator EnsureBattleBgmWhenReady()
+        {
+            float elapsed = 0f;
+            const float timeout = 3f;
+            while (CharacterEffectManager.Instance == null && elapsed < timeout)
+            {
+                elapsed += 0.1f;
+                yield return new WaitForSeconds(0.1f);
+            }
+            _ensureBattleBgmRoutine = null;
+            if (CharacterEffectManager.Instance == null) yield break;
+            SwitchToBattleBgm();
+            EnsureBattleBgmWatchdogRunning();
         }
 
         private void SwitchJourneyBgm(string targetEffectId)
         {
             if (string.IsNullOrEmpty(targetEffectId)) return;
-            if (string.Equals(_currentJourneyBgmId, targetEffectId, StringComparison.Ordinal)) return;
+            if (string.Equals(_currentJourneyBgmId, targetEffectId, StringComparison.Ordinal))
+            {
+                var fxRef = CharacterEffectManager.Instance;
+                if (fxRef != null && fxRef.IsBgmPlaying(targetEffectId))
+                {
+                    TraceBgm("SwitchJourneyBgm skip, already playing " + targetEffectId);
+                    return;
+                }
+                TraceBgm("SwitchJourneyBgm same id but not playing -> force replay " + targetEffectId);
+            }
 
             StopBgmSwitchRoutine();
             _bgmSwitchRoutine = StartCoroutine(SwitchJourneyBgmRoutine(targetEffectId));
@@ -611,12 +653,14 @@ namespace LittleHeroJourney
             bool hasCurrent = !string.IsNullOrEmpty(_currentJourneyBgmId);
             if (hasCurrent)
             {
+                TraceBgm("SwitchJourneyBgmRoutine fade out " + _currentJourneyBgmId + " -> " + targetEffectId);
                 fx.FadeOutBGM(Mathf.Max(0f, bgmFadeOutDuration));
                 float wait = Mathf.Max(0f, bgmSwitchDelay);
                 if (wait > 0f)
                     yield return new WaitForSeconds(wait);
             }
 
+            TraceBgm("SwitchJourneyBgmRoutine play " + targetEffectId);
             fx.PlayBGM(targetEffectId);
             _currentJourneyBgmId = targetEffectId;
             _bgmSwitchRoutine = null;
@@ -625,6 +669,7 @@ namespace LittleHeroJourney
         private void StopJourneyBgmImmediate()
         {
             StopBgmSwitchRoutine();
+            StopBattleBgmWatchdog();
             if (CharacterEffectManager.Instance != null)
                 CharacterEffectManager.Instance.StopBGM();
             _currentJourneyBgmId = string.Empty;
@@ -635,6 +680,69 @@ namespace LittleHeroJourney
             if (_bgmSwitchRoutine == null) return;
             StopCoroutine(_bgmSwitchRoutine);
             _bgmSwitchRoutine = null;
+        }
+
+        private void EnsureBattleBgmWatchdogRunning()
+        {
+            if (_battleBgmWatchdogRoutine != null) return;
+            _battleBgmWatchdogRoutine = StartCoroutine(BattleBgmWatchdogRoutine());
+        }
+
+        private void StopBattleBgmWatchdog()
+        {
+            if (_battleBgmWatchdogRoutine == null) return;
+            StopCoroutine(_battleBgmWatchdogRoutine);
+            _battleBgmWatchdogRoutine = null;
+        }
+
+        private IEnumerator BattleBgmWatchdogRoutine()
+        {
+            const float checkInterval = 2f;
+            while (true)
+            {
+                yield return new WaitForSeconds(checkInterval);
+
+                if (_isStartStoryPlaying || _isEndStoryPlaying) continue;
+                if (string.IsNullOrEmpty(battleBgmEffectId)) continue;
+                var fx = CharacterEffectManager.Instance;
+                if (fx == null) continue;
+                if (fx.IsBgmPlaying(battleBgmEffectId)) continue;
+
+                if (showDebugLog)
+                    Debug.Log("[JourneyManager] Battle BGM watchdog restoring missing BGM.");
+                TraceBgm("Battle watchdog restoring missing BGM");
+                fx.PlayBGM(battleBgmEffectId);
+                _currentJourneyBgmId = battleBgmEffectId;
+            }
+        }
+
+        private void ResetJourneyRuntimeState(bool preserveSkipStartStoryFlag)
+        {
+            _pendingStartStorySequence = null;
+            _pendingEndStorySequence = null;
+            _startStoryCanvasOpened = false;
+            _isStartStoryPlaying = false;
+            _isEndStoryPlaying = false;
+            _playerReadyForEncounter = false;
+            _lastStepCompleted = false;
+            _pendingEncounterSpawner = null;
+            _currentStoryDisplay = null;
+            StopBgmSwitchRoutine();
+            if (_ensureBattleBgmRoutine != null)
+            {
+                StopCoroutine(_ensureBattleBgmRoutine);
+                _ensureBattleBgmRoutine = null;
+            }
+            StopBattleBgmWatchdog();
+            if (!preserveSkipStartStoryFlag)
+                _skipStartStoryOnce = false;
+            TraceBgm("ResetJourneyRuntimeState preserveSkip=" + preserveSkipStartStoryFlag + ", currentBgmId=" + _currentJourneyBgmId);
+        }
+
+        private void TraceBgm(string message)
+        {
+            if (!ForceBgmTrace && !showDebugLog) return;
+            Debug.Log("[JourneyManager:BGM] " + message + " | stage=" + currentLevelNumber + " skip=" + _skipStartStoryOnce + " start=" + _isStartStoryPlaying + " end=" + _isEndStoryPlaying + " current=" + _currentJourneyBgmId);
         }
 
         private void SetLevelUnlocked(int stageNumber, bool unlocked)
